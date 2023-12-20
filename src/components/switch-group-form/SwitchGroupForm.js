@@ -16,10 +16,10 @@ const style = {
   p: 4,
 };
 
-export default function SwitchableGroupForm({groupId, groupName, groupIcon='', onClose, onChange, onSave}) {
+export default function SwitchGroupForm({open, groupName, groupIcon='', onClose, onChange, onSave}) {
   return (
     <Modal
-      open={!!groupId}
+      open={open}
       onClose={onClose}
     >
       <Box sx={style}>

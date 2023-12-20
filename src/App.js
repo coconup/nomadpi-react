@@ -7,7 +7,7 @@ import Box from '@mui/material/Box';
 
 import ResponsiveAppBar from './components/responsive-app-bar/ResponsiveAppBar';
 import HomePanel from './components/home-panel/HomePanel';
-import ControlPanel from './components/control-panel/ControlPanel';
+import SwitchGroupsPage from './components/switch-groups-page/SwitchGroupsPage';
 import SettingsPanel from './components/settings-panel/SettingsPanel';
 import MonitorPanel from './components/monitor-panel/MonitorPanel';
 import DayNightIndicator from './components/day-night-indicator/DayNightIndicator';
@@ -20,8 +20,6 @@ function App() {
   const [state, setState] = useState({
     nightMode: false
   });
-
-  console.log(theme)
 
   const handleNightModeChange = (isNight) => {
     console.log(`Night mode is ${isNight ? 'on' : 'off'}`);
@@ -48,7 +46,7 @@ function App() {
         <Route path="/weather">
           <WeatherForecast />
         </Route>
-        <Route path="/control-panel"><ControlPanel /></Route>
+        <Route path="/control-panel"><SwitchGroupsPage /></Route>
         <Route path="/monitor"><MonitorPanel /></Route>
         <Route path="/settings"><SettingsPanel /></Route>
       </ThemeProvider>

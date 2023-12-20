@@ -8,59 +8,55 @@ import Box from '@mui/material/Box';
 import Switch from '@mui/material/Switch';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
-import Autocomplete from '@mui/material/Autocomplete';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 import Divider from '@mui/material/Divider';
 import { Icon} from '@mui/material';
 import Fab from '@mui/material/Fab';
 
-export default function ActionSwitchForm({actionSwitch, switchableItems, onChange, onDelete}) {
+export default function ActionSwitchForm({actionSwitch, relaySwitches: relaySwitchOptions, onChange, onDelete}) {
   const {
     name,
     icon='',
-    items=[]
+    relay_switches: relaySwitches=[]
   } = actionSwitch;
 
-  const handleSwitchableChange = (_index, value) => {
-    const newItems = actionSwitch.items.map((item, index) => ({
+  const handleRelaySwitchChange = (_index, value) => {
+    const newRelaySwitches = relaySwitches.map((item, index) => ({
       ...item,
-      ...index === _index ? { switchable: switchableItems.find(({name}) => name === value) } : {}
+      ...index === _index ? { relay_switch_id: value } : {}
     }));
 
-    onChange(actionSwitch, {items: newItems});
+    onChange(actionSwitch, {relay_switches: newRelaySwitches});
   }
 
-  const handleStateChange = (_index, value) => {
-    const newItems = actionSwitch.items.map((item, index) => ({
+  const handleStateChange = (state_type, _index, value) => {
+    const newRelaySwitches = relaySwitches.map((item, index) => ({
       ...item,
-      ...index === _index ? { state: value } : {}
+      ...index === _index ? { [`${state_type}_state`]: value } : {}
     }));
 
-    onChange(actionSwitch, {items: newItems});
+    onChange(actionSwitch, {relay_switches: newRelaySwitches});
   }
 
   const addItem = () => {
-    const { items } = actionSwitch;
     const newItem = {
-      switchable: null,
+      relay_switch_id: null,
       state: false
     }
-    onChange(actionSwitch, {items: [...items, newItem]})
+    onChange(actionSwitch, {relay_switches: [...relaySwitches, newItem]})
   }
 
-  const removeItem = (index) => {
-    const { items } = actionSwitch;
-    const newItems = items.filter((el, i) => i !== index)
-    onChange(actionSwitch, {items: newItems})
+  const removeRelaySwitch = (item) => {
+    onChange(actionSwitch, {relay_switches: relaySwitches.filter(({relay_switch_id}) => relay_switch_id !== item.relay_switch_id)})
   }
-
-  const switchableOptions = (
-    switchableItems
-      .filter(({enabled, name}) => enabled)
-      .map(({name}) => name)
-  );
 
   return (
-    <Card sx={{ width: 400, margin: '20px' }}>
+    <Card sx={{ width: 600, margin: '20px' }}>
       <CardContent>
         <Box
           sx={{
@@ -126,10 +122,10 @@ export default function ActionSwitchForm({actionSwitch, switchableItems, onChang
         </Box>
         <Box>
           {
-            items.map((item, index) => {
+            relaySwitches.map((relaySwitch, index) => {
               return(
                 <Box
-                  key={`ActionSwitchItem-${actionSwitch.id}-${index}`}
+                  key={`RelaySwitch-${actionSwitch.id}-${index}`}
                   sx={{
                     display: 'flex',
                     flexDirection: 'row',
@@ -137,27 +133,70 @@ export default function ActionSwitchForm({actionSwitch, switchableItems, onChang
                     alignItems: 'center'
                   }}
                 >
-                  <Autocomplete 
+
+                  <FormControl 
                     sx={{
-                      flex: 1,
+                      flex: 6,
                       margin: '5px 15px'
                     }}
-                    options={switchableOptions}
-                    onChange={(event, value) => handleSwitchableChange(index, value)}
-                    value={item.switchable ? item.switchable.name : ''}
-                    renderInput={(params) => <TextField {...params} label="Switch" />}
-                  />
-                  <Switch 
-                    checked={item.state}
-                    onChange={(event, value) => handleStateChange(index, value)}
-                  />
+                  >
+                    <InputLabel>Switch</InputLabel>
+                    <Select
+                      value={relaySwitch.relay_switch_id ? relaySwitch.relay_switch_id : ''}
+                      label="Switch"
+                      onChange={(event, option) => {
+                        handleRelaySwitchChange(index, event.target.value)
+                      }}
+                    >
+                      {
+                        relaySwitchOptions.map(({id, name, key}) => (
+                          <MenuItem key={`RelaySwitch-${actionSwitch.id}-${index}-${key}`} value={id}>{name}</MenuItem>
+                        ))
+                      }
+                    </Select>
+                  </FormControl>
+                  <FormControl 
+                    sx={{
+                      flex: 3,
+                      marginRight: '15px'
+                    }}
+                  >
+                    <InputLabel>ON state</InputLabel>
+                    <Select
+                      value={relaySwitch.on_state}
+                      label="ON state"
+                      onChange={(event, option) => {
+                        handleStateChange('on', index, event.target.value)
+                      }}
+                    >
+                      <MenuItem value={true}>On</MenuItem>
+                      <MenuItem value={false}>Off</MenuItem>
+                    </Select>
+                  </FormControl>
+                  <FormControl 
+                    sx={{
+                      flex: 3
+                    }}
+                  >
+                    <InputLabel>OFF state</InputLabel>
+                    <Select
+                      value={relaySwitch.off_state}
+                      label="OFF state"
+                      onChange={(event, option) => {
+                        handleStateChange('off', index, event.target.value)
+                      }}
+                    >
+                      <MenuItem value={'ignore'}>Ignore</MenuItem>
+                      <MenuItem value={'toggle'}>Toggle</MenuItem>
+                    </Select>
+                  </FormControl>
                   <Fab 
                     size="small"
                     color="secondary" 
                     aria-label="edit"
-                    onClick={() => removeItem(index)}
+                    onClick={() => removeRelaySwitch(index)}
                     sx={{
-                      marginRight: '5px'
+                      margin: '0px 5px 0px 15px'
                     }}
                   >
                     <Icon>remove</Icon>

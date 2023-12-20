@@ -2,8 +2,9 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Tabs, { tabsClasses } from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import SwitchesSettings from '../switches-settings/SwitchesSettings';
-import ActionSwitchesSettings from '../action-switches-settings/ActionSwitchesSettings';
+import RelaySwitchesForm from '../relay-switches-form/RelaySwitchesForm';
+import SwitchGroupsForm from '../switch-groups-form/SwitchGroupsForm';
+import ActionSwitchesForm from '../action-switches-form/ActionSwitchesForm';
 
 export default function ScrollableTabsButtonVisible() {
   const [state, setState] = React.useState({
@@ -58,13 +59,17 @@ export default function ScrollableTabsButtonVisible() {
       >
         <Tab label="Switches"/>
         <Tab label="Action Switches" />
+        <Tab label="Switch groups"/>
         <Tab label="Item Three" />
       </Tabs>
       <CustomTabPanel value={value} index={0}>
-        <SwitchesSettings />
+        <RelaySwitchesForm />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        <ActionSwitchesSettings />
+        <ActionSwitchesForm />
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={2}>
+        <SwitchGroupsForm />
       </CustomTabPanel>
     </Box>
   );

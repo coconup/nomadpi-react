@@ -10,22 +10,22 @@ import Typography from '@mui/material/Typography';
 
 import { Icon} from '@mui/material';
 
-import { useToggleSwitchableMutation } from '../../apis/van-pi/van-pi-api';
+import { useToggleRelaySwitchMutation } from '../../apis/van-pi/vanpi-app-api';
 
-export default function SwitchControl({switchable}) {
-  const {type, id, name, state, icon, group='General'} = switchable;
+export default function SwitchControl({switchItem, state}) {
+  const {id, name, icon} = switchItem;
 
-  const [
-    toggleSwitchableTrigger, 
-    {
-      data={},
-      isLoading,
-      isFetching,
-      isSuccess,
-      isError,
-      error,
-    }
-  ] = useToggleSwitchableMutation();
+  // const [
+  //   toggleRelaySwitchTrigger, 
+  //   {
+  //     data={},
+  //     isLoading,
+  //     isFetching,
+  //     isSuccess,
+  //     isError,
+  //     error,
+  //   }
+  // ] = useToggleRelaySwitchMutation();
 
   return (
     <Button color='secondary' sx={{
@@ -33,7 +33,10 @@ export default function SwitchControl({switchable}) {
         ...(state === true ? {} : {backgroundColor: 'grey.200'})
       }
     }}>
-      <Card sx={{ minWidth: 275 }} onClick={() => toggleSwitchableTrigger(switchable)}>
+      <Card 
+        sx={{ minWidth: 275 }} 
+        // onClick={() => toggleRelaySwitchTrigger(switchable)}
+      >
         <CardContent>
           <CardHeader
             avatar={

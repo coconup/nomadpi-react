@@ -1,99 +1,39 @@
 import BaseModel from './abstract/BaseModel';
-import Switchable from './Switchable';
+import RelaySwitch from './RelaySwitch';
 
 // Initializer
 class ActionSwitch extends BaseModel() {
-  constructor({name, icon, items=[]}) {
-    if(!name) {
-      throw '`name`is required when creating an instance of `ActionSwitch`';
-    }
-    
+  constructor(data) {
+    const parsedRelaySwitches = JSON.parse(data.relay_switches || '[]')
+
     super({
-      name,
-      icon,
-      items
-    });
-
-    this.id = this.name;
-    console.log(this.id)
+      ...data,
+      relay_switches: parsedRelaySwitches,
+    })
   }
 
-  set name(val) {
-    this._name = val;
+  get frontendType() {
+    return 'Action Switch';
   }
 
-  get name() {
-    return this._name;
-  }
-
-  set icon(val) {
-    this._icon = val;
-  }
-
-  get icon() {
-    return this._icon;
-  }
-
-  set items(val) {
-    this._items = val;
-  }
-
-  get items() {
-    return this._items;
+  get snakecaseType() {
+    return 'action_switch';
   }
 
   toJSONPayload(state) {
     return {
+      id: this.id,
       name: this.name,
       icon: this.icon,
-      id: this.id || this.name,
-      state
+      relay_switches: JSON.stringify(this.relay_switches.map(({relay_switch_id, on_state, off_state}) => ({relay_switch_id, on_state, off_state})))
     }
   }
 };
 
 const validateItems = (items) => {
-  if(items.find(el => el.constructor !== Switchable)) {
-    throw '`ActionSwitch` `items` must be instances of `Switchable`'
+  if(items.find(el => el.constructor !== RelaySwitch)) {
+    throw '`ActionSwitch` `items` must be instances of `RelaySwitch`'
   }
 };
 
-const actionSwitchesFromItems = (items) => {
-  validateItems(items);
-
-  console.log('items', items)
-
-  let actionSwitchesNames = [...new Set(items.map(({actionSwitches=[]}) => actionSwitches.map(a => a.name)).flat())];
-
-  return actionSwitchesNames.map(name => {
-    const _name = name
-    const actionSwitch = items.map(({actionSwitches=[]}) => actionSwitches).flat(2).find(a => a.name === name);
-    const actionSwitchItems = (
-      items
-        .filter(el => el.actionSwitches.find(a => a.name === name))
-        .map((switchable) => {
-          const actionSwitch = switchable.actionSwitches.find(a => a.name === name);
-
-          if(name) {
-            return {
-              switchable,
-              state: actionSwitch.state,
-              name: actionSwitch.name,
-              id: actionSwitch.id
-            }
-          }
-        })
-    );
-
-    return new ActionSwitch({
-      name: actionSwitch.name,
-      icon: actionSwitch.icon,
-      items: actionSwitchItems
-    })
-  })
-};
-
-export {
-  ActionSwitch,
-  actionSwitchesFromItems
-};
+export default ActionSwitch;
