@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-const BASE_URL = 'http://127.0.0.1:1880/api/v1'
+const BASE_URL = 'http://raspberrypi.local:1880/api/v1'
 
 export const vanPiAPI = createApi({
   reducerPath: 'vanpi-api',

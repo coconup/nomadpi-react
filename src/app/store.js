@@ -1,11 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
-import counterReducer from '../components/counter/counterSlice';
-import { vanPiAppAPI } from '../apis/van-pi/vanpi-app-api';
+import { vanPiAppAPI, useAuthStatusQuery } from '../apis/van-pi/vanpi-app-api';
 import { vanPiAPI } from '../apis/van-pi/vanpi-api';
+import { authMiddleware } from './middleware';
+import authReducer from './authSlice';
 
-export const store = configureStore({
+const store = configureStore({
   reducer: {
-    counter: counterReducer,
+    auth: authReducer,
     [vanPiAppAPI.reducerPath]: vanPiAppAPI.reducer,
     [vanPiAPI.reducerPath]: vanPiAPI.reducer,
   },
@@ -13,5 +14,8 @@ export const store = configureStore({
     getDefaultMiddleware({serializableCheck: false})
       .concat(vanPiAppAPI.middleware)
       .concat(vanPiAPI.middleware)
+      .concat(authMiddleware)
   )
 });
+
+export default store;

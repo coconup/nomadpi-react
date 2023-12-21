@@ -3,7 +3,7 @@ import RelaySwitch from '../../models/RelaySwitch';
 import ActionSwitch from '../../models/ActionSwitch';
 import SwitchGroup from '../../models/SwitchGroup';
 
-const BASE_URL = 'http://127.0.0.1:3000'
+const BASE_URL = 'http://raspberrypi.local:3001'
 
 export const vanPiAppAPI = createApi({
   reducerPath: 'vanpi-app-api',
@@ -18,9 +18,20 @@ export const vanPiAppAPI = createApi({
       headers.set('Accept', 'application/json');
       return headers;
     },
+    credentials: "include"
   }),
   endpoints: (builder) => {
     let endpoints = {
+      login: builder.mutation({
+        query: (credentials) => ({
+          url: '/auth/login',
+          method: 'POST',
+          body: credentials,
+        }),
+      }),
+      checkAuthStatus: builder.query({
+        query: () => 'auth/status',
+      }),
       toggleRelaySwitch: builder.mutation({
         // query: (switchableItem) => ({
         //   url: switchableItem.routes.toggle,
@@ -111,10 +122,13 @@ export const vanPiAppAPI = createApi({
     });
 
     return endpoints;
-  }
+  },
 })
 
 export const {
+  useLoginMutation,
+  useCheckAuthStatusQuery,
+
   useGetRelaySwitchesQuery,
   useToggleRelaySwitchMutation,
   useUpdateRelaySwitchMutation,
