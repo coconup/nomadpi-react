@@ -3,7 +3,9 @@ import RelaySwitch from '../../models/RelaySwitch';
 import ActionSwitch from '../../models/ActionSwitch';
 import SwitchGroup from '../../models/SwitchGroup';
 
-const BASE_URL = 'http://raspberrypi.local:3001'
+// const BASE_URL = 'http://raspberrypi.local:3001'
+
+const BASE_URL = window.location.origin.includes(':3000') ? window.location.origin.replace('3000', '3001') : window.location.origin.replace('/app.', '/api.');
 
 export const vanPiAppAPI = createApi({
   reducerPath: 'vanpi-app-api',
