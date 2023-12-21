@@ -55,6 +55,25 @@ function App() {
     const apiLogin = loginTrigger(credentials);
   };
 
+  let content;
+  
+  if(!loggedIn) {
+    content = <LoginForm onSubmit={onLoginSubmit}/>;
+  } else {
+    content = (
+      <Box>
+        <ResponsiveAppBar />
+        <Route path="/home"><HomePanel /></Route>
+        <Route path="/weather">
+          <WeatherForecast />
+        </Route>
+        <Route path="/control-panel"><SwitchGroupsPage /></Route>
+        <Route path="/monitor"><MonitorPanel /></Route>
+        <Route path="/settings"><SettingsPanel /></Route>
+      </Box>
+    )
+  };
+
   return (
     <Box 
       className="App"
@@ -68,15 +87,7 @@ function App() {
         onNightMode={handleNightModeChange}
       />
       <ThemeProvider theme={theme(state.nightMode)}>
-        {loggedIn && <ResponsiveAppBar />}
-        {!loggedIn && <LoginForm onSubmit={onLoginSubmit}/>}
-        <Route path="/home"><HomePanel /></Route>
-        <Route path="/weather">
-          <WeatherForecast />
-        </Route>
-        <Route path="/control-panel"><SwitchGroupsPage /></Route>
-        <Route path="/monitor"><MonitorPanel /></Route>
-        <Route path="/settings"><SettingsPanel /></Route>
+        {content}
       </ThemeProvider>
     </Box>
   );

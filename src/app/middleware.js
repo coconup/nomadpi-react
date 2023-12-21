@@ -4,7 +4,7 @@ import store from './store';
 
 export const authMiddleware = () => (next) => async (action) => {
   if (action.type === 'vanpi-app-api/executeQuery/fulfilled') {
-    debugger
+    if(!store.getState().loggedIn) store.dispatch(setLoggedIn(true));
   } else if (action.type === 'vanpi-app-api/executeQuery/rejected') {
     if(action.payload.status === 401) {
       store.dispatch(setLoggedIn(false));
