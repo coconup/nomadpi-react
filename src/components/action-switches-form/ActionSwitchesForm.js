@@ -7,7 +7,7 @@ import { Icon} from '@mui/material';
 
 import {
   useGetActionSwitchesQuery,
-  useGetRelaySwitchesQuery,
+  useGetRelaysQuery,
   useUpdateActionSwitchMutation,
   useCreateActionSwitchMutation,
   useDeleteActionSwitchMutation
@@ -25,7 +25,7 @@ const ActionSwitchesForm = () => {
   });
 
   const apiActionSwitches = useGetActionSwitchesQuery();
-  const apiRelaySwitches = useGetRelaySwitchesQuery();
+  const apiRelaySwitches = useGetRelaysQuery();
 
   const [
     updateActionSwitchTrigger, 

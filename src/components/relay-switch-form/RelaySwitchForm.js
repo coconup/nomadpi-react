@@ -17,8 +17,7 @@ import RelaySwitch from '../../models/RelaySwitch';
 
 export default function RelaySwitchForm({relaySwitch, onChange, editable}) {
   const {
-    target_id,
-    target_type,
+    relay_position,
     frontendType, 
     name,
     icon,
@@ -43,7 +42,7 @@ export default function RelaySwitchForm({relaySwitch, onChange, editable}) {
                   marginBottom: '0px', 
                   alignSelf: 'center'
                 }} color="primary" gutterBottom>
-                {frontendType && target_id ? `${frontendType} ${target_id}` : ''}
+                {relay_position ? `${frontendType} ${relay_position}` : ''}
               </Typography>
               <Icon sx={{marginLeft: '15px'}}>{icon}</Icon>
             </Box>
@@ -63,22 +62,11 @@ export default function RelaySwitchForm({relaySwitch, onChange, editable}) {
                 flexDirection: 'row',
               }}
             >
-              <FormControl sx={{margin: '0px 15px', flex: 3}}>
-                <InputLabel>Type</InputLabel>
-                <Select
-                  value={target_type || ''}
-                  label="Type"
-                  onChange={(event) => onChange(relaySwitch, {target_type: event.target.value})}
-                >
-                  <MenuItem value={'relay'}>Relay</MenuItem>
-                  <MenuItem value={'wifi_relay'}>WiFi Relay</MenuItem>
-                </Select>
-              </FormControl>
               <TextField
-                label="ID"
-                value={target_id || ''}
+                label="Relay position"
+                value={relay_position || ''}
                 sx={{marginRight: '15px', flex: 1}}
-                onChange={(event) => onChange(relaySwitch, {target_id: event.target.value})}
+                onChange={(event) => onChange(relaySwitch, {relay_position: event.target.value})}
               />
             </Box>
         }

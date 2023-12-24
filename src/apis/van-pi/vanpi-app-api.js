@@ -5,14 +5,17 @@ import SwitchGroup from '../../models/SwitchGroup';
 
 // const BASE_URL = 'http://raspberrypi.local:3001'
 
-const BASE_URL = window.location.origin.includes(':3000') ? window.location.origin.replace('3000', '3001') : window.location.origin.replace('/app.', '/api.');
+// const BASE_URL = window.location.origin.includes(':3000') ? window.location.origin.replace('3000', '3001') : window.location.origin.replace('/app.', '/api.');
+
+const BASE_URL = 'https://api.monsterpi.net'
 
 export const vanPiAppAPI = createApi({
   reducerPath: 'vanpi-app-api',
   tagTypes: [
     'RelaySwitch',
     'ActionSwitch',
-    'SwitchGroup'
+    'SwitchGroup',
+    'SwitchState'
   ],
   baseQuery: fetchBaseQuery({ 
     baseUrl: BASE_URL,
@@ -34,23 +37,39 @@ export const vanPiAppAPI = createApi({
       checkAuthStatus: builder.query({
         query: () => 'auth/status',
       }),
-      toggleRelaySwitch: builder.mutation({
-        // query: (switchableItem) => ({
-        //   url: switchableItem.routes.toggle,
-        //   method: 'put'
-        // }),
-        // invalidatesTags: (result, error, switchableItem, request) => {
-        //   return [switchableItem.tags]
-        // }
-      })
+
+      postRelayState: builder.mutation({
+        query: ({relay_position, ...body}) => ({
+          url: `relays/${relay_position}`,
+          method: 'post',
+          body
+        }),
+        invalidatesTags: (result, error, payload, request) => {
+          if(result) {
+            return [{type: 'RelaysState'}];
+          }
+        }
+      }),
+
+      getRelaysState: builder.query({
+        query: () => `relays/state`,
+        transformResponse: (result, meta) => {
+          if(result) {
+            return result;
+          }
+        },
+        providesTags: (result) => {
+          return [{type: 'RelaysState'}]
+        }
+      }),
     };
 
     [
       {
-        apiPath: 'relay_switches',
+        apiPath: 'relays',
         model: RelaySwitch,
-        resourceNameSingular: 'RelaySwitch',
-        resourceNamePlural: 'RelaySwitches'
+        resourceNameSingular: 'Relay',
+        resourceNamePlural: 'Relays'
       },
       {
         apiPath: 'action_switches',
@@ -131,11 +150,13 @@ export const {
   useLoginMutation,
   useCheckAuthStatusQuery,
 
-  useGetRelaySwitchesQuery,
-  useToggleRelaySwitchMutation,
-  useUpdateRelaySwitchMutation,
-  useCreateRelaySwitchMutation,
-  useDeleteRelaySwitchMutation,
+  usePostRelayStateMutation,
+  useGetRelaysStateQuery,
+
+  useGetRelaysQuery,
+  useUpdateRelayMutation,
+  useCreateRelayMutation,
+  useDeleteRelayMutation,
   
   useGetActionSwitchesQuery,
   useUpdateActionSwitchMutation,

@@ -15,7 +15,7 @@ import {
 } from "react-beautiful-dnd";
 
 import { 
-  useGetRelaySwitchesQuery, 
+  useGetRelaysQuery, 
   useGetActionSwitchesQuery, 
   useGetSwitchGroupsQuery,
   useUpdateSwitchGroupMutation,
@@ -38,7 +38,7 @@ const SwitchGroupsForm = () => {
 
   const [state, setState] = useState(initialState);  
 
-  const apiRelaySwitches = useGetRelaySwitchesQuery();
+  const apiRelaySwitches = useGetRelaysQuery();
   const apiActionSwitches = useGetActionSwitchesQuery();
   const apiSwitchGroups = useGetSwitchGroupsQuery();
 

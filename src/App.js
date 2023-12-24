@@ -57,11 +57,11 @@ function App() {
 
   let content;
   
-  if(!loggedIn) {
+  if(loggedIn === false) {
     content = <LoginForm onSubmit={onLoginSubmit}/>;
   } else {
     content = (
-      <Box>
+      <Box sx={{height: '100%'}}>
         <ResponsiveAppBar />
         <Route path="/home"><HomePanel /></Route>
         <Route path="/weather">

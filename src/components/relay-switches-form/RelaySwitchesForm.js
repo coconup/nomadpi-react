@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 import Fab from '@mui/material/Fab';
 import { Icon} from '@mui/material';
 
-import { useGetRelaySwitchesQuery, useUpdateRelaySwitchMutation, useCreateRelaySwitchMutation } from '../../apis/van-pi/vanpi-app-api';
+import { useGetRelaysQuery, useUpdateRelayMutation, useCreateRelayMutation } from '../../apis/van-pi/vanpi-app-api';
 
 import RelaySwitchForm from '../relay-switch-form/RelaySwitchForm';
 
@@ -19,7 +19,7 @@ const RelaySwitchesForm = () => {
 
   const [state, setState] = useState(initialState);  
 
-  let apiSwitches = useGetRelaySwitchesQuery();
+  let apiSwitches = useGetRelaysQuery();
 
   const [
     updateRelaySwitchTrigger, 
@@ -31,7 +31,7 @@ const RelaySwitchesForm = () => {
       // isError,
       // error,
     }
-  ] = useUpdateRelaySwitchMutation();
+  ] = useUpdateRelayMutation();
 
   const [
     createRelaySwitchTrigger, 
@@ -43,7 +43,7 @@ const RelaySwitchesForm = () => {
       // isError,
       // error,
     }
-  ] = useCreateRelaySwitchMutation();
+  ] = useCreateRelayMutation();
 
   const isLoading = apiSwitches.isLoading;
   const isFetching = apiSwitches.isFetching;

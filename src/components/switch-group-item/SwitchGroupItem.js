@@ -10,32 +10,37 @@ import Typography from '@mui/material/Typography';
 
 import { Icon} from '@mui/material';
 
-import { useToggleRelaySwitchMutation } from '../../apis/van-pi/vanpi-app-api';
+import { usePostRelayStateMutation } from '../../apis/van-pi/vanpi-app-api';
 
-export default function SwitchControl({switchItem, state}) {
-  const {id, name, icon} = switchItem;
+export default function SwitchControl({switchItem, state, onClick}) {
+  const itemType = switchItem.snakecaseType;
+  const {
+    relay_position,
+    name,
+    icon
+  } = switchItem;
 
-  // const [
-  //   toggleRelaySwitchTrigger, 
-  //   {
-  //     data={},
-  //     isLoading,
-  //     isFetching,
-  //     isSuccess,
-  //     isError,
-  //     error,
-  //   }
-  // ] = useToggleRelaySwitchMutation();
+  const [
+    postSwitchStateTrigger, 
+    {
+      data={},
+      isLoading,
+      isFetching,
+      isSuccess,
+      isError,
+      error,
+    }
+  ] = usePostRelayStateMutation();
 
   return (
     <Button color='secondary' sx={{
       '& .MuiPaper-root': {
-        ...(state === true ? {} : {backgroundColor: 'grey.200'})
+        // ...(state === true ? {} : {backgroundColor: 'grey.200'})
       }
     }}>
       <Card 
         sx={{ minWidth: 275 }} 
-        // onClick={() => toggleRelaySwitchTrigger(switchable)}
+        onClick={() => postSwitchStateTrigger({ relay_position, state: !state}).then(onClick)}
       >
         <CardContent>
           <CardHeader

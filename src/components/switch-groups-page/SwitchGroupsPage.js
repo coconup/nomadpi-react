@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useSelector } from 'react-redux'
 
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
@@ -10,13 +11,11 @@ import SwitchGroup from '../../models/SwitchGroup';
 import SwitchGroupItem from '../switch-group-item/SwitchGroupItem';
 
 import { 
-  useGetRelaySwitchesQuery, 
+  useGetRelaysQuery, 
   useGetActionSwitchesQuery, 
-  useGetSwitchGroupsQuery
+  useGetSwitchGroupsQuery,
+  useGetRelaysStateQuery
 } from '../../apis/van-pi/vanpi-app-api';
-import { 
-  useGetStateGPIOQuery
-} from '../../apis/van-pi/vanpi-api';
 
 const SwitchGroupsPage = () => {
   const initialState = {
@@ -29,16 +28,16 @@ const SwitchGroupsPage = () => {
 
   const [state, setState] = useState(initialState);
 
-  const apiRelaySwitches = useGetRelaySwitchesQuery();
+  const apiRelaySwitches = useGetRelaysQuery();
   const apiActionSwitches = useGetActionSwitchesQuery();
   const apiSwitchGroups = useGetSwitchGroupsQuery();
-  const apiStateGPIO = useGetStateGPIOQuery();
+  const apiSwitchesState = useGetRelaysStateQuery();
 
-  const isLoading = apiRelaySwitches.isLoading || apiActionSwitches.isLoading || apiSwitchGroups.isLoading || apiStateGPIO.isLoading;
-  const isFetching = apiRelaySwitches.isFetching || apiActionSwitches.isFetching || apiSwitchGroups.isFetching || apiStateGPIO.isFetching;
-  const isSuccess = apiRelaySwitches.isSuccess && apiActionSwitches.isSuccess && apiSwitchGroups.isSuccess && apiStateGPIO.isSuccess;
-  const isError = apiRelaySwitches.isError || apiActionSwitches.isError || apiSwitchGroups.isError || apiStateGPIO.isError;
-  const error = apiRelaySwitches.error || apiActionSwitches.error || apiSwitchGroups.error || apiStateGPIO.error;
+  const isLoading = apiRelaySwitches.isLoading || apiActionSwitches.isLoading || apiSwitchGroups.isLoading || apiSwitchesState.isLoading;
+  const isFetching = apiRelaySwitches.isFetching || apiActionSwitches.isFetching || apiSwitchGroups.isFetching || apiSwitchesState.isFetching;
+  const isSuccess = apiRelaySwitches.isSuccess && apiActionSwitches.isSuccess && apiSwitchGroups.isSuccess && apiSwitchesState.isSuccess;
+  const isError = apiRelaySwitches.isError || apiActionSwitches.isError || apiSwitchGroups.isError || apiSwitchesState.isError;
+  const error = apiRelaySwitches.error || apiActionSwitches.error || apiSwitchGroups.error || apiSwitchesState.error;
 
   if(!state.init && isSuccess) {
     const sortedSwitchGroups = [...apiSwitchGroups.data].sort((a, b) => a.id - b.id);
@@ -48,7 +47,7 @@ const SwitchGroupsPage = () => {
       switchGroups: sortedSwitchGroups,
       relaySwitches: apiRelaySwitches.data,
       actionSwitches: apiActionSwitches.data,
-      stateGPIO: apiStateGPIO.data,
+      switchesState: apiSwitchesState.data,
       init: true, 
       selectedSwitchGroup: sortedSwitchGroups[0] && sortedSwitchGroups[0].name || initialState.selectedSwitchGroup
     })
@@ -59,7 +58,7 @@ const SwitchGroupsPage = () => {
     relaySwitches,
     actionSwitches,
     selectedSwitchGroup,
-    stateGPIO
+    switchesState
   } = state;
 
   let displaySwitches = [];
@@ -72,15 +71,18 @@ const SwitchGroupsPage = () => {
         .map(({switch_type, switch_id}) => {
           if(switch_type === 'action_switch') {
             return actionSwitches.find(({id}) => id === switch_id);
-          } else if(switch_type === 'relay_switch') {
+          } else if(switch_type === 'relay') {
             return relaySwitches.find(({id}) => id === switch_id);
           }
         })
     )
   }
 
+  const itemStates = useSelector(state => {
+    return state.relays.relaysState;
+  })
   const getSwitchItemState = (switchItem) => {
-    return (stateGPIO[switchItem.target_type] || {})[switchItem.target_id] || false;
+    return (itemStates[switchItem.relay_position] || {}).state;
   }
 
   let content;
@@ -112,6 +114,7 @@ const SwitchGroupsPage = () => {
                 key={`${switchItem.key}`} 
                 switchItem={switchItem}
                 state={getSwitchItemState(switchItem)}
+                onClick={() => setState({...state})}
               />
             ))
           }
