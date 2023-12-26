@@ -16,6 +16,7 @@ import {
 
 import { 
   useGetRelaysQuery, 
+  useGetModesQuery, 
   useGetActionSwitchesQuery, 
   useGetSwitchGroupsQuery,
   useUpdateSwitchGroupMutation,
@@ -31,6 +32,7 @@ const SwitchGroupsForm = () => {
   const initialState = {
     switchGroups: [],
     relaySwitches: [],
+    modeSwitches: [],
     actionSwitches: [],
     init: false,
     editingGroup: {}
@@ -39,14 +41,15 @@ const SwitchGroupsForm = () => {
   const [state, setState] = useState(initialState);  
 
   const apiRelaySwitches = useGetRelaysQuery();
+  const apiModeSwitches = useGetModesQuery();
   const apiActionSwitches = useGetActionSwitchesQuery();
   const apiSwitchGroups = useGetSwitchGroupsQuery();
 
-  const isLoading = apiRelaySwitches.isLoading || apiActionSwitches.isLoading || apiSwitchGroups.isLoading;
-  const isFetching = apiRelaySwitches.isFetching || apiActionSwitches.isFetching || apiSwitchGroups.isFetching;
-  const isSuccess = apiRelaySwitches.isSuccess && apiActionSwitches.isSuccess && apiSwitchGroups.isSuccess;
-  const isError = apiRelaySwitches.isError || apiActionSwitches.isError || apiSwitchGroups.isError;
-  const error = apiRelaySwitches.error || apiActionSwitches.error || apiSwitchGroups.error;
+  const isLoading = apiRelaySwitches.isLoading || apiActionSwitches.isLoading || apiSwitchGroups.isLoading || apiModeSwitches.isLoading;
+  const isFetching = apiRelaySwitches.isFetching || apiActionSwitches.isFetching || apiSwitchGroups.isFetching || apiModeSwitches.isFetching;
+  const isSuccess = apiRelaySwitches.isSuccess && apiActionSwitches.isSuccess && apiSwitchGroups.isSuccess && apiModeSwitches.isSuccess;
+  const isError = apiRelaySwitches.isError || apiActionSwitches.isError || apiSwitchGroups.isError || apiModeSwitches.isError;
+  const error = apiRelaySwitches.error || apiActionSwitches.error || apiSwitchGroups.error || apiModeSwitches.error;
 
   const [
     updateSwitchGroupTrigger, 
@@ -89,6 +92,7 @@ const SwitchGroupsForm = () => {
       ...state,
       switchGroups: apiSwitchGroups.data,
       relaySwitches: apiRelaySwitches.data,
+      modeSwitches: apiModeSwitches.data,
       actionSwitches: apiActionSwitches.data,
       init: true
     });
@@ -97,12 +101,14 @@ const SwitchGroupsForm = () => {
   const {
     switchGroups,
     actionSwitches,
-    relaySwitches
+    relaySwitches,
+    modeSwitches
   } = state;
 
   const switchableItems = [
     ...actionSwitches,
-    ...relaySwitches
+    ...relaySwitches,
+    ...modeSwitches
   ];
 
   const ungroupedSwitches = switchableItems.filter(item => !switchGroups.find(group => group.hasItem(item)));

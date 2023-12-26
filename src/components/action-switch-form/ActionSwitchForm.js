@@ -28,7 +28,7 @@ export default function ActionSwitchForm({actionSwitch, relaySwitches: relaySwit
   const handleRelaySwitchChange = (_index, value) => {
     const newRelaySwitches = relaySwitches.map((item, index) => ({
       ...item,
-      ...index === _index ? { relay_switch_id: value } : {}
+      ...index === _index ? { item_id: value } : {}
     }));
 
     onChange(actionSwitch, {relay_switches: newRelaySwitches});
@@ -45,14 +45,14 @@ export default function ActionSwitchForm({actionSwitch, relaySwitches: relaySwit
 
   const addItem = () => {
     const newItem = {
-      relay_switch_id: null,
+      item_id: null,
       state: false
     }
     onChange(actionSwitch, {relay_switches: [...relaySwitches, newItem]})
   }
 
   const removeRelaySwitch = (item) => {
-    onChange(actionSwitch, {relay_switches: relaySwitches.filter(({relay_switch_id}) => relay_switch_id !== item.relay_switch_id)})
+    onChange(actionSwitch, {relay_switches: relaySwitches.filter(({item_id}) => item_id !== item.item_id)})
   }
 
   return (
@@ -142,7 +142,7 @@ export default function ActionSwitchForm({actionSwitch, relaySwitches: relaySwit
                   >
                     <InputLabel>Switch</InputLabel>
                     <Select
-                      value={relaySwitch.relay_switch_id ? relaySwitch.relay_switch_id : ''}
+                      value={relaySwitch.item_id ? relaySwitch.item_id : ''}
                       label="Switch"
                       onChange={(event, option) => {
                         handleRelaySwitchChange(index, event.target.value)

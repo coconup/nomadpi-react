@@ -12,15 +12,18 @@ import SwitchGroupItem from '../switch-group-item/SwitchGroupItem';
 
 import { 
   useGetRelaysQuery, 
+  useGetModesQuery, 
   useGetActionSwitchesQuery, 
   useGetSwitchGroupsQuery,
-  useGetRelaysStateQuery
+  useGetRelaysStateQuery,
+  useGetModesStateQuery
 } from '../../apis/van-pi/vanpi-app-api';
 
 const SwitchGroupsPage = () => {
   const initialState = {
     switchGroups: [],
     relaySwitches: [],
+    modeSwitches: [],
     actionSwitches: [],
     init: false,
     selectedSwitchGroup: null,
@@ -29,15 +32,17 @@ const SwitchGroupsPage = () => {
   const [state, setState] = useState(initialState);
 
   const apiRelaySwitches = useGetRelaysQuery();
+  const apiModeSwitches = useGetModesQuery();
   const apiActionSwitches = useGetActionSwitchesQuery();
   const apiSwitchGroups = useGetSwitchGroupsQuery();
-  const apiSwitchesState = useGetRelaysStateQuery();
+  const apiRelaysState = useGetRelaysStateQuery();
+  const apiModesState = useGetModesStateQuery();
 
-  const isLoading = apiRelaySwitches.isLoading || apiActionSwitches.isLoading || apiSwitchGroups.isLoading || apiSwitchesState.isLoading;
-  const isFetching = apiRelaySwitches.isFetching || apiActionSwitches.isFetching || apiSwitchGroups.isFetching || apiSwitchesState.isFetching;
-  const isSuccess = apiRelaySwitches.isSuccess && apiActionSwitches.isSuccess && apiSwitchGroups.isSuccess && apiSwitchesState.isSuccess;
-  const isError = apiRelaySwitches.isError || apiActionSwitches.isError || apiSwitchGroups.isError || apiSwitchesState.isError;
-  const error = apiRelaySwitches.error || apiActionSwitches.error || apiSwitchGroups.error || apiSwitchesState.error;
+  const isLoading = apiRelaySwitches.isLoading || apiActionSwitches.isLoading || apiSwitchGroups.isLoading || apiRelaysState.isLoading || apiModeSwitches.isLoading || apiModesState.isLoading;
+  const isFetching = apiRelaySwitches.isFetching || apiActionSwitches.isFetching || apiSwitchGroups.isFetching || apiRelaysState.isFetching || apiModeSwitches.isFetching || apiModesState.isFetching;
+  const isSuccess = apiRelaySwitches.isSuccess && apiActionSwitches.isSuccess && apiSwitchGroups.isSuccess && apiRelaysState.isSuccess && apiModeSwitches.isSuccess && apiModesState.isSuccess;
+  const isError = apiRelaySwitches.isError || apiActionSwitches.isError || apiSwitchGroups.isError || apiRelaysState.isError || apiModeSwitches.isError || apiModesState.isError;
+  const error = apiRelaySwitches.error || apiActionSwitches.error || apiSwitchGroups.error || apiRelaysState.error || apiModeSwitches.error || apiModesState.error;
 
   if(!state.init && isSuccess) {
     const sortedSwitchGroups = [...apiSwitchGroups.data].sort((a, b) => a.id - b.id);
@@ -45,9 +50,11 @@ const SwitchGroupsPage = () => {
     setState({
       ...state,
       switchGroups: sortedSwitchGroups,
+      modeSwitches: apiModeSwitches.data,
       relaySwitches: apiRelaySwitches.data,
       actionSwitches: apiActionSwitches.data,
-      switchesState: apiSwitchesState.data,
+      relaysState: apiRelaysState.data,
+      modesState: apiModesState.data,
       init: true, 
       selectedSwitchGroup: sortedSwitchGroups[0] && sortedSwitchGroups[0].name || initialState.selectedSwitchGroup
     })
@@ -56,9 +63,9 @@ const SwitchGroupsPage = () => {
   const {
     switchGroups,
     relaySwitches,
+    modeSwitches,
     actionSwitches,
     selectedSwitchGroup,
-    switchesState
   } = state;
 
   let displaySwitches = [];
@@ -73,16 +80,29 @@ const SwitchGroupsPage = () => {
             return actionSwitches.find(({id}) => id === switch_id);
           } else if(switch_type === 'relay') {
             return relaySwitches.find(({id}) => id === switch_id);
+          } else if(switch_type === 'mode') {
+            return modeSwitches.find(({id}) => id === switch_id);
           }
         })
     )
   }
 
-  const itemStates = useSelector(state => {
+  const relaysState = useSelector(state => {
     return state.relays.relaysState;
   })
+
+  const modesState = useSelector(state => {
+    return state.modes.modesState;
+  })
+
   const getSwitchItemState = (switchItem) => {
-    return (itemStates[switchItem.relay_position] || {}).state;
+    const {snakecaseType} = switchItem;
+    if(snakecaseType === 'relay') {
+      const itemState = relaysState[switchItem.relay_position] || {};
+      return itemState.state && itemState.actors.find(({actor}) => actor === switchItem.actor) || false;
+    } else if (snakecaseType === 'mode') {
+      return (modesState[switchItem.mode_key] || {}).state || false;
+    }
   }
 
   let content;
@@ -114,7 +134,8 @@ const SwitchGroupsPage = () => {
                 key={`${switchItem.key}`} 
                 switchItem={switchItem}
                 state={getSwitchItemState(switchItem)}
-                onClick={() => setState({...state})}
+                relays={relaySwitches}
+                relaysState={relaysState}
               />
             ))
           }

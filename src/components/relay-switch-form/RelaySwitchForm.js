@@ -20,8 +20,7 @@ export default function RelaySwitchForm({relaySwitch, onChange, editable}) {
     relay_position,
     frontendType, 
     name,
-    icon,
-    enabled
+    icon
   } = relaySwitch;
 
   return (
@@ -47,47 +46,32 @@ export default function RelaySwitchForm({relaySwitch, onChange, editable}) {
               <Icon sx={{marginLeft: '15px'}}>{icon}</Icon>
             </Box>
           }
-          action={
-            <Switch
-              checked={enabled}
-              onChange={(event, value) => onChange(relaySwitch, {enabled: value})}
-            />
-          }
         />
-        {
-          editable &&
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: 'row',
-              }}
-            >
-              <TextField
-                label="Relay position"
-                value={relay_position || ''}
-                sx={{marginRight: '15px', flex: 1}}
-                onChange={(event) => onChange(relaySwitch, {relay_position: event.target.value})}
-              />
-            </Box>
-        }
-        {
-          editable &&
-            <TextField
-              label="Label"
-              value={name || ''}
-              sx={{margin: '15px', display: 'flex'}}
-              onChange={(event) => onChange(relaySwitch, {name: event.target.value})}
-            />
-        }
-        {
-          editable &&
-            <TextField
-              label="Icon"
-              value={icon || ''}
-              sx={{margin: '15px', display: 'flex'}}
-              onChange={(event) => onChange(relaySwitch, {icon: event.target.value})}
-            />
-        }
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'row',
+          }}
+        >
+          <TextField
+            label="Relay position"
+            value={relay_position || ''}
+            sx={{margin: '0px 15px', flex: 1}}
+            onChange={(event) => onChange(relaySwitch, {relay_position: event.target.value})}
+          />
+        </Box>
+        <TextField
+          label="Label"
+          value={name || ''}
+          sx={{margin: '15px', display: 'flex'}}
+          onChange={(event) => onChange(relaySwitch, {name: event.target.value})}
+        />
+        <TextField
+          label="Icon"
+          value={icon || ''}
+          sx={{margin: '15px', display: 'flex'}}
+          onChange={(event) => onChange(relaySwitch, {icon: event.target.value})}
+        />
       </CardContent>
     </Card>
   );

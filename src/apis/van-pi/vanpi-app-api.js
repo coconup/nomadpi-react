@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import RelaySwitch from '../../models/RelaySwitch';
+import ModeSwitch from '../../models/ModeSwitch';
 import ActionSwitch from '../../models/ActionSwitch';
 import SwitchGroup from '../../models/SwitchGroup';
 
@@ -38,9 +39,9 @@ export const vanPiAppAPI = createApi({
         query: () => 'auth/status',
       }),
 
-      postRelayState: builder.mutation({
-        query: ({relay_position, ...body}) => ({
-          url: `relays/${relay_position}`,
+      postRelaysState: builder.mutation({
+        query: (body) => ({
+          url: `relays/state`,
           method: 'post',
           body
         }),
@@ -62,6 +63,31 @@ export const vanPiAppAPI = createApi({
           return [{type: 'RelaysState'}]
         }
       }),
+
+      postModeState: builder.mutation({
+        query: ({mode_key, ...body}) => ({
+          url: `modes/${mode_key}`,
+          method: 'post',
+          body
+        }),
+        invalidatesTags: (result, error, payload, request) => {
+          if(result) {
+            return [{type: 'ModesState'}];
+          }
+        }
+      }),
+
+      getModesState: builder.query({
+        query: () => `modes/state`,
+        transformResponse: (result, meta) => {
+          if(result) {
+            return result;
+          }
+        },
+        providesTags: (result) => {
+          return [{type: 'ModesState'}]
+        }
+      }),
     };
 
     [
@@ -70,6 +96,12 @@ export const vanPiAppAPI = createApi({
         model: RelaySwitch,
         resourceNameSingular: 'Relay',
         resourceNamePlural: 'Relays'
+      },
+      {
+        apiPath: 'modes',
+        model: ModeSwitch,
+        resourceNameSingular: 'Mode',
+        resourceNamePlural: 'Modes'
       },
       {
         apiPath: 'action_switches',
@@ -150,13 +182,21 @@ export const {
   useLoginMutation,
   useCheckAuthStatusQuery,
 
-  usePostRelayStateMutation,
+  usePostRelaysStateMutation,
   useGetRelaysStateQuery,
+
+  usePostModeStateMutation,
+  useGetModesStateQuery,
 
   useGetRelaysQuery,
   useUpdateRelayMutation,
   useCreateRelayMutation,
   useDeleteRelayMutation,
+
+  useGetModesQuery,
+  useUpdateModeMutation,
+  useCreateModeMutation,
+  useDeleteModeMutation,
   
   useGetActionSwitchesQuery,
   useUpdateActionSwitchMutation,

@@ -10,27 +10,76 @@ import Typography from '@mui/material/Typography';
 
 import { Icon} from '@mui/material';
 
-import { usePostRelayStateMutation } from '../../apis/van-pi/vanpi-app-api';
+import ActionSwitch from '../../models/ActionSwitch';
 
-export default function SwitchControl({switchItem, state, onClick}) {
+import { 
+  usePostRelaysStateMutation,
+  usePostModeStateMutation
+} from '../../apis/van-pi/vanpi-app-api';
+
+export default function SwitchControl({switchItem, state: stateProp, relays, relaysState}) {
   const itemType = switchItem.snakecaseType;
   const {
-    relay_position,
+    snakecaseType,
     name,
-    icon
+    icon,
+    actor
   } = switchItem;
 
+  let state;
+  if(switchItem.constructor === ActionSwitch) {
+    state = !!Object.values(relaysState).find(({actors=[]}) => !!actors.find(({actor: a}) => a === actor));
+  } else {
+    state = stateProp;
+  }
+
   const [
-    postSwitchStateTrigger, 
+    postRelaysStateTrigger, 
     {
-      data={},
-      isLoading,
-      isFetching,
-      isSuccess,
-      isError,
-      error,
+      // data={},
+      // isLoading,
+      // isFetching,
+      // isSuccess,
+      // isError,
+      // error,
     }
-  ] = usePostRelayStateMutation();
+  ] = usePostRelaysStateMutation();
+
+  const [
+    postModeStateTrigger, 
+    {
+      // data={},
+      // isLoading,
+      // isFetching,
+      // isSuccess,
+      // isError,
+      // error,
+    }
+  ] = usePostModeStateMutation();
+
+  const handleClick = () => {
+    if(snakecaseType === 'relay') {
+      postRelaysStateTrigger([{
+        relay_position: switchItem.relay_position, 
+        state: !state,
+        mode: !state ? 'subscribe' : 'unsubscribe',
+        actor
+      }]);
+    } else if(snakecaseType === 'action_switch') {
+      const payload = switchItem.relay_switches.map(item => {
+        const relay = relays.find(({id}) => id === item.item_id);
+        return { 
+          relay_position: relay.relay_position, 
+          state: !state ? item.on_state : !item.on_state,
+          actor,
+          mode: !state ? 'subscribe' : 'unsubscribe'
+        }
+      })
+      postRelaysStateTrigger(payload);
+    } else if(snakecaseType === 'mode') {
+      postModeStateTrigger({ mode_key: switchItem.mode_key, state: !state});
+    }
+  }
 
   return (
     <Button color='secondary' sx={{
@@ -40,7 +89,7 @@ export default function SwitchControl({switchItem, state, onClick}) {
     }}>
       <Card 
         sx={{ minWidth: 275 }} 
-        onClick={() => postSwitchStateTrigger({ relay_position, state: !state}).then(onClick)}
+        onClick={handleClick}
       >
         <CardContent>
           <CardHeader

@@ -1,7 +1,7 @@
 import BaseModel from './abstract/BaseModel';
 
 // Initializer
-class RelaySwitch extends BaseModel() {
+class ModeSwitch extends BaseModel() {
   constructor(data) {
     super({
       ...data
@@ -9,11 +9,11 @@ class RelaySwitch extends BaseModel() {
   }
   
   get frontendType() {
-    return 'Relay';
+    return 'Mode';
   }
 
   get snakecaseType() {
-    return 'relay';
+    return 'mode';
   }
 
   get actor() {
@@ -22,7 +22,7 @@ class RelaySwitch extends BaseModel() {
 
   get routes() {
     return {
-      // toggle: `toggle/${this.relay_position}`
+      // toggle: ...
     };
   }
 
@@ -30,10 +30,10 @@ class RelaySwitch extends BaseModel() {
     return {
       id: this.id,
       name: this.name,
-      relay_position: this.relay_position,
+      mode_key: this.mode_key,
       icon: this.icon
     }
   }
 };
 
-export default RelaySwitch;
+export default ModeSwitch;
