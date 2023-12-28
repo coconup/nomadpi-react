@@ -11,7 +11,8 @@ import SwitchGroup from '../../models/SwitchGroup';
 import SwitchGroupItem from '../switch-group-item/SwitchGroupItem';
 
 import { 
-  useGetRelaysQuery, 
+  useGetRelaysQuery,
+  useGetWifiRelaysQuery,
   useGetModesQuery, 
   useGetActionSwitchesQuery, 
   useGetSwitchGroupsQuery,
@@ -23,6 +24,7 @@ const SwitchGroupsPage = () => {
   const initialState = {
     switchGroups: [],
     relaySwitches: [],
+    wifiRelaySwitches: [],
     modeSwitches: [],
     actionSwitches: [],
     init: false,
@@ -32,17 +34,18 @@ const SwitchGroupsPage = () => {
   const [state, setState] = useState(initialState);
 
   const apiRelaySwitches = useGetRelaysQuery();
+  const apiWifiRelaySwitches = useGetWifiRelaysQuery();
   const apiModeSwitches = useGetModesQuery();
   const apiActionSwitches = useGetActionSwitchesQuery();
   const apiSwitchGroups = useGetSwitchGroupsQuery();
   const apiRelaysState = useGetRelaysStateQuery();
   const apiModesState = useGetModesStateQuery();
 
-  const isLoading = apiRelaySwitches.isLoading || apiActionSwitches.isLoading || apiSwitchGroups.isLoading || apiRelaysState.isLoading || apiModeSwitches.isLoading || apiModesState.isLoading;
-  const isFetching = apiRelaySwitches.isFetching || apiActionSwitches.isFetching || apiSwitchGroups.isFetching || apiRelaysState.isFetching || apiModeSwitches.isFetching || apiModesState.isFetching;
-  const isSuccess = apiRelaySwitches.isSuccess && apiActionSwitches.isSuccess && apiSwitchGroups.isSuccess && apiRelaysState.isSuccess && apiModeSwitches.isSuccess && apiModesState.isSuccess;
-  const isError = apiRelaySwitches.isError || apiActionSwitches.isError || apiSwitchGroups.isError || apiRelaysState.isError || apiModeSwitches.isError || apiModesState.isError;
-  const error = apiRelaySwitches.error || apiActionSwitches.error || apiSwitchGroups.error || apiRelaysState.error || apiModeSwitches.error || apiModesState.error;
+  const isLoading = apiRelaySwitches.isLoading || apiWifiRelaySwitches.isLoading || apiActionSwitches.isLoading || apiSwitchGroups.isLoading || apiRelaysState.isLoading || apiModeSwitches.isLoading || apiModesState.isLoading;
+  const isFetching = apiRelaySwitches.isFetching || apiWifiRelaySwitches.isFetching || apiActionSwitches.isFetching || apiSwitchGroups.isFetching || apiRelaysState.isFetching || apiModeSwitches.isFetching || apiModesState.isFetching;
+  const isSuccess = apiRelaySwitches.isSuccess && apiWifiRelaySwitches.isSuccess && apiActionSwitches.isSuccess && apiSwitchGroups.isSuccess && apiRelaysState.isSuccess && apiModeSwitches.isSuccess && apiModesState.isSuccess;
+  const isError = apiRelaySwitches.isError || apiWifiRelaySwitches.isError || apiActionSwitches.isError || apiSwitchGroups.isError || apiRelaysState.isError || apiModeSwitches.isError || apiModesState.isError;
+  const error = apiRelaySwitches.error || apiWifiRelaySwitches.error || apiActionSwitches.error || apiSwitchGroups.error || apiRelaysState.error || apiModeSwitches.error || apiModesState.error;
 
   if(!state.init && isSuccess) {
     const sortedSwitchGroups = [...apiSwitchGroups.data].sort((a, b) => a.id - b.id);
@@ -52,6 +55,7 @@ const SwitchGroupsPage = () => {
       switchGroups: sortedSwitchGroups,
       modeSwitches: apiModeSwitches.data,
       relaySwitches: apiRelaySwitches.data,
+      wifiRelaySwitches: apiWifiRelaySwitches.data,
       actionSwitches: apiActionSwitches.data,
       relaysState: apiRelaysState.data,
       modesState: apiModesState.data,
@@ -63,6 +67,7 @@ const SwitchGroupsPage = () => {
   const {
     switchGroups,
     relaySwitches,
+    wifiRelaySwitches,
     modeSwitches,
     actionSwitches,
     selectedSwitchGroup,
@@ -80,6 +85,8 @@ const SwitchGroupsPage = () => {
             return actionSwitches.find(({id}) => id === switch_id);
           } else if(switch_type === 'relay') {
             return relaySwitches.find(({id}) => id === switch_id);
+          } else if(switch_type === 'wifi_relay') {
+            return wifiRelaySwitches.find(({id}) => id === switch_id);
           } else if(switch_type === 'mode') {
             return modeSwitches.find(({id}) => id === switch_id);
           }
@@ -94,16 +101,6 @@ const SwitchGroupsPage = () => {
   const modesState = useSelector(state => {
     return state.modes.modesState;
   })
-
-  const getSwitchItemState = (switchItem) => {
-    const {snakecaseType} = switchItem;
-    if(snakecaseType === 'relay') {
-      const itemState = relaysState[switchItem.relay_position] || {};
-      return itemState.state && itemState.actors.find(({actor}) => actor === switchItem.actor) || false;
-    } else if (snakecaseType === 'mode') {
-      return (modesState[switchItem.mode_key] || {}).state || false;
-    }
-  }
 
   let content;
 
@@ -133,9 +130,10 @@ const SwitchGroupsPage = () => {
               <SwitchGroupItem 
                 key={`${switchItem.key}`} 
                 switchItem={switchItem}
-                state={getSwitchItemState(switchItem)}
+                wifiRelays={wifiRelaySwitches}
                 relays={relaySwitches}
                 relaysState={relaysState}
+                modesState={modesState}
               />
             ))
           }

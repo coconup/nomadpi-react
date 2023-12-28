@@ -8,6 +8,7 @@ import { Icon} from '@mui/material';
 import {
   useGetActionSwitchesQuery,
   useGetRelaysQuery,
+  useGetWifiRelaysQuery,
   useUpdateActionSwitchMutation,
   useCreateActionSwitchMutation,
   useDeleteActionSwitchMutation
@@ -21,11 +22,13 @@ const ActionSwitchesForm = () => {
   const [state, setState] = useState({
     actionSwitches: [],
     relaySwitches: [],
+    wifiRelaySwitches: [],
     init: false
   });
 
   const apiActionSwitches = useGetActionSwitchesQuery();
   const apiRelaySwitches = useGetRelaysQuery();
+  const apiWifiRelaySwitches = useGetWifiRelaysQuery();
 
   const [
     updateActionSwitchTrigger, 
@@ -63,22 +66,23 @@ const ActionSwitchesForm = () => {
     }
   ] = useDeleteActionSwitchMutation();
 
-  const isLoading = apiActionSwitches.isLoading || apiRelaySwitches.isLoading;
-  const isFetching = apiActionSwitches.isFetching || apiRelaySwitches.isFetching;
-  const isSuccess = apiActionSwitches.isSuccess && apiRelaySwitches.isSuccess;
-  const isError = apiActionSwitches.isError || apiRelaySwitches.isError;
-  const error = apiActionSwitches.error || apiRelaySwitches.error;
+  const isLoading = apiActionSwitches.isLoading || apiRelaySwitches.isLoading || apiWifiRelaySwitches.isLoading;
+  const isFetching = apiActionSwitches.isFetching || apiRelaySwitches.isFetching || apiWifiRelaySwitches.isFetching;
+  const isSuccess = apiActionSwitches.isSuccess && apiRelaySwitches.isSuccess && apiWifiRelaySwitches.isSuccess;
+  const isError = apiActionSwitches.isError || apiRelaySwitches.isError || apiWifiRelaySwitches.isError;
+  const error = apiActionSwitches.error || apiRelaySwitches.error || apiWifiRelaySwitches.error;
 
   if(isSuccess && !state.init) {
     setState({
       ...state,
       actionSwitches: apiActionSwitches.data,
       relaySwitches: apiRelaySwitches.data,
+      wifiRelaySwitches: apiWifiRelaySwitches.data,
       init: true
     });
   };
 
-  const { actionSwitches, relaySwitches } = state;
+  const { actionSwitches, relaySwitches, wifiRelaySwitches } = state;
 
   const addActionSwitch = () => {
     const newActionSwitch = new ActionSwitch({
@@ -151,6 +155,7 @@ const ActionSwitchesForm = () => {
           <ActionSwitchForm
             actionSwitch={actionSwitch}
             relaySwitches={relaySwitches}
+            wifiRelaySwitches={wifiRelaySwitches}
             onChange={handleChange}
             onDelete={handleDelete}
           />
@@ -178,7 +183,7 @@ const ActionSwitchesForm = () => {
           color="primary" 
           aria-label="add"
           onClick={() => addActionSwitch()}
-          disabled={actionSwitches.find(({relay_switches}) => !!relay_switches.length === 0)}
+          disabled={actionSwitches.find(({switches}) => !!switches.length === 0)}
         >
           <Icon>add</Icon>
         </Fab>

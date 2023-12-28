@@ -18,20 +18,28 @@ import Divider from '@mui/material/Divider';
 import { Icon} from '@mui/material';
 import Fab from '@mui/material/Fab';
 
-export default function ActionSwitchForm({actionSwitch, relaySwitches: relaySwitchOptions, onChange, onDelete}) {
+export default function ActionSwitchForm({
+  actionSwitch, 
+  relaySwitches: relaySwitchOptions, 
+  wifiRelaySwitches: wifiRelaySwitchOptions, 
+  onChange, 
+  onDelete
+}) {
   const {
     name,
     icon='',
-    relay_switches: relaySwitches=[]
+    switches: relaySwitches=[]
   } = actionSwitch;
 
-  const handleRelaySwitchChange = (_index, value) => {
+  console.log(relaySwitchOptions)
+
+  const handleRelaySwitchChange = (_index, relaySwitch) => {
     const newRelaySwitches = relaySwitches.map((item, index) => ({
       ...item,
-      ...index === _index ? { item_id: value } : {}
+      ...index === _index ? { switch_id: relaySwitch.id, switch_type: relaySwitch.snakecaseType } : {}
     }));
 
-    onChange(actionSwitch, {relay_switches: newRelaySwitches});
+    onChange(actionSwitch, {switches: newRelaySwitches});
   }
 
   const handleStateChange = (state_type, _index, value) => {
@@ -40,19 +48,19 @@ export default function ActionSwitchForm({actionSwitch, relaySwitches: relaySwit
       ...index === _index ? { [`${state_type}_state`]: value } : {}
     }));
 
-    onChange(actionSwitch, {relay_switches: newRelaySwitches});
+    onChange(actionSwitch, {switches: newRelaySwitches});
   }
 
   const addItem = () => {
     const newItem = {
-      item_id: null,
+      switch_id: null,
       state: false
     }
-    onChange(actionSwitch, {relay_switches: [...relaySwitches, newItem]})
+    onChange(actionSwitch, {switches: [...relaySwitches, newItem]})
   }
 
   const removeRelaySwitch = (item) => {
-    onChange(actionSwitch, {relay_switches: relaySwitches.filter(({item_id}) => item_id !== item.item_id)})
+    onChange(actionSwitch, {switches: relaySwitches.filter(({switch_id}) => switch_id !== item.switch_id)})
   }
 
   return (
@@ -123,6 +131,13 @@ export default function ActionSwitchForm({actionSwitch, relaySwitches: relaySwit
         <Box>
           {
             relaySwitches.map((relaySwitch, index) => {
+              let relay;
+              if(relaySwitch.switch_type === 'relay') {
+                relay = relaySwitchOptions.find(({id}) => id === relaySwitch.switch_id);
+              } else if(relaySwitch.switch_type === 'wifi_relay') {
+                relay = wifiRelaySwitchOptions.find(({id}) => id === relaySwitch.switch_id);
+              }
+
               return(
                 <Box
                   key={`RelaySwitch-${actionSwitch.id}-${index}`}
@@ -142,15 +157,22 @@ export default function ActionSwitchForm({actionSwitch, relaySwitches: relaySwit
                   >
                     <InputLabel>Switch</InputLabel>
                     <Select
-                      value={relaySwitch.item_id ? relaySwitch.item_id : ''}
+                      value={relaySwitch.switch_id ? `${relaySwitch.switch_type}-${relaySwitch.switch_id}` : ''}
                       label="Switch"
                       onChange={(event, option) => {
-                        handleRelaySwitchChange(index, event.target.value)
+                        const value = event.target.value;
+                        let newRelay;
+                        if(value.startsWith('relay')) {
+                          newRelay = relaySwitchOptions.find(({id, snakecaseType}) => `${snakecaseType}-${id}` === value);
+                        } else if(value.startsWith('wifi_relay')) {
+                          newRelay = wifiRelaySwitchOptions.find(({id, snakecaseType}) => `${snakecaseType}-${id}` === value);
+                        }
+                        handleRelaySwitchChange(index, newRelay);
                       }}
                     >
                       {
-                        relaySwitchOptions.map(({id, name, key}) => (
-                          <MenuItem key={`RelaySwitch-${actionSwitch.id}-${index}-${key}`} value={id}>{name}</MenuItem>
+                        [...relaySwitchOptions, ...wifiRelaySwitchOptions].map(({id, name, snakecaseType, key}) => (
+                          <MenuItem key={`RelaySwitch-${actionSwitch.id}-${index}-${key}`} value={`${snakecaseType}-${id}`}>{name}</MenuItem>
                         ))
                       }
                     </Select>
@@ -171,23 +193,6 @@ export default function ActionSwitchForm({actionSwitch, relaySwitches: relaySwit
                     >
                       <MenuItem value={true}>On</MenuItem>
                       <MenuItem value={false}>Off</MenuItem>
-                    </Select>
-                  </FormControl>
-                  <FormControl 
-                    sx={{
-                      flex: 3
-                    }}
-                  >
-                    <InputLabel>OFF state</InputLabel>
-                    <Select
-                      value={relaySwitch.off_state}
-                      label="OFF state"
-                      onChange={(event, option) => {
-                        handleStateChange('off', index, event.target.value)
-                      }}
-                    >
-                      <MenuItem value={'ignore'}>Ignore</MenuItem>
-                      <MenuItem value={'toggle'}>Toggle</MenuItem>
                     </Select>
                   </FormControl>
                   <Fab 

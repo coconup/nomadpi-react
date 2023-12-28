@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import RelaySwitch from '../../models/RelaySwitch';
+import WifiRelaySwitch from '../../models/WifiRelaySwitch';
 import ModeSwitch from '../../models/ModeSwitch';
 import ActionSwitch from '../../models/ActionSwitch';
 import SwitchGroup from '../../models/SwitchGroup';
@@ -98,6 +99,12 @@ export const vanPiAppAPI = createApi({
         resourceNamePlural: 'Relays'
       },
       {
+        apiPath: 'wifi_relays',
+        model: WifiRelaySwitch,
+        resourceNameSingular: 'WifiRelay',
+        resourceNamePlural: 'WifiRelays'
+      },
+      {
         apiPath: 'modes',
         model: ModeSwitch,
         resourceNameSingular: 'Mode',
@@ -192,6 +199,11 @@ export const {
   useUpdateRelayMutation,
   useCreateRelayMutation,
   useDeleteRelayMutation,
+
+  useGetWifiRelaysQuery,
+  useUpdateWifiRelayMutation,
+  useCreateWifiRelayMutation,
+  useDeleteWifiRelayMutation,
 
   useGetModesQuery,
   useUpdateModeMutation,

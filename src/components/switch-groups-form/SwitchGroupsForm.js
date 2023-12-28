@@ -16,6 +16,7 @@ import {
 
 import { 
   useGetRelaysQuery, 
+  useGetWifiRelaysQuery, 
   useGetModesQuery, 
   useGetActionSwitchesQuery, 
   useGetSwitchGroupsQuery,
@@ -32,6 +33,7 @@ const SwitchGroupsForm = () => {
   const initialState = {
     switchGroups: [],
     relaySwitches: [],
+    wifiRelaySwitches: [],
     modeSwitches: [],
     actionSwitches: [],
     init: false,
@@ -41,15 +43,16 @@ const SwitchGroupsForm = () => {
   const [state, setState] = useState(initialState);  
 
   const apiRelaySwitches = useGetRelaysQuery();
+  const apiWifiRelaySwitches = useGetWifiRelaysQuery();
   const apiModeSwitches = useGetModesQuery();
   const apiActionSwitches = useGetActionSwitchesQuery();
   const apiSwitchGroups = useGetSwitchGroupsQuery();
 
-  const isLoading = apiRelaySwitches.isLoading || apiActionSwitches.isLoading || apiSwitchGroups.isLoading || apiModeSwitches.isLoading;
-  const isFetching = apiRelaySwitches.isFetching || apiActionSwitches.isFetching || apiSwitchGroups.isFetching || apiModeSwitches.isFetching;
-  const isSuccess = apiRelaySwitches.isSuccess && apiActionSwitches.isSuccess && apiSwitchGroups.isSuccess && apiModeSwitches.isSuccess;
-  const isError = apiRelaySwitches.isError || apiActionSwitches.isError || apiSwitchGroups.isError || apiModeSwitches.isError;
-  const error = apiRelaySwitches.error || apiActionSwitches.error || apiSwitchGroups.error || apiModeSwitches.error;
+  const isLoading = apiRelaySwitches.isLoading || apiWifiRelaySwitches.isLoading || apiActionSwitches.isLoading || apiSwitchGroups.isLoading || apiModeSwitches.isLoading;
+  const isFetching = apiRelaySwitches.isFetching || apiWifiRelaySwitches.isFetching || apiActionSwitches.isFetching || apiSwitchGroups.isFetching || apiModeSwitches.isFetching;
+  const isSuccess = apiRelaySwitches.isSuccess && apiWifiRelaySwitches.isSuccess && apiActionSwitches.isSuccess && apiSwitchGroups.isSuccess && apiModeSwitches.isSuccess;
+  const isError = apiRelaySwitches.isError || apiWifiRelaySwitches.isError || apiActionSwitches.isError || apiSwitchGroups.isError || apiModeSwitches.isError;
+  const error = apiRelaySwitches.error || apiWifiRelaySwitches.error || apiActionSwitches.error || apiSwitchGroups.error || apiModeSwitches.error;
 
   const [
     updateSwitchGroupTrigger, 
@@ -92,6 +95,7 @@ const SwitchGroupsForm = () => {
       ...state,
       switchGroups: apiSwitchGroups.data,
       relaySwitches: apiRelaySwitches.data,
+      wifiRelaySwitches: apiWifiRelaySwitches.data,
       modeSwitches: apiModeSwitches.data,
       actionSwitches: apiActionSwitches.data,
       init: true
@@ -102,12 +106,14 @@ const SwitchGroupsForm = () => {
     switchGroups,
     actionSwitches,
     relaySwitches,
+    wifiRelaySwitches,
     modeSwitches
   } = state;
 
   const switchableItems = [
     ...actionSwitches,
     ...relaySwitches,
+    ...wifiRelaySwitches,
     ...modeSwitches
   ];
 

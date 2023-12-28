@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import Tabs, { tabsClasses } from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import RelaySwitchesForm from '../relay-switches-form/RelaySwitchesForm';
+import WifiRelaySwitchesForm from '../wifi-relay-switches-form/WifiRelaySwitchesForm';
 import ModeSwitchesForm from '../mode-switches-form/ModeSwitchesForm';
 import SwitchGroupsForm from '../switch-groups-form/SwitchGroupsForm';
 import ActionSwitchesForm from '../action-switches-form/ActionSwitchesForm';
@@ -59,21 +60,24 @@ export default function ScrollableTabsButtonVisible() {
         }}
       >
         <Tab label="Relays"/>
+        <Tab label="WiFi Relays"/>
         <Tab label="Mode Switches" />
         <Tab label="Action Switches" />
         <Tab label="Switch groups"/>
-        <Tab label="Item Three" />
       </Tabs>
       <CustomTabPanel value={value} index={0}>
         <RelaySwitchesForm />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        <ModeSwitchesForm />
+        <WifiRelaySwitchesForm />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
-        <ActionSwitchesForm />
+        <ModeSwitchesForm />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={3}>
+        <ActionSwitchesForm />
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={4}>
         <SwitchGroupsForm />
       </CustomTabPanel>
     </Box>
