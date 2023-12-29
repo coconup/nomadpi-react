@@ -4,6 +4,8 @@ import WifiRelaySwitch from '../../models/WifiRelaySwitch';
 import ModeSwitch from '../../models/ModeSwitch';
 import ActionSwitch from '../../models/ActionSwitch';
 import SwitchGroup from '../../models/SwitchGroup';
+import Setting from '../../models/Setting';
+import Battery from '../../models/Battery';
 
 // const BASE_URL = 'http://raspberrypi.local:3001'
 
@@ -89,6 +91,58 @@ export const vanPiAppAPI = createApi({
           return [{type: 'ModesState'}]
         }
       }),
+
+      getBatteryState: builder.query({
+        query: ({
+          connection_type,
+          device_type,
+          device_id
+        }) => `batteries/${connection_type}/${device_type}/${device_id}/state`,
+        transformResponse: (result, meta) => {
+          return result;
+        },
+        providesTags: (result) => {
+          return [{type: 'BatteriesState'}]
+        }
+      }),
+
+      getUsbDevices: builder.query({
+        query: () => `usb_devices`,
+        transformResponse: (result, meta) => {
+          if(result) {
+            return result;
+          }
+        },
+        providesTags: (result) => {
+          return [{type: 'UsbDevices'}]
+        }
+      }),
+
+      getSettings: builder.query({
+        query: () => `settings`,
+        transformResponse: (result, meta) => {
+          if(result) {
+            console.log(result.map(row => new Setting(row)))
+            return result.map(row => new Setting(row));
+          }
+        },
+        providesTags: (result) => {
+          return [{type: 'Settings'}]
+        }
+      }),
+
+      updateSetting: builder.mutation({
+        query: (data) => ({
+          url: `settings/${data.setting_key}`,
+          method: 'put',
+          body: data
+        }),
+        invalidatesTags: (result, error, payload, request) => {
+          if(result) {
+            return [{type: 'Settings'}]
+          }
+        }
+      }),
     };
 
     [
@@ -121,6 +175,12 @@ export const vanPiAppAPI = createApi({
         model: SwitchGroup,
         resourceNameSingular: 'SwitchGroup',
         resourceNamePlural: 'SwitchGroups'
+      },
+      {
+        apiPath: 'batteries',
+        model: Battery,
+        resourceNameSingular: 'Battery',
+        resourceNamePlural: 'Batteries'
       }
     ].forEach(spec => {
       // GET endpoint
@@ -194,6 +254,13 @@ export const {
 
   usePostModeStateMutation,
   useGetModesStateQuery,
+  
+  useUpdateSettingMutation,
+  useGetSettingsQuery,
+
+  useGetBatteryStateQuery,
+
+  useGetUsbDevicesQuery,
 
   useGetRelaysQuery,
   useUpdateRelayMutation,
@@ -218,5 +285,10 @@ export const {
   useGetSwitchGroupsQuery,
   useUpdateSwitchGroupMutation,
   useCreateSwitchGroupMutation,
-  useDeleteSwitchGroupMutation
+  useDeleteSwitchGroupMutation,
+  
+  useGetBatteriesQuery,
+  useUpdateBatteryMutation,
+  useCreateBatteryMutation,
+  useDeleteBatteryMutation
 } = vanPiAppAPI;

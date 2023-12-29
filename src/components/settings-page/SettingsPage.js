@@ -7,8 +7,10 @@ import WifiRelaySwitchesForm from '../wifi-relay-switches-form/WifiRelaySwitches
 import ModeSwitchesForm from '../mode-switches-form/ModeSwitchesForm';
 import SwitchGroupsForm from '../switch-groups-form/SwitchGroupsForm';
 import ActionSwitchesForm from '../action-switches-form/ActionSwitchesForm';
+import SettingsForm from '../settings-form/SettingsForm';
+import BatteriesForm from '../batteries-form/BatteriesForm';
 
-export default function ScrollableTabsButtonVisible() {
+export default function SettingsPage() {
   const [state, setState] = React.useState({
     value: 0
   });
@@ -59,6 +61,8 @@ export default function ScrollableTabsButtonVisible() {
           },
         }}
       >
+        <Tab label="General"/>
+        <Tab label="Batteries"/>
         <Tab label="Relays"/>
         <Tab label="WiFi Relays"/>
         <Tab label="Mode Switches" />
@@ -66,18 +70,24 @@ export default function ScrollableTabsButtonVisible() {
         <Tab label="Switch groups"/>
       </Tabs>
       <CustomTabPanel value={value} index={0}>
-        <RelaySwitchesForm />
+        <SettingsForm />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        <WifiRelaySwitchesForm />
+        <BatteriesForm />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
-        <ModeSwitchesForm />
+        <RelaySwitchesForm />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={3}>
-        <ActionSwitchesForm />
+        <WifiRelaySwitchesForm />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={4}>
+        <ModeSwitchesForm />
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={5}>
+        <ActionSwitchesForm />
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={6}>
         <SwitchGroupsForm />
       </CustomTabPanel>
     </Box>

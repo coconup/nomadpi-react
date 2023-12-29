@@ -12,8 +12,8 @@ import LoginForm from './components/login-form/LoginForm';
 import ResponsiveAppBar from './components/responsive-app-bar/ResponsiveAppBar';
 import HomePanel from './components/home-panel/HomePanel';
 import SwitchGroupsPage from './components/switch-groups-page/SwitchGroupsPage';
-import SettingsPanel from './components/settings-panel/SettingsPanel';
-import MonitorPanel from './components/monitor-panel/MonitorPanel';
+import SettingsPage from './components/settings-page/SettingsPage';
+import MonitorPage from './components/monitor-page/MonitorPage';
 import DayNightIndicator from './components/day-night-indicator/DayNightIndicator';
 import WeatherForecast from './components/weather-forecast/WeatherForecast';
 
@@ -68,8 +68,8 @@ function App() {
           <WeatherForecast />
         </Route>
         <Route path="/control-panel"><SwitchGroupsPage /></Route>
-        <Route path="/monitor"><MonitorPanel /></Route>
-        <Route path="/settings"><SettingsPanel /></Route>
+        <Route path="/monitor"><MonitorPage /></Route>
+        <Route path="/settings"><SettingsPage /></Route>
       </Box>
     )
   };
