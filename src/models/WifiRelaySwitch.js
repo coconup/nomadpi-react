@@ -1,7 +1,7 @@
 import BaseModel from './abstract/BaseModel';
 
 // Initializer
-class RelaySwitch extends BaseModel() {
+class WifiRelaySwitch extends BaseModel() {
   constructor(data) {
     super({
       ...data
@@ -38,4 +38,4 @@ class RelaySwitch extends BaseModel() {
   }
 };
 
-export default RelaySwitch;
+export default WifiRelaySwitch;

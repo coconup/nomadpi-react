@@ -266,7 +266,10 @@ const SwitchGroupsForm = () => {
                   </Box>
                   {
                     sortedSwitches.map(({switch_type, switch_id}, index) => {
+
                       const switchable = switchableItems.find(item => item.snakecaseType === switch_type && item.id === switch_id);
+
+                      console.log(switch_type, switch_id, switchable.key)
 
                       return (
                         <Draggable

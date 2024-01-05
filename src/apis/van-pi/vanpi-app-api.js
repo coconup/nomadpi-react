@@ -7,11 +7,7 @@ import SwitchGroup from '../../models/SwitchGroup';
 import Setting from '../../models/Setting';
 import Battery from '../../models/Battery';
 
-// const BASE_URL = 'http://raspberrypi.local:3001'
-
-// const BASE_URL = window.location.origin.includes(':3000') ? window.location.origin.replace('3000', '3001') : window.location.origin.replace('/app.', '/api.');
-
-const BASE_URL = 'https://api.monsterpi.net'
+const BASE_URL = process.env.API_BASE_URL || 'http://raspberrypi.local:3001';
 
 export const vanPiAppAPI = createApi({
   reducerPath: 'vanpi-app-api',
