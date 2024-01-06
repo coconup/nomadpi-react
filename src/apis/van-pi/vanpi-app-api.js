@@ -6,6 +6,7 @@ import ActionSwitch from '../../models/ActionSwitch';
 import SwitchGroup from '../../models/SwitchGroup';
 import Setting from '../../models/Setting';
 import Battery from '../../models/Battery';
+import WaterTank from '../../models/WaterTank';
 
 const BASE_URL = process.env.API_BASE_URL || 'http://raspberrypi.local:3001';
 
@@ -98,7 +99,21 @@ export const vanPiAppAPI = createApi({
           return result;
         },
         providesTags: (result) => {
-          return [{type: 'BatteriesState'}]
+          return [{type: 'BatteryState'}]
+        }
+      }),
+
+      getWaterTankState: builder.query({
+        query: ({
+          connection_type,
+          device_type,
+          device_id
+        }) => `water_tanks/${connection_type}/${device_type}/${device_id}/state`,
+        transformResponse: (result, meta) => {
+          return result;
+        },
+        providesTags: (result) => {
+          return [{type: 'WaterTankState'}]
         }
       }),
 
@@ -177,6 +192,12 @@ export const vanPiAppAPI = createApi({
         model: Battery,
         resourceNameSingular: 'Battery',
         resourceNamePlural: 'Batteries'
+      },
+      {
+        apiPath: 'water_tanks',
+        model: WaterTank,
+        resourceNameSingular: 'WaterTank',
+        resourceNamePlural: 'WaterTanks'
       }
     ].forEach(spec => {
       // GET endpoint
@@ -255,6 +276,7 @@ export const {
   useGetSettingsQuery,
 
   useGetBatteryStateQuery,
+  useGetWaterTankStateQuery,
 
   useGetUsbDevicesQuery,
 
@@ -286,5 +308,10 @@ export const {
   useGetBatteriesQuery,
   useUpdateBatteryMutation,
   useCreateBatteryMutation,
-  useDeleteBatteryMutation
+  useDeleteBatteryMutation,
+  
+  useGetWaterTanksQuery,
+  useUpdateWaterTankMutation,
+  useCreateWaterTankMutation,
+  useDeleteWaterTankMutation
 } = vanPiAppAPI;

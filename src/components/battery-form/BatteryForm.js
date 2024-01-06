@@ -41,7 +41,7 @@ export default function BatteryForm({battery, onChange, editable}) {
           <Select
             value={connection_type || ''}
             label="Connection type"
-            onChange={(event) => onChange(battery, {connection_type: event.target.value})}
+            onChange={(event) => onChange(battery, {connection_type: event.target.value, connection_params: {}})}
           >
             <MenuItem value={'ble'}>Bluetooth</MenuItem>
           </Select>
