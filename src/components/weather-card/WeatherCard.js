@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import Box from '@mui/material/Box';
-import {WeatherWidget} from '@daniel-szulc/react-weather-widget';
+// import {WeatherWidget} from '@daniel-szulc/react-weather-widget';
 import WeatherForecast from '../weather-forecast/WeatherForecast';
 
 export default function WeatherCard() {
@@ -38,11 +38,11 @@ export default function WeatherCard() {
       }}
       onClick={handleWeatherForecastOpen}
     >
-      <WeatherWidget
+      {/*<WeatherWidget
         autoLocate="gps"
         provider="openWeather"
         apiKey={apiKey}
-      />
+      />*/}
       <WeatherForecast 
         open={state.weatherForecastOpen}
         onClose={handleWeatherForecastClose}
