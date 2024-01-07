@@ -13,6 +13,7 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^14.5.1",
     "apexcharts": "^3.44.2",
+    "axios": "^1.6.5",
     "material-icons": "^1.13.12",
     "react": "^18.2.0",
     "react-apexcharts": "^1.4.1",
