@@ -30,7 +30,7 @@ export default function SwitchControl({switchItem, relays, wifiRelays, relaysSta
   if(switchItem.constructor === ModeSwitch) {
     state = (modesState[switchItem.mode_key] || {}).state || false;
   } else {
-    state = !![relaysState.relay || {}, relaysState.wifi_relay || {}].find(switchesState => {
+    state = !![relaysState.relay || {}, ...(Object.values(relaysState.wifi_relay) || [])].find(switchesState => {
       return !!Object.values(switchesState).find(({actors=[]}) => !!actors.find(({actor: a}) => a === actor));
     })
   }
