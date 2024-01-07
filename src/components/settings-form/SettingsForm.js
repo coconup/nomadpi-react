@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
 import Fab from '@mui/material/Fab';
 import { Icon} from '@mui/material';
 
@@ -89,14 +90,14 @@ const SettingsForm = () => {
   }
 
   const [
+    portainerTokenSetting,
     gpsdSetting,
     zigbeeSetting
   ] = [
+    getSetting('portainer_access_token'),
     getSetting('gpsd_usb_device'),
     getSetting('zigbee_usb_device')
-  ]
-
-  console.log(settings)
+  ];
 
   let content;
   if (isLoading) {
@@ -104,6 +105,14 @@ const SettingsForm = () => {
   } else if(isSuccess && state.init) {
     content = (
       <Box sx={{display: 'flex', flexDirection: 'column', flex: 1, maxWidth: 600}}>
+        <TextField
+          type="password"
+          label="Portainer access token"
+          value={portainerTokenSetting.value || ''}
+          sx={{margin: '15px', display: 'flex'}}
+          onChange={(event) => onSettingChange(portainerTokenSetting.setting_key, {value: event.target.value})}
+        />
+
         <FormControl sx={{display: 'flex', margin: '15px', flex: 1}}>
           <InputLabel>{gpsdSetting.label}</InputLabel>
           <Select
