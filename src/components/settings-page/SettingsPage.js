@@ -10,6 +10,8 @@ import ActionSwitchesForm from '../action-switches-form/ActionSwitchesForm';
 import SettingsForm from '../settings-form/SettingsForm';
 import BatteriesForm from '../batteries-form/BatteriesForm';
 import WaterTanksForm from '../water-tanks-form/WaterTanksForm';
+import SensorsForm from '../sensors-form/SensorsForm';
+import CamerasForm from '../cameras-form/CamerasForm';
 
 export default function SettingsPage() {
   const [state, setState] = React.useState({
@@ -65,6 +67,8 @@ export default function SettingsPage() {
         <Tab label="General"/>
         <Tab label="Batteries"/>
         <Tab label="Water Tanks"/>
+        <Tab label="Cameras"/>
+        <Tab label="Sensors"/>
         <Tab label="Relays"/>
         <Tab label="WiFi Relays"/>
         <Tab label="Mode Switches" />
@@ -81,18 +85,24 @@ export default function SettingsPage() {
         <WaterTanksForm />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={3}>
-        <RelaySwitchesForm />
+        <CamerasForm />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={4}>
-        <WifiRelaySwitchesForm />
+        <SensorsForm />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={5}>
-        <ModeSwitchesForm />
+        <RelaySwitchesForm />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={6}>
-        <ActionSwitchesForm />
+        <WifiRelaySwitchesForm />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={7}>
+        <ModeSwitchesForm />
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={8}>
+        <ActionSwitchesForm />
+      </CustomTabPanel>
+      <CustomTabPanel value={value} index={9}>
         <SwitchGroupsForm />
       </CustomTabPanel>
     </Box>

@@ -3,8 +3,8 @@ import BaseModel from './abstract/BaseModel';
 // Initializer
 class WaterTank extends BaseModel() {
   constructor(data) {
-    const parsedConnectionParams = JSON.parse(data.connection_params || '{}')
-    const parsedVolumetricParams = JSON.parse(data.volumetric_params || '{}')
+    const parsedConnectionParams = JSON.parse(data.connection_params || '{}');
+    const parsedVolumetricParams = JSON.parse(data.volumetric_params || '{}');
 
     super({
       ...data,

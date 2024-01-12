@@ -8,7 +8,7 @@ import Button from '@mui/material/Button';
 import Switch from '@mui/material/Switch';
 import Typography from '@mui/material/Typography';
 
-import { Icon} from '@mui/material';
+import { Icon } from '@mui/material';
 
 import ModeSwitch from '../../models/ModeSwitch';
 

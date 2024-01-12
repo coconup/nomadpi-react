@@ -1,4 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { makeCrudEndpoints } from '../crudBuilder';
+
 import RelaySwitch from '../../models/RelaySwitch';
 import WifiRelaySwitch from '../../models/WifiRelaySwitch';
 import ModeSwitch from '../../models/ModeSwitch';
@@ -7,6 +9,8 @@ import SwitchGroup from '../../models/SwitchGroup';
 import Setting from '../../models/Setting';
 import Battery from '../../models/Battery';
 import WaterTank from '../../models/WaterTank';
+import Sensor from '../../models/Sensor';
+import Camera from '../../models/Camera';
 
 const BASE_URL = process.env.API_BASE_URL || 'http://raspberrypi.local:3001';
 
@@ -14,9 +18,22 @@ export const vanPiAppAPI = createApi({
   reducerPath: 'vanpi-app-api',
   tagTypes: [
     'RelaySwitch',
+    'WifiRelaySwitch',
+    'ModeSwitch',
     'ActionSwitch',
     'SwitchGroup',
-    'SwitchState'
+    'Setting',
+    'Battery',
+    'WaterTank',
+    'Sensor',
+    'Camera',
+    'RelaysState',
+    'ModesState',
+    'BatteryState',
+    'WaterTankState',
+    'SensorState',
+    'UsbDevices',
+    'Settings',
   ],
   baseQuery: fetchBaseQuery({ 
     baseUrl: BASE_URL,
@@ -153,7 +170,7 @@ export const vanPiAppAPI = createApi({
             return [{type: 'Settings'}]
           }
         }
-      }),
+      })
     };
 
     [
@@ -198,64 +215,24 @@ export const vanPiAppAPI = createApi({
         model: WaterTank,
         resourceNameSingular: 'WaterTank',
         resourceNamePlural: 'WaterTanks'
+      },
+      {
+        apiPath: 'sensors',
+        model: Sensor,
+        resourceNameSingular: 'Sensor',
+        resourceNamePlural: 'Sensors'
+      },
+      {
+        apiPath: 'cameras',
+        model: Camera,
+        resourceNameSingular: 'Camera',
+        resourceNamePlural: 'Cameras'
       }
     ].forEach(spec => {
-      // GET endpoint
-      endpoints[`get${spec.resourceNamePlural}`] = builder.query({
-        query: () => `/${spec.apiPath}`,
-        transformResponse: (result, meta) => {
-          if(result) {
-            return result.map(row => new spec.model(row));
-          }
-        },
-        providesTags: (result) => {
-          return result ? result.map(({tags}) => tags) : []
-        }
-      });
-
-      // POST endpoint
-      endpoints[`create${spec.resourceNameSingular}`] = builder.mutation({
-        query: (data) => ({
-          url: `${spec.apiPath}`,
-          method: 'post',
-          body: data
-        }),
-        invalidatesTags: (result, error, payload, request) => {
-          if(result) {
-            const item = new spec.model(result);
-            return item.tags;
-          }
-        }
-      });
-
-      // PUT endpoint
-      endpoints[`update${spec.resourceNameSingular}`] = builder.mutation({
-        query: (data) => ({
-          url: `${spec.apiPath}/${data.id}`,
-          method: 'put',
-          body: data
-        }),
-        invalidatesTags: (result, error, payload, request) => {
-          if(result) {
-            const item = new spec.model(result);
-            return item.tags;
-          }
-        }
-      });
-
-      // DELETE endpoint
-      endpoints[`delete${spec.resourceNameSingular}`] = builder.mutation({
-        query: (data) => ({
-          url: `${spec.apiPath}/${data.id}`,
-          method: 'delete'
-        }),
-        invalidatesTags: (result, error, payload, request) => {
-          if(result) {
-            const item = new spec.model(result);
-            return item.tags;
-          }
-        }
-      });
+      endpoints = {
+        ...endpoints,
+        ...makeCrudEndpoints(spec, builder)
+      }
     });
 
     return endpoints;
@@ -313,5 +290,15 @@ export const {
   useGetWaterTanksQuery,
   useUpdateWaterTankMutation,
   useCreateWaterTankMutation,
-  useDeleteWaterTankMutation
+  useDeleteWaterTankMutation,
+  
+  useGetSensorsQuery,
+  useUpdateSensorMutation,
+  useCreateSensorMutation,
+  useDeleteSensorMutation,
+  
+  useGetCamerasQuery,
+  useUpdateCameraMutation,
+  useCreateCameraMutation,
+  useDeleteCameraMutation,
 } = vanPiAppAPI;

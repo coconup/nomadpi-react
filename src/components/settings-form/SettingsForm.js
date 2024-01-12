@@ -4,6 +4,7 @@ import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Fab from '@mui/material/Fab';
+import Divider from '@mui/material/Divider';
 import { Icon} from '@mui/material';
 
 import InputLabel from '@mui/material/InputLabel';
@@ -105,6 +106,9 @@ const SettingsForm = () => {
   } else if(isSuccess && state.init) {
     content = (
       <Box sx={{display: 'flex', flexDirection: 'column', flex: 1, maxWidth: 600}}>
+        <Typography variant="h6">
+          General
+        </Typography>
         <TextField
           type="password"
           label="Portainer access token"
