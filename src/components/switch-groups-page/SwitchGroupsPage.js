@@ -1,14 +1,12 @@
 import { useState } from 'react';
-import { useSelector } from 'react-redux'
+import { useSelector } from 'react-redux';
 
-import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
-import BottomNavigation from '@mui/material/BottomNavigation';
-import BottomNavigationAction from '@mui/material/BottomNavigationAction';
-import { Icon} from '@mui/material';
+import {
+  Unstable_Grid2 as Grid
+} from '@mui/material';
 
-import SwitchGroup from '../../models/SwitchGroup';
-import SwitchGroupItem from '../switch-group-item/SwitchGroupItem';
+import BottomNavigation from '../ui/BottomNavigation';
+import Container from '../ui/Container';
 
 import { 
   useGetRelaysQuery,
@@ -19,6 +17,8 @@ import {
   useGetRelaysStateQuery,
   useGetModesStateQuery
 } from '../../apis/van-pi/vanpi-app-api';
+
+import SwitchGroupItem from '../switch-group-item/SwitchGroupItem';
 
 const SwitchGroupsPage = () => {
   const initialState = {
@@ -111,55 +111,42 @@ const SwitchGroupsPage = () => {
     content = <div>{message}</div>
   } else if (isSuccess) {
     content = (
-      <Box sx={{
-        height: '100%',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginTop: '-100px'
-      }}>
-        <Paper
+      <Container>
+        <Grid container 
+          spacing={2}
           sx={{
-            padding:'120px',
-            backgroundColor: 'grey.100'
+            flex: 1,
+            justifyContent: 'center',
           }}
-          elevation={1}
         >
           {
             displaySwitches.map(switchItem => (
-              <SwitchGroupItem 
-                key={`${switchItem.key}`} 
-                switchItem={switchItem}
-                wifiRelays={wifiRelaySwitches}
-                relays={relaySwitches}
-                relaysState={relaysState}
-                modesState={modesState}
-              />
+              <Grid
+                key={`${switchItem.key}`}
+                xs={12}
+                sm={6}
+                md={4}
+              >
+                <SwitchGroupItem
+                  switchItem={switchItem}
+                  wifiRelays={wifiRelaySwitches}
+                  relays={relaySwitches}
+                  relaysState={relaysState}
+                  modesState={modesState}
+                />
+              </Grid>
             ))
           }
-        </Paper>
-        <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>
-          <BottomNavigation
-            showLabels
-            value={state.selectedSwitchGroup}
-            onChange={(event, value) => {
-              setState({...state, selectedSwitchGroup: value})
-            }}
-          >
-            {
-              switchGroups.map(({id, name, icon}) => (
-                <BottomNavigationAction
-                  key={`SwitchGroup-${id}`}
-                  label={name}
-                  value={name}
-                  icon={<Icon>{icon}</Icon>}
-                  // onClick={() => setState({...state, selectedSwitchGroup: id})}
-                />
-              ))
-            }
-          </BottomNavigation>
-        </Paper>
-      </Box>
+        </Grid>
+
+        <BottomNavigation
+          tabs={switchGroups}
+          value={state.selectedSwitchGroup}
+          onChange={(event, value) => {
+            setState({...state, selectedSwitchGroup: value})
+          }}
+        />
+      </Container>
     )
   }
 

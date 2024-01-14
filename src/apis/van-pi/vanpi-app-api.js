@@ -12,7 +12,7 @@ import WaterTank from '../../models/WaterTank';
 import Sensor from '../../models/Sensor';
 import Camera from '../../models/Camera';
 
-const BASE_URL = process.env.API_BASE_URL || 'http://raspberrypi.local:3001';
+const BASE_URL = process.env.API_BASE_URL || 'http://localhost:3001';
 
 export const vanPiAppAPI = createApi({
   reducerPath: 'vanpi-app-api',

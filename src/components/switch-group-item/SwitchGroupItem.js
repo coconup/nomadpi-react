@@ -5,6 +5,7 @@ import CardHeader from '@mui/material/CardHeader';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
+import Container from '@mui/material/Container';
 import Switch from '@mui/material/Switch';
 import Typography from '@mui/material/Typography';
 
@@ -37,26 +38,12 @@ export default function SwitchControl({switchItem, relays, wifiRelays, relaysSta
 
   const [
     postRelaysStateTrigger, 
-    {
-      // data={},
-      // isLoading,
-      // isFetching,
-      // isSuccess,
-      // isError,
-      // error,
-    }
+    relayStateResponse
   ] = usePostRelaysStateMutation();
 
   const [
     postModeStateTrigger, 
-    {
-      // data={},
-      // isLoading,
-      // isFetching,
-      // isSuccess,
-      // isError,
-      // error,
-    }
+    modeStateResponse
   ] = usePostModeStateMutation();
 
   const relayStatePayload = (relayItem, actor, state) => {
@@ -108,39 +95,69 @@ export default function SwitchControl({switchItem, relays, wifiRelays, relaysSta
     }
   }
 
+  const transform = state ? 'scale(0.95)' : null;
+
   return (
-    <Button color='secondary' sx={{
-      '& .MuiPaper-root': {
-        // ...(state === true ? {} : {backgroundColor: 'grey.200'})
-      }
-    }}>
+    // <Button color='secondary' sx={{
+    //   '& .MuiPaper-root': {
+    //     // ...(state === true ? {} : {backgroundColor: 'grey.200'})
+    //   }
+    // }}>
       <Card 
-        sx={{ minWidth: 275 }} 
         onClick={handleClick}
+        raised
+        elevation={state ? 1 : 2}
+        sx={{
+          padding: state ? '0px' : '3px',
+          margin: state ? '3px' : '0px'
+        }}
       >
         <CardContent>
           <CardHeader
             avatar={
               <Typography sx={{ 
-                  fontSize: 14, 
-                  fontWeight: 500, 
-                  marginBottom: '0px', 
-                  alignSelf: 'center',
-                  color: state === true ? 'primary.main' : 'text.secondary'
-                }} color="primary" gutterBottom>
-                  {state === true ? 'on' : 'off'}
-                </Typography>
+                fontSize: 14, 
+                fontWeight: 500, 
+                marginBottom: '0px', 
+                alignSelf: 'center',
+                color: state === true ? 'primary.light' : 'text.disabled'
+              }} color="primary" gutterBottom>
+                {state ? 'ON' : 'OFF'}
+              </Typography>
             }
             action={
               <Switch checked={state}/>
             }
           />
-          <Icon>{icon}</Icon>
-          <Typography sx={{ fontSize: 16, marginBottom: '20px' }} color="text.primary" gutterBottom>
-            {name}
-          </Typography>
+          <Box
+            sx={{
+              textAlign: 'center'
+            }}
+          >
+            <Icon 
+              sx={{
+                fontSize: '64px', 
+                color: state ? 'primary.main' : 'action.disabled',
+                transform
+              }}
+            >
+              {icon}
+            </Icon>
+            <Typography 
+              sx={{
+                fontSize: 20,
+                fontWeight: 500,
+                margin: '20px',
+                color: state ? 'primary.main' : 'text.secondary',
+                transform
+              }} 
+              color="text.primary"
+            >
+              {name}
+            </Typography>
+          </Box>
         </CardContent>
       </Card>
-    </Button>
+    // </Button>
   );
 }

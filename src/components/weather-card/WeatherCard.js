@@ -1,3 +1,5 @@
+import ReactWeather, { useOpenWeather } from 'react-open-weather';
+
 import { useState } from 'react';
 import Box from '@mui/material/Box';
 // import {WeatherWidget} from '@daniel-szulc/react-weather-widget';
@@ -5,6 +7,14 @@ import WeatherForecast from '../weather-forecast/WeatherForecast';
 
 export default function WeatherCard() {
   const apiKey = '908ad75f36452c11ff4306cd53162218';
+
+  const { data, isLoading, errorMessage } = useOpenWeather({
+    key: apiKey,
+    lat: '48.137154',
+    lon: '11.576124',
+    lang: 'en',
+    unit: 'metric', // values are (metric, standard, imperial)
+  });
   
   const [state, setState] = useState({
     weatherForecastOpen: false
@@ -22,27 +32,17 @@ export default function WeatherCard() {
 
   return (
     <Box
-      sx={{
-        padding: 3,
-        fontFamily: 'courier',
-        '& .daniel-szulc-weather-widget': {
-          '& .weather-widget': {
-            '& .background': {
-              borderRadius: '10px',
-            },
-            '& *': {
-              fontFamily: 'Roboto'
-            }
-          }
-        }
-      }}
       onClick={handleWeatherForecastOpen}
     >
-      {/*<WeatherWidget
-        autoLocate="gps"
-        provider="openWeather"
-        apiKey={apiKey}
-      />*/}
+      <ReactWeather
+        isLoading={isLoading}
+        errorMessage={errorMessage}
+        data={data}
+        lang="en"
+        // locationLabel="Munich"
+        unitsLabels={{ temperature: 'C', windSpeed: 'Km/h' }}
+        showForecast
+      />
       <WeatherForecast 
         open={state.weatherForecastOpen}
         onClose={handleWeatherForecastClose}

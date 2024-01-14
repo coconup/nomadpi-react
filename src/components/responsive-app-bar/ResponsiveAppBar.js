@@ -106,7 +106,7 @@ function ResponsiveAppBar() {
               textDecoration: 'none',
             }}
           >
-            LOGO
+            LOGOS
           </Typography>
         </Toolbar>
       </Container>

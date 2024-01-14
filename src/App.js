@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import logo from './logo.svg';
 import store from "./app/store";
-import './App.css';
 
-import { Route, Redirect } from "wouter";
-import { useSelector } from 'react-redux'
+import { Route } from "wouter";
+import { useSelector } from 'react-redux';
 
+import useMediaQuery from '@mui/material/useMediaQuery';
 import Box from '@mui/material/Box';
 
 import LoginForm from './components/login-form/LoginForm';
@@ -14,6 +14,7 @@ import HomePanel from './components/home-panel/HomePanel';
 import SwitchGroupsPage from './components/switch-groups-page/SwitchGroupsPage';
 import SettingsPage from './components/settings-page/SettingsPage';
 import MonitorPage from './components/monitor-page/MonitorPage';
+import TemperatureControlPage from './components/temperature-control-page/TemperatureControlPage';
 import DayNightIndicator from './components/day-night-indicator/DayNightIndicator';
 import WeatherForecast from './components/weather-forecast/WeatherForecast';
 
@@ -23,10 +24,17 @@ import { ThemeProvider } from '@mui/material/styles';
 import theme from './app/theme';
 
 function App() {
+  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+
   const [state, setState] = useState({
-    nightMode: false,
+    nightMode: prefersDarkMode,
     init: false
   });
+
+  const [
+    loginTrigger, 
+    loginResponse
+  ] = useLoginMutation();
 
   const { loggedIn } = useSelector(state => state.auth);
 
@@ -39,18 +47,6 @@ function App() {
     }
   };
 
-  const [
-    loginTrigger, 
-    {
-      // data={},
-      // isLoading,
-      // isFetching,
-      // isSuccess,
-      // isError,
-      // error,
-    }
-  ] = useLoginMutation();
-
   const onLoginSubmit = (credentials) => {
     const apiLogin = loginTrigger(credentials);
   };
@@ -61,35 +57,52 @@ function App() {
     content = <LoginForm onSubmit={onLoginSubmit}/>;
   } else {
     content = (
-      <Box sx={{height: '100%'}}>
+      <Box 
+        sx={{
+          flexGrow: 1,
+          display: 'flex',
+          flexDirection: 'column'
+        }}>
         <ResponsiveAppBar />
-        <Route path="/home"><HomePanel /></Route>
-        <Route path="/weather">
-          <WeatherForecast />
-        </Route>
-        <Route path="/control-panel"><SwitchGroupsPage /></Route>
-        <Route path="/monitor"><MonitorPage /></Route>
-        <Route path="/settings"><SettingsPage /></Route>
+        <Box
+          sx={{
+            flexGrow: 1,
+            display: 'flex'
+          }}
+        >
+          <Route path="/home"><HomePanel /></Route>
+          <Route path="/weather">
+            <WeatherForecast />
+          </Route>
+          <Route path="/control-panel"><SwitchGroupsPage /></Route>
+          <Route path="/monitor"><MonitorPage /></Route>
+          <Route path="/settings"><SettingsPage /></Route>
+          <Route path="/heater"><TemperatureControlPage /></Route>
+        </Box>
       </Box>
     )
   };
 
   return (
-    <Box 
-      className="App"
-      sx={{
-        backgroundColor: state.nightMode ? 'grey.900' : 'grey.50'
-      }}
-    >
-      <DayNightIndicator
-        latitude={52.4823} // Replace with your desired latitude
-        longitude={13.4409} // Replace with your desired longitude
-        onNightMode={handleNightModeChange}
-      />
-      <ThemeProvider theme={theme(state.nightMode)}>
+    <ThemeProvider theme={theme(state.nightMode)}>
+      {
+        !prefersDarkMode && (
+          <DayNightIndicator
+            latitude={52.4823}
+            longitude={13.4409}
+            onNightMode={handleNightModeChange}
+          />
+        )
+      }
+      <Box 
+        className="App"
+        sx={{
+          backgroundColor: 'background.paper'
+        }}
+      >
         {content}
-      </ThemeProvider>
-    </Box>
+      </Box>
+    </ThemeProvider>
   );
 }
 
