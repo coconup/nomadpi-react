@@ -23,7 +23,7 @@ const BottomNavigationComponent = (props) => {
         key={name}
         label={name}
         value={name}
-        icon={<Icon>{icon}</Icon>}
+        icon={icon && <Icon>{icon}</Icon>}
       />
     )
   })

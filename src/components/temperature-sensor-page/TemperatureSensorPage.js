@@ -12,7 +12,7 @@ import {
 
 // import TemperatureSensor from '../../models/TemperatureSensor';
 
-export default function TemperatureSensorPage({ temperatureSensor, temperatureState, isLoading }) {
+export default function TemperatureSensorPage({ temperatureSensor, temperatureState, isLoading, compact=false }) {
   const { name } = temperatureSensor;
 
   // OFFLINE editing
@@ -35,10 +35,11 @@ export default function TemperatureSensorPage({ temperatureSensor, temperatureSt
         <CardContent>
           <Box
             sx={{
-              mb: '20px'
+              mb: '20px',
+              textAlign: 'left'
             }}
           >
-            <Typography variant="h4">
+            <Typography variant={compact ? "h6" : "h4"}>
               { name }
             </Typography>
           </Box>

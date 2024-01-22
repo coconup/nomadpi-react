@@ -58,9 +58,6 @@ const makeCrudEndpoints = (spec, builder) => {
     }
   });
   
-
-    console.log(endpoints)
-
   return endpoints;
 }
 

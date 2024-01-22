@@ -11,8 +11,10 @@ import Battery from '../../models/Battery';
 import WaterTank from '../../models/WaterTank';
 import Sensor from '../../models/Sensor';
 import Camera from '../../models/Camera';
+import Heater from '../../models/Heater';
+import TemperatureSensor from '../../models/TemperatureSensor';
 
-const BASE_URL = process.env.API_BASE_URL || 'http://localhost:3001';
+const BASE_URL = process.env.API_BASE_URL || 'http://raspberrypi.local:3001';
 
 export const vanPiAppAPI = createApi({
   reducerPath: 'vanpi-app-api',
@@ -27,6 +29,8 @@ export const vanPiAppAPI = createApi({
     'WaterTank',
     'Sensor',
     'Camera',
+    'Heater',
+    'TemperatureSensor',
     'RelaysState',
     'ModesState',
     'BatteryState',
@@ -227,6 +231,18 @@ export const vanPiAppAPI = createApi({
         model: Camera,
         resourceNameSingular: 'Camera',
         resourceNamePlural: 'Cameras'
+      },
+      {
+        apiPath: 'heaters',
+        model: Heater,
+        resourceNameSingular: 'Heater',
+        resourceNamePlural: 'Heaters'
+      },
+      {
+        apiPath: 'temperature_sensors',
+        model: TemperatureSensor,
+        resourceNameSingular: 'TemperatureSensor',
+        resourceNamePlural: 'TemperatureSensors'
       }
     ].forEach(spec => {
       endpoints = {
@@ -301,4 +317,14 @@ export const {
   useUpdateCameraMutation,
   useCreateCameraMutation,
   useDeleteCameraMutation,
+  
+  useGetHeatersQuery,
+  useUpdateHeaterMutation,
+  useCreateHeaterMutation,
+  useDeleteHeaterMutation,
+  
+  useGetTemperatureSensorsQuery,
+  useUpdateTemperatureSensorMutation,
+  useCreateTemperatureSensorMutation,
+  useDeleteTemperatureSensorMutation,
 } = vanPiAppAPI;

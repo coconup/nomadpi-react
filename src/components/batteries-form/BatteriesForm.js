@@ -73,9 +73,9 @@ const BatteriesForm = () => {
     })
   };
 
-  const onBatteryChange = (wifiBattery, attrs) => {
+  const onBatteryChange = (battery, attrs) => {
     const newBatteries = batteries.map(item => {
-      if((item.id || item.pseudoId) === (wifiBattery.id || wifiBattery.pseudoId)) {
+      if((item.id || item.pseudoId) === (battery.id || battery.pseudoId)) {
         const newItem = item.clone();
         Object.keys(attrs).forEach(k => newItem[k] = attrs[k]);
         return newItem;

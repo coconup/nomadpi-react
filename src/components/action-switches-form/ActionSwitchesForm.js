@@ -1,9 +1,14 @@
 import { useState } from 'react';
-import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
-import Typography from '@mui/material/Typography';
-import Fab from '@mui/material/Fab';
-import { Icon} from '@mui/material';
+
+import {
+  getApisState
+} from '../../utils';
+
+import {
+  Box,
+  Fab,
+  Icon
+} from '@mui/material';
 
 import {
   useGetActionSwitchesQuery,
@@ -14,9 +19,9 @@ import {
   useDeleteActionSwitchMutation
 } from '../../apis/van-pi/vanpi-app-api';
 
-import ActionSwitchForm from '../action-switch-form/ActionSwitchForm';
-
 import ActionSwitch from '../../models/ActionSwitch';
+
+import ActionSwitchForm from '../action-switch-form/ActionSwitchForm';
 
 const ActionSwitchesForm = () => {
   const [state, setState] = useState({
@@ -32,45 +37,30 @@ const ActionSwitchesForm = () => {
 
   const [
     updateActionSwitchTrigger, 
-    {
-      // data={},
-      // isLoading,
-      // isFetching,
-      // isSuccess,
-      // isError,
-      // error,
-    }
+    updateActionSwitchState
   ] = useUpdateActionSwitchMutation();
 
   const [
     createActionSwitchTrigger, 
-    {
-      // data={},
-      // isLoading,
-      // isFetching,
-      // isSuccess,
-      // isError,
-      // error,
-    }
+    createActionSwitchState
   ] = useCreateActionSwitchMutation();
 
   const [
     deleteActionSwitchTrigger, 
-    {
-      // data={},
-      // isLoading,
-      // isFetching,
-      // isSuccess,
-      // isError,
-      // error,
-    }
+    deleteActionSwitchState
   ] = useDeleteActionSwitchMutation();
 
-  const isLoading = apiActionSwitches.isLoading || apiRelaySwitches.isLoading || apiWifiRelaySwitches.isLoading;
-  const isFetching = apiActionSwitches.isFetching || apiRelaySwitches.isFetching || apiWifiRelaySwitches.isFetching;
-  const isSuccess = apiActionSwitches.isSuccess && apiRelaySwitches.isSuccess && apiWifiRelaySwitches.isSuccess;
-  const isError = apiActionSwitches.isError || apiRelaySwitches.isError || apiWifiRelaySwitches.isError;
-  const error = apiActionSwitches.error || apiRelaySwitches.error || apiWifiRelaySwitches.error;
+  const {
+    isLoading,
+    isFetching,
+    isSuccess,
+    isError,
+    errors
+  } = getApisState([
+    apiActionSwitches,
+    apiRelaySwitches,
+    apiWifiRelaySwitches
+  ]);
 
   if(isSuccess && !state.init) {
     setState({
@@ -163,7 +153,7 @@ const ActionSwitchesForm = () => {
       )
     });
   } else if (isError) {
-  	const {status, error: message} = error;
+  	const {status, error: message} = errors[0];
     content = <div>{message}</div>
   }
 

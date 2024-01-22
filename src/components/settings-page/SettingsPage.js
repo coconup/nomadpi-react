@@ -1,7 +1,13 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
-import Tabs, { tabsClasses } from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
+
+import {
+  Box,
+  Tabs,
+  Tab
+} from '@mui/material';
+
+import { tabsClasses } from '@mui/material/Tabs';
+
 import RelaySwitchesForm from '../relay-switches-form/RelaySwitchesForm';
 import WifiRelaySwitchesForm from '../wifi-relay-switches-form/WifiRelaySwitchesForm';
 import ModeSwitchesForm from '../mode-switches-form/ModeSwitchesForm';
@@ -12,6 +18,8 @@ import BatteriesForm from '../batteries-form/BatteriesForm';
 import WaterTanksForm from '../water-tanks-form/WaterTanksForm';
 import SensorsForm from '../sensors-form/SensorsForm';
 import CamerasForm from '../cameras-form/CamerasForm';
+import HeatersForm from '../heaters-form/HeatersForm';
+import TemperatureSensorsForm from '../temperature-sensors-form/TemperatureSensorsForm';
 
 export default function SettingsPage() {
   const [state, setState] = React.useState({
@@ -46,6 +54,57 @@ export default function SettingsPage() {
     );
   };
 
+  const pages = [
+    {
+      label: "General",
+      component: <SettingsForm />
+    },
+    {
+      label: "Batteries",
+      component: <BatteriesForm />
+    },
+    {
+      label: "Water Tanks",
+      component: <WaterTanksForm />
+    },
+    {
+      label: "Cameras",
+      component: <CamerasForm />
+    },
+    {
+      label: "Heaters",
+      component: <HeatersForm />
+    },
+    {
+      label: "Temperature Sensors",
+      component: <TemperatureSensorsForm />
+    },
+    {
+      label: "Sensors",
+      component: <SensorsForm />
+    },
+    {
+      label: "Relays",
+      component: <RelaySwitchesForm />
+    },
+    {
+      label: "WiFi Relays",
+      component: <WifiRelaySwitchesForm />
+    },
+    {
+      label: "Mode Switches" ,
+      component: <ModeSwitchesForm />
+    },
+    {
+      label: "Action Switches" ,
+      component: <ActionSwitchesForm />
+    },
+    {
+      label: "Switch groups",
+      component: <SwitchGroupsForm />
+    }
+  ]
+
   return (
     <Box
       sx={{
@@ -64,47 +123,30 @@ export default function SettingsPage() {
           },
         }}
       >
-        <Tab label="General"/>
-        <Tab label="Batteries"/>
-        <Tab label="Water Tanks"/>
-        <Tab label="Cameras"/>
-        <Tab label="Sensors"/>
-        <Tab label="Relays"/>
-        <Tab label="WiFi Relays"/>
-        <Tab label="Mode Switches" />
-        <Tab label="Action Switches" />
-        <Tab label="Switch groups"/>
+        {
+          pages.map(({ label }, index) => {
+            return (
+              <Tab 
+                label={label}
+                key={`settings-page-tab-${index}`}
+              />
+            )
+          })
+        }
       </Tabs>
-      <CustomTabPanel value={value} index={0}>
-        <SettingsForm />
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={1}>
-        <BatteriesForm />
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={2}>
-        <WaterTanksForm />
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={3}>
-        <CamerasForm />
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={4}>
-        <SensorsForm />
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={5}>
-        <RelaySwitchesForm />
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={6}>
-        <WifiRelaySwitchesForm />
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={7}>
-        <ModeSwitchesForm />
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={8}>
-        <ActionSwitchesForm />
-      </CustomTabPanel>
-      <CustomTabPanel value={value} index={9}>
-        <SwitchGroupsForm />
-      </CustomTabPanel>
+      {
+        pages.map(({ component }, index) => {
+          return (
+            <CustomTabPanel 
+              value={value}
+              index={index}
+              key={`settings-page-${index}`}
+            >
+              { component }
+            </CustomTabPanel>
+          )
+        })
+      }
     </Box>
   );
 }

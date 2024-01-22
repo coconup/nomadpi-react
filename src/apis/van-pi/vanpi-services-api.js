@@ -3,7 +3,7 @@ import { makeCrudEndpoints } from '../crudBuilder';
 
 import Credentials from '../../models/Credentials';
 
-const BASE_URL = process.env.SERVICES_API_BASE_URL || 'http://localhost:3002';
+const BASE_URL = process.env.SERVICES_API_BASE_URL || 'http://raspberrypi.local:3002';
 
 export const vanPiServicesAPI = createApi({
   reducerPath: 'vanpi-services-api',

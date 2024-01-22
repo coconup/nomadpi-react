@@ -12,7 +12,9 @@ import {
 
 import { useGetBatteryStateQuery } from '../../apis/van-pi/vanpi-app-api';
 
-export default function BatteryPage({battery}) {
+import Metric from '../ui/Metric';
+
+export default function BatteryPage({ battery, compact=false }) {
   const {
     name,
     connection_type,
@@ -81,7 +83,6 @@ export default function BatteryPage({battery}) {
     ...cellsVoltage
   } = voltage;
 
-  console.log(cellsVoltage)
   const minCellVoltage = Math.min(...Object.values(cellsVoltage));
   const maxCellVoltage = Math.max(...Object.values(cellsVoltage));
 
@@ -124,7 +125,6 @@ export default function BatteryPage({battery}) {
   ];
 
   const icon = (iconsMap.find(({ threshold }) => state_of_charge > threshold) || {}).icon;
-  console.log(icon)
 
   let content;
   if (isLoading) {
@@ -146,43 +146,6 @@ export default function BatteryPage({battery}) {
       )
     };
 
-    const Metric = ({ label, value, unit }) => {
-      return (
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            margin: '0px 45px 20px 0px'
-          }}
-        >
-          <Typography
-            variant="body2"
-            color="primary.light"
-            sx={{
-              lineHeight: 1.2,
-              marginBottom: '4px'
-            }}
-          >
-            { label }
-          </Typography>
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'baseline'
-            }}
-          >
-            <Typography variant="h5">
-              { value }
-            </Typography>
-            <Typography variant="body1" component="h6" color="text.secondary">
-              &nbsp;{ unit }
-            </Typography>
-          </Box>
-        </Box>
-      );
-    };
-
     content = (
       <Card
         sx={{
@@ -192,10 +155,10 @@ export default function BatteryPage({battery}) {
         <CardContent>
           <Row 
             sx={{
-              margin: '15px 0px'
+              mb: '20px'
             }}
           >
-            <Typography variant="h4">
+            <Typography variant={compact ? "h6" : "h4"}>
               { name }
             </Typography>
             <Box 
@@ -204,7 +167,7 @@ export default function BatteryPage({battery}) {
                 alignItems: 'center'
               }}
             >
-              <Typography variant="h6" component="body1">
+              <Typography variant="h6">
                 { state_of_charge }%
               </Typography>
               <Icon>
@@ -213,54 +176,90 @@ export default function BatteryPage({battery}) {
             </Box>
           </Row>
           <Divider />
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'row',
-              mt: '20px'
-            }}
-          >
-            <Box>
-              <Metric
-                label="State of charge"
-                value={`${state_of_charge.toFixed(2)}`}
-                unit="%"
-              />
-              <Metric
-                label="Current load"
-                value={`${load.toFixed(2)}`}
-                unit="Ah"
-              />
-              <Metric
-                label="Total voltage"
-                value={`${totalVoltage.toFixed(2)}`}
-                unit="V"
-              />
-            </Box>
-            <Box>
-              <Metric
-                label="Remaining capacity"
-                value={`${capacity.remaining.toFixed(2)}`}
-                unit="Ah"
-              />
-              <Metric
-                label="Status"
-                value={
-                  <Chip 
-                    label={status.label}
+          <Box>
+            {
+              !compact && (
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    mt: '20px'
+                  }}
+                >
+                  <Box>
+                    <Metric
+                      label="State of charge"
+                      value={`${state_of_charge.toFixed(2)}`}
+                      unit="%"
+                    />
+                    <Metric
+                      label="Current load"
+                      value={`${load.toFixed(2)}`}
+                      unit="Ah"
+                    />
+                    <Metric
+                      label="Total voltage"
+                      value={`${totalVoltage.toFixed(2)}`}
+                      unit="V"
+                    />
+                  </Box>
+                  <Box>
+                    <Metric
+                      label="Remaining capacity"
+                      value={`${capacity.remaining.toFixed(2)}`}
+                      unit="Ah"
+                    />
+                    <Metric
+                      label="Status"
+                      value={
+                        <Chip 
+                          label={status.label}
+                          sx={{
+                            backgroundColor: status.color,
+                            color: status.textColor
+                          }}
+                        />
+                      }
+                    />
+                    <Metric
+                      label="Cell voltage range"
+                      value={`${minCellVoltage.toFixed(2)} - ${maxCellVoltage.toFixed(2)}`}
+                      unit="V"
+                    />
+                  </Box>
+                </Box>
+              )
+            }
+            {
+              compact && (
+                <Box
+                  sx={{
+                    mt: '20px',
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'flex-start'
+                  }}
+                >
+                  <Typography
+                    variant="h3"
                     sx={{
-                      backgroundColor: status.color,
-                      color: status.textColor
+                      fontWeight: 300
                     }}
-                  />
-                }
-              />
-              <Metric
-                label="Cell voltage range"
-                value={`${minCellVoltage.toFixed(2)} - ${maxCellVoltage.toFixed(2)}`}
-                unit="V"
-              />
-            </Box>
+                  >
+                    { capacity.remaining.toFixed(2) }
+                  </Typography>
+                  <Typography 
+                    variant="h5" 
+                    color="text.secondary"
+                    sx={{
+                      fontWeight: 300
+                    }}
+                  >
+                    &nbsp;Ah
+                  </Typography>
+                </Box>
+              )
+            }
           </Box>
         </CardContent>
       </Card>

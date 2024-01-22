@@ -40,8 +40,6 @@ const BlinkCredentialsCredentialsSelector = ({credentials: credentialsList=[], c
 
   const credentials = credentialsList.find(c => c.service_id === credentialServices.amazon_blink);
 
-  console.log('credentials', credentials)
-
   const onLogin = () => {
     const {
       email,

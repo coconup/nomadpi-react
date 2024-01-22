@@ -14,7 +14,7 @@ import HomePanel from './components/home-panel/HomePanel';
 import SwitchGroupsPage from './components/switch-groups-page/SwitchGroupsPage';
 import SettingsPage from './components/settings-page/SettingsPage';
 import MonitorPage from './components/monitor-page/MonitorPage';
-import TemperatureControlPage from './components/temperature-control-page/TemperatureControlPage';
+import HeatersPage from './components/heaters-page/HeatersPage';
 import DayNightIndicator from './components/day-night-indicator/DayNightIndicator';
 import WeatherForecast from './components/weather-forecast/WeatherForecast';
 
@@ -77,7 +77,7 @@ function App() {
           <Route path="/control-panel"><SwitchGroupsPage /></Route>
           <Route path="/monitor"><MonitorPage /></Route>
           <Route path="/settings"><SettingsPage /></Route>
-          <Route path="/heater"><TemperatureControlPage /></Route>
+          <Route path="/heater"><HeatersPage /></Route>
         </Box>
       </Box>
     )

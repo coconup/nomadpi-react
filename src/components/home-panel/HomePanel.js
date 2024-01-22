@@ -1,8 +1,17 @@
-import Grid from '@mui/material/Unstable_Grid2'; // Grid version 2
+import {
+  Box,
+  Unstable_Grid2 as Grid,
+  Paper
+} from '@mui/material';
+
 import { styled } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
+
+import Container from '../ui/Container';
 import WeatherCard from '../weather-card/WeatherCard';
+import CurrentTimeCard from '../current-time-card/CurrentTimeCard';
+import TemperatureSensorsPage from '../temperature-sensors-page/TemperatureSensorsPage';
+import BatteriesPage from '../batteries-page/BatteriesPage';
+import WaterTanksPage from '../water-tanks-page/WaterTanksPage';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -14,22 +23,45 @@ const Item = styled(Paper)(({ theme }) => ({
 
 export default function HomePanel() {
   return (
-    <Box sx={{ flexGrow: 1, padding: 3 }}>
-      <Grid container spacing={2}>
-        <Grid item xs={12} sm={10} md={8} lg={6} xl={4}>
-          <WeatherCard />
+    <Container>
+      <Box sx={{ flexGrow: 1, padding: 3 }}>
+        <Grid container spacing={2}>
+          <Grid xs={12} sm={8} md={6} xl={4}>
+            <WeatherCard
+              latitude="52.50"
+              longitude="13.43"
+            />
+          </Grid>
+          <Grid xs={6}>
+            <CurrentTimeCard
+              latitude={52.50}
+              longitude={13.43}
+            />
+          </Grid>
+          <Grid 
+            md={3}
+            sm={6}
+            xs={12}
+          >
+            <TemperatureSensorsPage compact />
+          </Grid>
+          <Grid 
+            md={3}
+            sm={6}
+            xs={12}
+          >
+            <BatteriesPage compact />
+          </Grid>
+          <Grid 
+            md={3}
+            sm={6}
+            xs={12}
+          >
+            <WaterTanksPage compact />
+          </Grid>
         </Grid>
-        <Grid item xs={8}>
-          <Item>xs=2</Item>
-        </Grid>
-        <Grid item xs={4}>
-          <Item>xs=4</Item>
-        </Grid>
-        <Grid item xs={8}>
-          <Item>xs=8</Item>
-        </Grid>
-      </Grid>
-    </Box>
+      </Box>
+    </Container>
   )
 }
 

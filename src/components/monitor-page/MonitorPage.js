@@ -5,6 +5,7 @@ import Container from '../ui/Container';
 
 import BatteriesPage from '../batteries-page/BatteriesPage';
 import TemperatureSensorsPage from '../temperature-sensors-page/TemperatureSensorsPage';
+import WaterTanksPage from '../water-tanks-page/WaterTanksPage';
 
 export default function MonitorPage() {
   const tabs = [
@@ -37,6 +38,7 @@ export default function MonitorPage() {
 
   return (
     <Container>
+      { selectedTab === tabs[0].name && <WaterTanksPage /> }
       { selectedTab === tabs[1].name && <TemperatureSensorsPage /> }
       { selectedTab === tabs[2].name && <BatteriesPage /> }
       <BottomNavigation

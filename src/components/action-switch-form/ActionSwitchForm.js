@@ -1,27 +1,23 @@
 import { useState } from 'react';
-import Card from '@mui/material/Card';
-import CardHeader from '@mui/material/CardHeader';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import Button from '@mui/material/Button';
-import Box from '@mui/material/Box';
-import Switch from '@mui/material/Switch';
-import Typography from '@mui/material/Typography';
-import TextField from '@mui/material/TextField';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormGroup from '@mui/material/FormGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
-import Divider from '@mui/material/Divider';
-import { Icon} from '@mui/material';
-import Fab from '@mui/material/Fab';
+
+import {
+  Box,
+  Card,
+  CardContent,
+  Divider,
+  Fab,
+  FormControl,
+  Icon,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField
+} from '@mui/material';
 
 export default function ActionSwitchForm({
   actionSwitch, 
-  relaySwitches: relaySwitchOptions, 
-  wifiRelaySwitches: wifiRelaySwitchOptions, 
+  relaySwitches: relaySwitchOptions,
+  wifiRelaySwitches: wifiRelaySwitchOptions,
   onChange, 
   onDelete
 }) {
@@ -30,8 +26,6 @@ export default function ActionSwitchForm({
     icon='',
     switches: relaySwitches=[]
   } = actionSwitch;
-
-  console.log(relaySwitchOptions)
 
   const handleRelaySwitchChange = (_index, relaySwitch) => {
     const newRelaySwitches = relaySwitches.map((item, index) => ({

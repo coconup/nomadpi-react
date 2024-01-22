@@ -1,20 +1,17 @@
 import { useState } from 'react';
-import Card from '@mui/material/Card';
-import CardHeader from '@mui/material/CardHeader';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import Button from '@mui/material/Button';
-import Box from '@mui/material/Box';
-import Switch from '@mui/material/Switch';
-import Typography from '@mui/material/Typography';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
-import TextField from '@mui/material/TextField';
-import InputAdornment from '@mui/material/InputAdornment';
-import Divider from '@mui/material/Divider';
-import { Icon} from '@mui/material';
+
+import {
+  Icon,
+  Card,
+  CardContent,
+  Box,
+  TextField,
+  InputAdornment,
+  Divider,
+} from '@mui/material';
+
+import Select from '../ui/Select';
+
 import WaterTank from '../../models/WaterTank';
 
 export default function WaterTankForm({waterTank, onChange, editable}) {
@@ -23,7 +20,8 @@ export default function WaterTankForm({waterTank, onChange, editable}) {
     connection_type,
     connection_params,
     volumetric_type,
-    volumetric_params
+    volumetric_params,
+    water_tank_settings
   } = waterTank;
 
   const {
@@ -40,6 +38,11 @@ export default function WaterTankForm({waterTank, onChange, editable}) {
     diameter
   } = volumetric_params;
 
+  const {
+    color,
+    alert_on
+  } = water_tank_settings;
+
   return (
     <Card sx={{ width: 400, margin: '20px' }}>
       <CardContent>
@@ -49,16 +52,12 @@ export default function WaterTankForm({waterTank, onChange, editable}) {
           sx={{margin: '15px', display: 'flex'}}
           onChange={(event) => onChange(waterTank, {name: event.target.value})}
         />
-        <FormControl sx={{display: 'flex', margin: '15px'}}>
-          <InputLabel>Connection type</InputLabel>
-          <Select
-            value={connection_type || ''}
-            label="Connection type"
-            onChange={(event) => onChange(waterTank, {connection_type: event.target.value, connection_params: {}})}
-          >
-            <MenuItem value={'mqtt'}>MQTT</MenuItem>
-          </Select>
-        </FormControl>
+        <Select
+          label="Connection type"
+          value={connection_type}
+          onChange={(event) => onChange(waterTank, {connection_type: event.target.value, connection_params: {}})}
+          options={[{ value: 'mqtt', label: 'MQTT' }]}
+        />
         {
           connection_type === 'mqtt' && (
             <Box>
@@ -68,20 +67,63 @@ export default function WaterTankForm({waterTank, onChange, editable}) {
                 sx={{margin: '15px', display: 'flex'}}
                 onChange={(event) => onChange(waterTank, {connection_params: {mqtt_topic: event.target.value}})}
               />
+            </Box>
+          )
+        }
+        {
+          connection_type && (
+            <Box>
               <Divider 
                 sx={{flex: 1, margin: '15px'}}
               />
-              <FormControl sx={{display: 'flex', margin: '15px'}}>
-                <InputLabel>Volumetric type</InputLabel>
-                <Select
-                  value={volumetric_type || ''}
-                  label="Volumetric type"
-                  onChange={(event) => onChange(waterTank, {volumetric_type: event.target.value, volumetric_params: {}})}
-                >
-                  <MenuItem value={'rectangular'}>Rectangular box</MenuItem>
-                  <MenuItem value={'cylindrical'}>Cylindrical box</MenuItem>
-                </Select>
-              </FormControl>
+              <Select
+                label="Color"
+                value={color}
+                onChange={(event) => onChange(waterTank, {water_tank_settings: {...water_tank_settings, color: event.target.value}})}
+                options={[
+                  {
+                    value: 'blue',
+                    label: 'Blue'
+                  },
+                  {
+                    value: 'grey',
+                    label: 'Grey'
+                  }
+                ]}
+              />
+              <Select
+                label="Alert when"
+                value={alert_on}
+                onChange={(event) => onChange(waterTank, {water_tank_settings: {...water_tank_settings, alert_on: event.target.value}})}
+                options={[
+                  {
+                    value: 'empty',
+                    label: 'Empty'
+                  },
+                  {
+                    value: 'full',
+                    label: 'Full'
+                  }
+                ]}
+              />
+              <Divider 
+                sx={{flex: 1, margin: '15px'}}
+              />
+              <Select
+                label="Volumetric type"
+                value={volumetric_type}
+                onChange={(event) => onChange(waterTank, {volumetric_type: event.target.value, volumetric_params: {}})}
+                options={[
+                  {
+                    value: 'rectangular',
+                    label: 'Rectangular box'
+                  },
+                  {
+                    value: 'cylindrical',
+                    label: 'Cylindrical box'
+                  }
+                ]}
+              />
               {
                 ['rectangular', 'cylindrical'].includes(volumetric_type) && (
                   <TextField

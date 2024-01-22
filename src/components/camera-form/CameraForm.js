@@ -1,20 +1,16 @@
 import { useState } from 'react';
-import Card from '@mui/material/Card';
-import CardHeader from '@mui/material/CardHeader';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import Button from '@mui/material/Button';
-import Box from '@mui/material/Box';
-import Switch from '@mui/material/Switch';
-import Typography from '@mui/material/Typography';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
-import TextField from '@mui/material/TextField';
-import InputAdornment from '@mui/material/InputAdornment';
-import Divider from '@mui/material/Divider';
-import { Icon} from '@mui/material';
+
+import {
+  Card,
+  CardContent,
+  Box,
+  InputLabel,
+  MenuItem,
+  FormControl,
+  Select,
+  TextField,
+} from '@mui/material';
+
 import Camera from '../../models/Camera';
 
 import BlinkCamerasCredentialsSelector from '../blink-cameras-credentials-selector/BlinkCamerasCredentialsSelector';
@@ -30,12 +26,6 @@ export default function CameraForm({camera, credentials, addCredentials, saveCre
     connection_type,
     connection_params
   } = camera;
-
-  const {
-    device_type,
-    device_id,
-    mqtt_topic
-  } = connection_params;
 
   return (
     <Card sx={{ width: 400, margin: '20px' }}>
