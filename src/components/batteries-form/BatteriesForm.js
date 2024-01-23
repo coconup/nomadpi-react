@@ -1,11 +1,15 @@
 import { useState } from 'react';
-import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
-import Typography from '@mui/material/Typography';
-import Fab from '@mui/material/Fab';
-import { Icon} from '@mui/material';
+import {
+  Box,
+  Fab,
+  Icon
+} from '@mui/material';
 
-import { useGetBatteriesQuery, useUpdateBatteryMutation, useCreateBatteryMutation } from '../../apis/van-pi/vanpi-app-api';
+import {
+  useGetBatteriesQuery,
+  useUpdateBatteryMutation,
+  useCreateBatteryMutation
+} from '../../apis/van-pi/vanpi-app-api';
 
 import BatteryForm from '../battery-form/BatteryForm';
 
@@ -23,26 +27,12 @@ const BatteriesForm = () => {
 
   const [
     updateBatteryTrigger, 
-    {
-      // data={},
-      // isLoading,
-      // isFetching,
-      // isSuccess,
-      // isError,
-      // error,
-    }
+    updateBatteryState
   ] = useUpdateBatteryMutation();
 
   const [
     createBatteryTrigger, 
-    {
-      // data={},
-      // isLoading,
-      // isFetching,
-      // isSuccess,
-      // isError,
-      // error,
-    }
+    createBatteryState
   ] = useCreateBatteryMutation();
 
   const isLoading = apiBatteries.isLoading;

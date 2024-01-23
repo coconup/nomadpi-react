@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
 
 import {
   Box,
@@ -10,140 +11,56 @@ import {
   Typography
 } from '@mui/material';
 
-import { useGetBatteryStateQuery } from '../../apis/van-pi/vanpi-app-api';
-
 import Metric from '../ui/Metric';
 
-export default function BatteryPage({ battery, compact=false }) {
+export default function SolarChargeControllerPage({ solarChargeController, compact=false }) {
   const {
-    name,
-    connection_type,
-    connection_params
-  } = battery;
+    id,
+    name
+  } = solarChargeController;
 
-  const {
-    device_type,
-    device_id
-  } = connection_params;
-
-  const initialState = {
-    batteryState: {},
-    init: false
-  };
-
-  const [state, setState] = useState(initialState);  
-
-  let apiBatteryState = useGetBatteryStateQuery({connection_type, device_type, device_id});
-
-  // OFFLINE editing
-  apiBatteryState = {
-    isLoading: false,
-    isSuccess: true,
-    isError: false,
-    data: {
-      state_of_charge: 90,
-      voltage: {
-        total: 13.313,
-        cell1: 3.323,
-        cell2: 3.312,
-        cell3: 3.322,
-        cell4: 3.332
-      },
-      load: 2.4,
-      capacity: {
-        total: 252,
-        remaining: 226.8
-      }
-    }
-  }
-
-  const isLoading = apiBatteryState.isLoading;
-  const isFetching = apiBatteryState.isFetching;
-  const isSuccess = apiBatteryState.isSuccess;
-  const isError = apiBatteryState.isError;
-  const error = apiBatteryState.error;
-
-  if(isSuccess && !state.init) {
-    setState({
-      ...state,
-      batteryState: apiBatteryState.data,
-      init: true
-    });
-  };
-
-  const {
-    state_of_charge,
-    voltage={},
-    load,
-    capacity
-  } = state.batteryState;
-
-  const {
-    total: totalVoltage,
-    ...cellsVoltage
-  } = voltage;
-
-  const minCellVoltage = Math.min(...Object.values(cellsVoltage));
-  const maxCellVoltage = Math.max(...Object.values(cellsVoltage));
-
-  let status = {};
-  if(load > 0) {
-    status = {
-      label: 'Charging',
-      color: 'success.main',
-      textColor: 'grey.900'
-    }
-  } else if(state_of_charge > 30) {
-    status = {
-      label: 'Discharging',
-      color: 'info.main',
-      textColor: 'grey.900'
-    }
-  } else if(state_of_charge > 10) {
-    status = {
-      label: 'Discharging',
-      color: 'warning.main',
-      textColor: 'grey.900'
-    }
-  } else {
-    status = {
-      label: 'Critically low',
-      color: 'error.main',
-      textColor: 'grey.200'
-    }
-  };
-
-  const iconsMap = [
-    { threshold: 95, icon: `battery_full`},
-    { threshold: 87.5, icon: `battery_6_bar`},
-    { threshold: 75, icon: `battery_5_bar`},
-    { threshold: 60, icon: `battery_4_bar`},
-    { threshold: 40, icon: `battery_3_bar`},
-    { threshold: 25, icon: `battery_2_bar`},
-    { threshold: 12.5, icon: `battery_1_bar`},
-    { threshold: 0, icon: `battery_0_bar`},
-  ];
-
-  const icon = (iconsMap.find(({ threshold }) => state_of_charge > threshold) || {}).icon;
+  const solarChargeControllerState = useSelector(state => {
+    return state.solarChargeControllers.solarChargeControllersState[id];
+  });
 
   let content;
-  if (isLoading) {
+  if (!solarChargeControllerState) {
     content = <div>Loading</div>
-  } else if(isSuccess && state.init) {
-    const Row = ({ children, sx={} }) => {
-      return (
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            ...sx
-          }}
-        >
-          { children }
-        </Box>
-      )
+  } else {
+    const {
+      charging_status,
+      controller_temperature,
+      photovoltaic,
+      load,
+      battery
+    } = solarChargeControllerState;
+
+    const {
+      temperature: battery_temperature,
+      type: battery_type,
+      voltage: battery_voltage
+    } = battery;
+
+    const {
+      current: load_current,
+      power: load_power,
+      status: load_status,
+      voltage: load_voltage
+    } = load;
+
+    const {
+      current: photovoltaic_current,
+      power: photovoltaic_power,
+      voltage: photovoltaic_voltage
+    } = photovoltaic;
+
+    let status = {};
+    if(charging_status === 'deactivated') {
+      status = {
+        label: 'Disabled',
+        color: 'grey.500',
+        textColor: 'grey.900'
+      }
     };
 
     content = (
@@ -153,28 +70,16 @@ export default function BatteryPage({ battery, compact=false }) {
         }}
       >
         <CardContent>
-          <Row 
+          <Box 
             sx={{
-              mb: '20px'
+              mb: '20px',
+              textAlign: 'left'
             }}
           >
             <Typography variant={compact ? "h6" : "h4"}>
               { name }
             </Typography>
-            <Box 
-              sx={{
-                display: 'flex',
-                alignItems: 'center'
-              }}
-            >
-              <Typography variant="h6">
-                { state_of_charge }%
-              </Typography>
-              <Icon>
-                { icon }
-              </Icon>
-            </Box>
-          </Row>
+          </Box>
           <Divider />
           <Box>
             {
@@ -186,44 +91,81 @@ export default function BatteryPage({ battery, compact=false }) {
                     mt: '20px'
                   }}
                 >
-                  <Box>
+                  <Box sx={{ mr: '20px' }}>
+                    <Typography variant={"h6"}>
+                      Photovoltaic (PV)
+                    </Typography>
                     <Metric
-                      label="State of charge"
-                      value={`${state_of_charge.toFixed(2)}`}
-                      unit="%"
+                      label="Status"
+                      value={<Chip label={charging_status} />}
+                      unit=""
                     />
                     <Metric
-                      label="Current load"
-                      value={`${load.toFixed(2)}`}
+                      label="Power"
+                      value={`${photovoltaic_power.toFixed(2)}`}
+                      unit="W"
+                    />
+                    <Metric
+                      label="Current"
+                      value={`${photovoltaic_current.toFixed(2)}`}
                       unit="Ah"
                     />
                     <Metric
-                      label="Total voltage"
-                      value={`${totalVoltage.toFixed(2)}`}
+                      label="Voltage"
+                      value={`${photovoltaic_voltage.toFixed(2)}`}
                       unit="V"
                     />
                   </Box>
-                  <Box>
+                  <Box sx={{ mr: '20px' }}>
+                    <Typography variant={"h6"}>
+                      Battery
+                    </Typography>
                     <Metric
-                      label="Remaining capacity"
-                      value={`${capacity.remaining.toFixed(2)}`}
+                      label="Type"
+                      value={
+                        <Chip 
+                          label={battery_type}
+                          // sx={{
+                          //   backgroundColor: status.color,
+                          //   color: status.textColor
+                          // }}
+                        />
+                      }
+                      unit=""
+                    />
+                    <Metric
+                      label="Temperature"
+                      value={`${battery_temperature.toFixed(2)}`}
+                      unit="°"
+                    />
+                    <Metric
+                      label="Voltage"
+                      value={`${battery_voltage.toFixed(2)}`}
+                      unit="V"
+                    />
+                  </Box>
+                  <Box sx={{ mr: '20px' }}>
+                    <Typography variant={"h6"}>
+                      Load
+                    </Typography>
+                    <Metric
+                      label="Status"
+                      value={<Chip label={load_status} />}
+                      unit=""
+                    />
+                    <Metric
+                      label="Power"
+                      value={`${load_power.toFixed(2)}`}
+                      unit="W"
+                    />
+                    <Metric
+                      label="Current"
+                      value={`${load_current.toFixed(2)}`}
                       unit="Ah"
                     />
                     <Metric
-                      label="Status"
-                      value={
-                        <Chip 
-                          label={status.label}
-                          sx={{
-                            backgroundColor: status.color,
-                            color: status.textColor
-                          }}
-                        />
-                      }
-                    />
-                    <Metric
-                      label="Cell voltage range"
-                      value={`${minCellVoltage.toFixed(2)} - ${maxCellVoltage.toFixed(2)}`}
+                      label="Voltage"
+                      value={`${load_voltage.toFixed(2)}`}
                       unit="V"
                     />
                   </Box>
@@ -246,7 +188,7 @@ export default function BatteryPage({ battery, compact=false }) {
                       fontWeight: 300
                     }}
                   >
-                    { capacity.remaining.toFixed(2) }
+                    { photovoltaic_power.toFixed(2) }
                   </Typography>
                   <Typography 
                     variant="h5" 
@@ -255,7 +197,7 @@ export default function BatteryPage({ battery, compact=false }) {
                       fontWeight: 300
                     }}
                   >
-                    &nbsp;Ah
+                    &nbsp;W
                   </Typography>
                 </Box>
               )
@@ -264,9 +206,6 @@ export default function BatteryPage({ battery, compact=false }) {
         </CardContent>
       </Card>
     );
-  } else if (isError) {
-    const {status, error: message} = error;
-    content = <div>{message}</div>
   }
 
   return content;

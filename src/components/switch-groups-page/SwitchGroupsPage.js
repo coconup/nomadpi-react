@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 
+import { getApisState } from '../../utils';
+
 import {
   Unstable_Grid2 as Grid
 } from '@mui/material';
@@ -41,11 +43,21 @@ const SwitchGroupsPage = () => {
   const apiRelaysState = useGetRelaysStateQuery();
   const apiModesState = useGetModesStateQuery();
 
-  const isLoading = apiRelaySwitches.isLoading || apiWifiRelaySwitches.isLoading || apiActionSwitches.isLoading || apiSwitchGroups.isLoading || apiRelaysState.isLoading || apiModeSwitches.isLoading || apiModesState.isLoading;
-  const isFetching = apiRelaySwitches.isFetching || apiWifiRelaySwitches.isFetching || apiActionSwitches.isFetching || apiSwitchGroups.isFetching || apiRelaysState.isFetching || apiModeSwitches.isFetching || apiModesState.isFetching;
-  const isSuccess = apiRelaySwitches.isSuccess && apiWifiRelaySwitches.isSuccess && apiActionSwitches.isSuccess && apiSwitchGroups.isSuccess && apiRelaysState.isSuccess && apiModeSwitches.isSuccess && apiModesState.isSuccess;
-  const isError = apiRelaySwitches.isError || apiWifiRelaySwitches.isError || apiActionSwitches.isError || apiSwitchGroups.isError || apiRelaysState.isError || apiModeSwitches.isError || apiModesState.isError;
-  const error = apiRelaySwitches.error || apiWifiRelaySwitches.error || apiActionSwitches.error || apiSwitchGroups.error || apiRelaysState.error || apiModeSwitches.error || apiModesState.error;
+  const {
+    isLoading,
+    isFetching,
+    isSuccess,
+    isError,
+    errors
+  } = getApisState([
+    apiRelaySwitches,
+    apiWifiRelaySwitches,
+    apiActionSwitches,
+    apiSwitchGroups,
+    apiRelaysState,
+    apiModeSwitches,
+    apiModesState
+  ]);
 
   if(!state.init && isSuccess) {
     const sortedSwitchGroups = [...apiSwitchGroups.data].sort((a, b) => a.id - b.id);
@@ -92,22 +104,22 @@ const SwitchGroupsPage = () => {
           }
         })
     )
-  }
+  };
 
   const relaysState = useSelector(state => {
     return state.relays.relaysState;
-  })
+  });
 
   const modesState = useSelector(state => {
     return state.modes.modesState;
-  })
+  });
 
   let content;
 
   if (isLoading) {
     content = <div>Loading</div>
   } else if (isError) {
-    const {status, error: message} = error;
+    const {status, error: message} = errors[0];
     content = <div>{message}</div>
   } else if (isSuccess) {
     content = (
@@ -150,7 +162,7 @@ const SwitchGroupsPage = () => {
     )
   }
 
-  return content
+  return content;
 }
 
 export default SwitchGroupsPage;

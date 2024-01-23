@@ -1,7 +1,7 @@
 import BaseModel from './abstract/BaseModel';
 
 // Initializer
-class Battery extends BaseModel() {
+class SolarChargeController extends BaseModel() {
   constructor(data) {
     const parsedConnectionParams = JSON.parse(data.connection_params || '{}')
 
@@ -24,8 +24,8 @@ class Battery extends BaseModel() {
     if(this.connection_type === 'ble') {
       return [
         {
-          value: 'jbd',
-          label: 'JBD BMS'
+          value: 'renogy',
+          label: 'Renogy / SRNE'
         }
       ]
     };
@@ -43,4 +43,4 @@ class Battery extends BaseModel() {
   }
 };
 
-export default Battery;
+export default SolarChargeController;

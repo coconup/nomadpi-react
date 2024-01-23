@@ -17,6 +17,7 @@ import MonitorPage from './components/monitor-page/MonitorPage';
 import HeatersPage from './components/heaters-page/HeatersPage';
 import DayNightIndicator from './components/day-night-indicator/DayNightIndicator';
 import WeatherForecast from './components/weather-forecast/WeatherForecast';
+import ResourceStateProvider from './components/resource-state-provider/ResourceStateProvider';
 
 import { useLoginMutation, useCheckAuthStatusQuery } from './apis/van-pi/vanpi-app-api';
 
@@ -85,6 +86,7 @@ function App() {
 
   return (
     <ThemeProvider theme={theme(state.nightMode)}>
+      <ResourceStateProvider />
       {
         !prefersDarkMode && (
           <DayNightIndicator

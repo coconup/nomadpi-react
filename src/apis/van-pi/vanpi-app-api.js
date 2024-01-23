@@ -1,6 +1,13 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { makeCrudEndpoints } from '../crudBuilder';
 
+import {
+  toSnakeCase,
+  uppercaseFirstLetter
+} from '../../utils';
+
+import { resourceNames } from '../../app/resourceStateMiddleware';
+
 import RelaySwitch from '../../models/RelaySwitch';
 import WifiRelaySwitch from '../../models/WifiRelaySwitch';
 import ModeSwitch from '../../models/ModeSwitch';
@@ -13,6 +20,7 @@ import Sensor from '../../models/Sensor';
 import Camera from '../../models/Camera';
 import Heater from '../../models/Heater';
 import TemperatureSensor from '../../models/TemperatureSensor';
+import SolarChargeController from '../../models/SolarChargeController';
 
 const BASE_URL = process.env.API_BASE_URL || 'http://raspberrypi.local:3001';
 
@@ -26,6 +34,7 @@ export const vanPiAppAPI = createApi({
     'SwitchGroup',
     'Setting',
     'Battery',
+    'SolarChargeController',
     'WaterTank',
     'Sensor',
     'Camera',
@@ -34,6 +43,7 @@ export const vanPiAppAPI = createApi({
     'RelaysState',
     'ModesState',
     'BatteryState',
+    'SolarChargecontrollerState',
     'WaterTankState',
     'SensorState',
     'UsbDevices',
@@ -73,18 +83,6 @@ export const vanPiAppAPI = createApi({
         }
       }),
 
-      getRelaysState: builder.query({
-        query: () => `relays/state`,
-        transformResponse: (result, meta) => {
-          if(result) {
-            return result;
-          }
-        },
-        providesTags: (result) => {
-          return [{type: 'RelaysState'}]
-        }
-      }),
-
       postModeState: builder.mutation({
         query: ({mode_key, ...body}) => ({
           url: `modes/${mode_key}`,
@@ -95,46 +93,6 @@ export const vanPiAppAPI = createApi({
           if(result) {
             return [{type: 'ModesState'}];
           }
-        }
-      }),
-
-      getModesState: builder.query({
-        query: () => `modes/state`,
-        transformResponse: (result, meta) => {
-          if(result) {
-            return result;
-          }
-        },
-        providesTags: (result) => {
-          return [{type: 'ModesState'}]
-        }
-      }),
-
-      getBatteryState: builder.query({
-        query: ({
-          connection_type,
-          device_type,
-          device_id
-        }) => `batteries/${connection_type}/${device_type}/${device_id}/state`,
-        transformResponse: (result, meta) => {
-          return result;
-        },
-        providesTags: (result) => {
-          return [{type: 'BatteryState'}]
-        }
-      }),
-
-      getWaterTankState: builder.query({
-        query: ({
-          connection_type,
-          device_type,
-          device_id
-        }) => `water_tanks/${connection_type}/${device_type}/${device_id}/state`,
-        transformResponse: (result, meta) => {
-          return result;
-        },
-        providesTags: (result) => {
-          return [{type: 'WaterTankState'}]
         }
       }),
 
@@ -154,7 +112,6 @@ export const vanPiAppAPI = createApi({
         query: () => `settings`,
         transformResponse: (result, meta) => {
           if(result) {
-            console.log(result.map(row => new Setting(row)))
             return result.map(row => new Setting(row));
           }
         },
@@ -176,6 +133,21 @@ export const vanPiAppAPI = createApi({
         }
       })
     };
+
+    // Resource State endpoints
+    resourceNames.forEach(name => {
+      endpoints[`get${uppercaseFirstLetter(name)}State`] = builder.query({
+        query: () => `${toSnakeCase(name)}/state`,
+        transformResponse: (result, meta) => {
+          if(result) {
+            return result;
+          }
+        },
+        providesTags: (result) => {
+          return [{type: `${uppercaseFirstLetter(name)}State`}]
+        }
+      })
+    });
 
     [
       {
@@ -243,6 +215,12 @@ export const vanPiAppAPI = createApi({
         model: TemperatureSensor,
         resourceNameSingular: 'TemperatureSensor',
         resourceNamePlural: 'TemperatureSensors'
+      },
+      {
+        apiPath: 'solar_charge_controllers',
+        model: SolarChargeController,
+        resourceNameSingular: 'SolarChargeController',
+        resourceNamePlural: 'SolarChargeControllers'
       }
     ].forEach(spec => {
       endpoints = {
@@ -260,16 +238,11 @@ export const {
   useCheckAuthStatusQuery,
 
   usePostRelaysStateMutation,
-  useGetRelaysStateQuery,
 
   usePostModeStateMutation,
-  useGetModesStateQuery,
   
   useUpdateSettingMutation,
   useGetSettingsQuery,
-
-  useGetBatteryStateQuery,
-  useGetWaterTankStateQuery,
 
   useGetUsbDevicesQuery,
 
@@ -327,4 +300,17 @@ export const {
   useUpdateTemperatureSensorMutation,
   useCreateTemperatureSensorMutation,
   useDeleteTemperatureSensorMutation,
+  
+  useGetSolarChargeControllersQuery,
+  useUpdateSolarChargeControllerMutation,
+  useCreateSolarChargeControllerMutation,
+  useDeleteSolarChargeControllerMutation,
+
+  useGetGpsStateQuery,
+  useGetRelaysStateQuery,
+  useGetModesStateQuery,
+  useGetBatteriesStateQuery,
+  useGetWaterTanksStateQuery,
+  useGetTemperatureSensorsStateQuery,
+  useGetSolarChargeControllersStateQuery,
 } = vanPiAppAPI;

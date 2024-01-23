@@ -20,6 +20,7 @@ import SensorsForm from '../sensors-form/SensorsForm';
 import CamerasForm from '../cameras-form/CamerasForm';
 import HeatersForm from '../heaters-form/HeatersForm';
 import TemperatureSensorsForm from '../temperature-sensors-form/TemperatureSensorsForm';
+import SolarChargeControllersForm from '../solar-charge-controllers-form/SolarChargeControllersForm';
 
 export default function SettingsPage() {
   const [state, setState] = React.useState({
@@ -62,6 +63,10 @@ export default function SettingsPage() {
     {
       label: "Batteries",
       component: <BatteriesForm />
+    },
+    {
+      label: "Solar Charge Controller",
+      component: <SolarChargeControllersForm />
     },
     {
       label: "Water Tanks",

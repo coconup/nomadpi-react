@@ -14,6 +14,21 @@ const getApisState = (apis) => {
   }
 };
 
+const uppercaseFirstLetter = (string) => {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+};
+
+const lowercaseFirstLetter = (string) => {
+  return string.charAt(0).toLowerCase() + string.slice(1);
+};
+
+const toSnakeCase = (string) => {
+  return lowercaseFirstLetter(string).replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
+};
+
 module.exports = {
-  getApisState
+  getApisState,
+  uppercaseFirstLetter,
+  lowercaseFirstLetter,
+  toSnakeCase
 };

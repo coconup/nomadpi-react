@@ -6,14 +6,11 @@ import {
   Unstable_Grid2 as Grid
 } from '@mui/material';
 
+import { useGetTemperatureSensorsQuery } from '../../apis/van-pi/vanpi-app-api';
+
 import Container from '../ui/Container';
 
 import TemperatureSensorPage from '../temperature-sensor-page/TemperatureSensorPage';
-
-// import {
-//   useGetTemperatureSensorsQuery,
-//   useGetTemperatureStateQuery
-// } from '../../apis/van-pi/vanpi-app-api';
 
 export default function TemperatureSensorsPage({ compact=false }) {
   const initialState = {
@@ -23,23 +20,7 @@ export default function TemperatureSensorsPage({ compact=false }) {
 
   const [state, setState] = useState(initialState);  
 
-  // let apiTemperatureSensors = useGetTemperatureSensorsQuery();
-
-  // OFFLINE editing
-  const apiTemperatureSensors = {
-    isLoading: false,
-    isSuccess: true,
-    data: [
-      {
-        id: 1,
-        name: 'Room temperature' 
-      },
-      {
-        id: 2,
-        name: 'Outside temperature' 
-      }
-    ]
-  };
+  const apiTemperatureSensors = useGetTemperatureSensorsQuery();
 
   const isLoading = apiTemperatureSensors.isLoading;
   const isFetching = apiTemperatureSensors.isFetching;

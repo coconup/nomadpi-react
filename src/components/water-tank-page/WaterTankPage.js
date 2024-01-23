@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { useTheme } from '@mui/material/styles';
 
 import {
@@ -16,24 +16,14 @@ import {
 
 import GaugeComponent from 'react-gauge-component';
 
-import WaterTank from '../../models/WaterTank';
-
-import { useGetWaterTankStateQuery } from '../../apis/van-pi/vanpi-app-api';
-
 export default function WaterTankPage({ waterTank, compact=false }) {
   const theme = useTheme();
 
   const {
+    id,
     name,
-    connection_type,
-    connection_params,
     water_tank_settings
   } = waterTank;
-
-  const {
-    device_type,
-    device_id
-  } = connection_params;
 
   const {
     color,
@@ -45,41 +35,19 @@ export default function WaterTankPage({ waterTank, compact=false }) {
     grey: blueGrey
   }[color] || lightBlue;
 
-  const initialState = {
-    total_volume_liters: 150,
-    remaining_volume_liters: 100,
-    init: false
-  };
-
-  const [state, setState] = useState(initialState);
-
-  const {
-    total_volume_liters,
-    remaining_volume_liters
-  } = state;
-
-  let apiWaterTankState = useGetWaterTankStateQuery({connection_type, device_type, device_id});
-
-  const isLoading = apiWaterTankState.isLoading;
-  const isFetching = apiWaterTankState.isFetching;
-  const isSuccess = apiWaterTankState.isSuccess;
-  const isError = apiWaterTankState.isError;
-  const error = apiWaterTankState.error;
-
-  if(isSuccess && !state.init) {
-    setState({
-      ...state,
-      waterTankState: apiWaterTankState.data,
-      init: true
-    });
-  };
-
-  const { waterTankState } = state;
+  const waterTankState = useSelector(state => {
+    return state.waterTanks.waterTanksState[id];
+  });
 
   let content;
-  if (isLoading) {
+  if (!waterTankState) {
     content = <div>Loading</div>
-  } else if(isSuccess && state.init) {
+  } else {
+    const {
+      total_volume_liters,
+      remaining_volume_liters
+    } = waterTankState;
+    
     let subArcs = [
       ...alert_on === 'empty' && [
         {
@@ -217,9 +185,6 @@ export default function WaterTankPage({ waterTank, compact=false }) {
         </CardContent>
       </Card>
     );
-  } else if (isError) {
-    const {status, error: message} = error;
-    content = <div>{message}</div>
   }
 
   return content;

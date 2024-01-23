@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useSelector } from 'react-redux';
 
 import {
   Box,
@@ -10,22 +10,22 @@ import {
   Typography
 } from '@mui/material';
 
-// import TemperatureSensor from '../../models/TemperatureSensor';
+export default function TemperatureSensorPage({ temperatureSensor, compact=false }) {
+  const {
+    id,
+    name
+  } = temperatureSensor;
 
-export default function TemperatureSensorPage({ temperatureSensor, temperatureState, isLoading, compact=false }) {
-  const { name } = temperatureSensor;
-
-  // OFFLINE editing
-  temperatureState = {
-    value: 26
-  };
-
-  const { value } = temperatureState;
+  const temperatureSensorState = useSelector(state => {
+    return state.temperatureSensors.temperatureSensorsState[id];
+  });
 
   let content;
-  if (isLoading) {
+  if (!temperatureSensorState) {
     content = <div>Loading</div>
   } else {
+    const { temperature } = temperatureSensorState;
+
     content = (
       <Card
         sx={{
@@ -58,7 +58,7 @@ export default function TemperatureSensorPage({ temperatureSensor, temperatureSt
                 fontWeight: 300
               }}
             >
-              { value }
+              { temperature.toFixed(1) }
             </Typography>
             <Typography 
               variant="h5" 

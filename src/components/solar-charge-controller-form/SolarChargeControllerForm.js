@@ -9,16 +9,16 @@ import {
 
 import Select from '../ui/Select';
 
-import Battery from '../../models/Battery';
+import SolarChargeController from '../../models/SolarChargeController';
 
-export default function BatteryForm({battery, onChange, editable}) {
+export default function SolarChargeControllerForm({solarChargeController, onChange, editable}) {
   const {
     name,
     connection_type,
     connection_params,
     connection_type_options,
     device_type_options
-  } = battery;
+  } = solarChargeController;
 
   const {
     device_type,
@@ -32,25 +32,25 @@ export default function BatteryForm({battery, onChange, editable}) {
           label="Name"
           value={name || ''}
           sx={{margin: '15px', display: 'flex'}}
-          onChange={(event) => onChange(battery, {name: event.target.value})}
+          onChange={(event) => onChange(solarChargeController, {name: event.target.value})}
         />
         <Select 
           label="Connection type"
           value={connection_type}
-          onChange={(event) => onChange(battery, {connection_type: event.target.value, connection_params: {}})}
+          onChange={(event) => onChange(solarChargeController, {connection_type: event.target.value, connection_params: {}})}
           options={connection_type_options}
         />
         <Select 
           label="Device type"
           value={device_type}
-          onChange={(event) => onChange(battery, {connection_params: {...connection_params, device_type: event.target.value}})}
+          onChange={(event) => onChange(solarChargeController, {connection_params: {...connection_params, device_type: event.target.value}})}
           options={device_type_options}
         />
         <TextField
           label="Device ID (MAC Address)"
           value={device_id || ''}
           sx={{margin: '15px', display: 'flex'}}
-          onChange={(event) => onChange(battery, {connection_params: {...connection_params, device_id: event.target.value}})}
+          onChange={(event) => onChange(solarChargeController, {connection_params: {...connection_params, device_id: event.target.value}})}
         />
       </CardContent>
     </Card>

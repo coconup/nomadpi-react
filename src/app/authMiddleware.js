@@ -1,9 +1,21 @@
-import { useCheckAuthStatusQuery } from '../apis/van-pi/vanpi-app-api';
-import { setLoggedIn } from './authSlice';
-import { setRelaysState } from './relaysSlice';
+import { createSlice } from '@reduxjs/toolkit';
 import store from './store';
 
-export const authMiddleware = () => (next) => async (action) => {
+const authSlice = createSlice({
+  name: 'auth',
+  initialState: {
+    loggedIn: null,
+  },
+  reducers: {
+    setLoggedIn: (state, action) => {
+      state.loggedIn = action.payload;
+    },
+  },
+});
+
+const setLoggedIn = authSlice.actions.setLoggedIn;
+
+const authMiddleware = () => (next) => async (action) => {
   if (action.type === 'vanpi-app-api/executeQuery/fulfilled') {
     if(!store.getState().loggedIn) store.dispatch(setLoggedIn(true));
   } else if (action.type === 'vanpi-app-api/executeQuery/rejected') {
@@ -30,13 +42,10 @@ export const authMiddleware = () => (next) => async (action) => {
   return next(action);
 };
 
-export const relaysMiddleware = () => (next) => async (action) => {
-  if (action.type === 'vanpi-app-api/executeQuery/fulfilled') {
-    if(action.meta.arg.endpointName === 'getRelaysState') {
-      store.dispatch(setRelaysState(action.payload));
-    }
-  }
+const authReducer = authSlice.reducer;
 
-  return next(action);
+export {
+  setLoggedIn,
+  authReducer,
+  authMiddleware
 };
-
