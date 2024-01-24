@@ -38,13 +38,17 @@ const ResourceStateProvider = () => {
   ]);
 
   const refetch = async () => {
-    await apiGpsState.refetch();
-    await apiRelaysState.refetch();
-    await apiModesState.refetch();
-    await apiBatteriesState.refetch();
-    await apiWaterTanksState.refetch();
-    await apiTemperatureSensorsState.refetch();
-    await apiSolarChargeControllersState.refetch();
+    try {
+      await apiGpsState.refetch();
+      await apiRelaysState.refetch();
+      await apiModesState.refetch();
+      await apiBatteriesState.refetch();
+      await apiWaterTanksState.refetch();
+      await apiTemperatureSensorsState.refetch();
+      await apiSolarChargeControllersState.refetch();
+    } catch(e) {
+      
+    }
   };
 
   useEffect(() => {

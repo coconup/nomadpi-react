@@ -90,8 +90,6 @@ function App() {
       {
         !prefersDarkMode && (
           <DayNightIndicator
-            latitude={52.4823}
-            longitude={13.4409}
             onNightMode={handleNightModeChange}
           />
         )

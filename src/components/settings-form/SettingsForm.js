@@ -1,16 +1,17 @@
 import { useState } from 'react';
-import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
-import Typography from '@mui/material/Typography';
-import TextField from '@mui/material/TextField';
-import Fab from '@mui/material/Fab';
-import Divider from '@mui/material/Divider';
-import { Icon} from '@mui/material';
 
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
+import { getApisState } from '../../utils';
+
+import {
+  Icon,
+  Box,
+  Typography,
+  TextField,
+  Fab,
+  MenuItem
+} from '@mui/material';
+
+import Select from '../ui/Select';
 
 import {
   useGetSettingsQuery,
@@ -32,21 +33,19 @@ const SettingsForm = () => {
 
   const [
     updateSettingTrigger, 
-    {
-      // data={},
-      // isLoading,
-      // isFetching,
-      // isSuccess,
-      // isError,
-      // error,
-    }
+    updateSettingState
   ] = useUpdateSettingMutation();
 
-  const isLoading = apiSettings.isLoading || apiUsbDevices.isLoading;
-  const isFetching = apiSettings.isFetching || apiUsbDevices.isFetching;
-  const isSuccess = apiSettings.isSuccess && apiUsbDevices.isSuccess;
-  const isError = apiSettings.isError || apiUsbDevices.isError;
-  const error = apiSettings.error || apiUsbDevices.error;
+  const {
+    isLoading,
+    isFetching,
+    isSuccess,
+    isError,
+    errors,
+  } = getApisState([
+    apiSettings,
+    apiUsbDevices
+  ]);
 
   if(isSuccess && !state.init) {
     setState({
@@ -61,6 +60,8 @@ const SettingsForm = () => {
     settings,
     usbDevices
   } = state;
+
+  console.log(settings)
 
   const onSettingChange = (settingKey, attrs) => {
     const newSettings = settings.map(item => {
@@ -93,17 +94,40 @@ const SettingsForm = () => {
   const [
     portainerTokenSetting,
     gpsdSetting,
-    zigbeeSetting
+    zigbeeSetting,
+    microphoneSetting
   ] = [
     getSetting('portainer_access_token'),
     getSetting('gpsd_usb_device'),
-    getSetting('zigbee_usb_device')
+    getSetting('zigbee_usb_device'),
+    getSetting('microphone_usb_device')
   ];
 
   let content;
   if (isLoading) {
     content = <div>Loading</div>
   } else if(isSuccess && state.init) {
+    const usbOptions = usbDevices.map(({vendor_id, product_id, product_name, vendor_name}) => {
+      const value = JSON.stringify({
+        vendor_id,
+        product_id
+      });
+
+      return {
+        value,
+        label: (
+          <Box>
+            <Typography variant="body1" component="h2">
+              {product_name}
+            </Typography>
+            <Typography variant="caption" component="h2">
+               {vendor_name}
+            </Typography>
+          </Box>
+        )
+      }
+    });
+
     content = (
       <Box sx={{display: 'flex', flexDirection: 'column', flex: 1, maxWidth: 600}}>
         <Typography variant="h6">
@@ -117,81 +141,28 @@ const SettingsForm = () => {
           onChange={(event) => onSettingChange(portainerTokenSetting.setting_key, {value: event.target.value})}
         />
 
-        <FormControl sx={{display: 'flex', margin: '15px', flex: 1}}>
-          <InputLabel>{gpsdSetting.label}</InputLabel>
-          <Select
-            value={gpsdSetting.value || ''}
-            label={gpsdSetting.label}
-            onChange={(event) => onSettingChange(gpsdSetting.setting_key, {value: event.target.value})}
-          >
-            {
-              usbDevices.map(({vendor_id, product_id, product_name, vendor_name}) => {
-                const value = JSON.stringify({
-                  vendor_id,
-                  product_id
-                });
-                return (
-                  <MenuItem 
-                    key={value} 
-                    value={value} 
-                    sx={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'flex-start'
-                    }}
-                  >
-                    <Typography variant="body1" component="h2">
-                      {product_name}
-                    </Typography>
-                    <Typography variant="caption" component="h2">
-                       {vendor_name}
-                    </Typography>
-                  </MenuItem>
-                )
-              })
-            }
-          </Select>
-        </FormControl>
-
-        <FormControl sx={{display: 'flex', margin: '15px', flex: 1}}>
-          <InputLabel>{zigbeeSetting.label}</InputLabel>
-          <Select
-            value={zigbeeSetting.value || ''}
-            label={zigbeeSetting.label}
-            onChange={(event) => onSettingChange(zigbeeSetting.setting_key, {value: event.target.value})}
-          >
-            {
-              usbDevices.map(({vendor_id, product_id, product_name, vendor_name}) => {
-                const value = JSON.stringify({
-                  vendor_id,
-                  product_id
-                });
-                return (
-                  <MenuItem 
-                    key={value} 
-                    value={value} 
-                    sx={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'flex-start'
-                    }}
-                  >
-                    <Typography variant="body1" component="h2">
-                      {product_name}
-                    </Typography>
-                    <Typography variant="caption" component="h2">
-                       {vendor_name}
-                    </Typography>
-                  </MenuItem>
-                )
-              })
-            }
-          </Select>
-        </FormControl>
+        <Select
+          label={gpsdSetting.label}
+          value={gpsdSetting.value}
+          onChange={(event) => onSettingChange(gpsdSetting.setting_key, {value: event.target.value})}
+          options={usbOptions}
+        />
+        <Select
+          label={zigbeeSetting.label}
+          value={zigbeeSetting.value}
+          onChange={(event) => onSettingChange(zigbeeSetting.setting_key, {value: event.target.value})}
+          options={usbOptions}
+        />
+        <Select
+          label={microphoneSetting.label}
+          value={microphoneSetting.value}
+          onChange={(event) => onSettingChange(microphoneSetting.setting_key, {value: event.target.value})}
+          options={usbOptions}
+        />
       </Box>
     );
   } else if (isError) {
-  	const {status, error: message} = error;
+  	const {status, error: message} = errors[0];
     content = <div>{message}</div>
   }
 

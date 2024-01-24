@@ -24,7 +24,7 @@ export default function BatteryPage({ battery, compact=false }) {
   });
 
   let content;
-  if (!batteryState) {
+  if (!batteryState || !batteryState.voltage) {
     content = <div>Loading</div>
   } else {
     const {
