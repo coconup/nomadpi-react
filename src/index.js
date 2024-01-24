@@ -16,6 +16,7 @@ import '@fontsource/roboto/700.css';
 
 const container = document.getElementById('root');
 const root = createRoot(container);
+console.log(process.env)
 
 root.render(
   <Provider store={store}>

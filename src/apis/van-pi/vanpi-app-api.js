@@ -22,7 +22,7 @@ import Heater from '../../models/Heater';
 import TemperatureSensor from '../../models/TemperatureSensor';
 import SolarChargeController from '../../models/SolarChargeController';
 
-const BASE_URL = process.env.API_BASE_URL || 'http://raspberrypi.local:3001';
+const BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://raspberrypi.local:3001';
 
 export const vanPiAppAPI = createApi({
   reducerPath: 'vanpi-app-api',

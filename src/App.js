@@ -18,6 +18,7 @@ import HeatersPage from './components/heaters-page/HeatersPage';
 import DayNightIndicator from './components/day-night-indicator/DayNightIndicator';
 import WeatherForecast from './components/weather-forecast/WeatherForecast';
 import ResourceStateProvider from './components/resource-state-provider/ResourceStateProvider';
+import VoiceAssistantProvider from './components/voice-assistant-provider/VoiceAssistantProvider';
 
 import { useLoginMutation, useCheckAuthStatusQuery } from './apis/van-pi/vanpi-app-api';
 
@@ -79,6 +80,7 @@ function App() {
           <Route path="/monitor"><MonitorPage /></Route>
           <Route path="/settings"><SettingsPage /></Route>
           <Route path="/heater"><HeatersPage /></Route>
+          <Route path="/voice"><VoiceAssistantProvider /></Route>
         </Box>
       </Box>
     )
