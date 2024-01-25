@@ -3,7 +3,8 @@ import { makeCrudEndpoints } from '../crudBuilder';
 
 import {
   toSnakeCase,
-  uppercaseFirstLetter
+  uppercaseFirstLetter,
+  snakeToCamelCase
 } from '../../utils';
 
 import { resourceNames } from '../../app/resourceStateMiddleware';
@@ -24,6 +25,24 @@ import SolarChargeController from '../../models/SolarChargeController';
 
 const BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://raspberrypi.local:3001';
 
+const toPlural = (resource) => {
+  return {
+    relay: 'relays',
+    wifi_relay: 'wifi_relays',
+    action_switch: 'action_switches',
+    mode: 'modes'
+  }[resource];
+};
+
+const toSingular = (resource) => {
+  return {
+    relays: 'relay',
+    wifi_relays: 'wifi_relay',
+    action_switches: 'action_switch',
+    modes: 'mode'
+  }[resource];
+};
+
 export const vanPiAppAPI = createApi({
   reducerPath: 'vanpi-app-api',
   tagTypes: [
@@ -40,8 +59,8 @@ export const vanPiAppAPI = createApi({
     'Camera',
     'Heater',
     'TemperatureSensor',
-    'RelaysState',
-    'ModesState',
+    'RelayState',
+    'ModeState',
     'BatteryState',
     'SolarChargecontrollerState',
     'WaterTankState',
@@ -70,28 +89,17 @@ export const vanPiAppAPI = createApi({
         query: () => 'auth/status',
       }),
 
-      postRelaysState: builder.mutation({
-        query: (body) => ({
-          url: `relays/state`,
-          method: 'post',
-          body
-        }),
-        invalidatesTags: (result, error, payload, request) => {
-          if(result) {
-            return [{type: 'RelaysState'}];
+      postSwitchState: builder.mutation({
+        query: ({switch_type, switch_id, ...body}) => {
+          return {
+            url: `${toPlural(switch_type)}/${switch_id}/state`,
+            method: 'post',
+            body
           }
-        }
-      }),
-
-      postModeState: builder.mutation({
-        query: ({mode_key, ...body}) => ({
-          url: `modes/${mode_key}`,
-          method: 'post',
-          body
-        }),
+        },
         invalidatesTags: (result, error, payload, request) => {
           if(result) {
-            return [{type: 'ModesState'}];
+            return [{type: `RelaysState`}];
           }
         }
       }),
@@ -237,9 +245,7 @@ export const {
   useLoginMutation,
   useCheckAuthStatusQuery,
 
-  usePostRelaysStateMutation,
-
-  usePostModeStateMutation,
+  usePostSwitchStateMutation,
   
   useUpdateSettingMutation,
   useGetSettingsQuery,

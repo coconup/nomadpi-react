@@ -26,9 +26,19 @@ const toSnakeCase = (string) => {
   return lowercaseFirstLetter(string).replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
 };
 
+const snakeToCamelCase = (string) => {
+  return string.toLowerCase().replace(/([-_][a-z])/g, group =>
+    group
+      .toUpperCase()
+      .replace('-', '')
+      .replace('_', '')
+  );
+};
+
 module.exports = {
   getApisState,
   uppercaseFirstLetter,
   lowercaseFirstLetter,
-  toSnakeCase
+  toSnakeCase,
+  snakeToCamelCase
 };

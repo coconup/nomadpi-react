@@ -17,6 +17,8 @@ export default function VoiceAssistantPipeline() {
   const [listening, setListening] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [processFile, setProcessFile] = useState(null);
+  const [prompt, setPrompt] = useState(null);
+  const [commands, setCommands] = useState([]);
 
   // Set a timeout of 5s in case nothing
   // is said after the wake word.
@@ -62,9 +64,36 @@ export default function VoiceAssistantPipeline() {
         processFile && (
           <WhisperProvider
             file={processFile}
-            onTranscript={(data) => setProcessFile(null)}
+            onTranscript={({ data }) => {
+              setProcessFile(null);
+              setPrompt(data.text);
+            }}
           />
         )
+      }
+      {
+        prompt && (
+          <ButterflyProvider
+            prompt={prompt}
+            onResponse={({ data }) => {
+              setPrompt(null);
+              setCommands(data.data);
+            }}
+          />
+        )
+      }
+      {
+        commands.map((command, i) => {
+          return (
+            <ButterflyProvider
+              key={`command-${i}`}
+              command={command}
+              onResponse={({ data }) => {
+                setCommands(commands.filter(c => JSON.stringify(c) !== JSON.stringify(command)));
+              }}
+            />
+          )
+        })
       }
     </span>
   )
@@ -205,4 +234,60 @@ const WhisperProvider = ({ file, onTranscript }) => {
       whisper();
     };
   }, [file]);
+}
+
+const ButterflyProvider = ({ prompt, command, onResponse }) => {
+  useEffect(() => {
+    const butterfly = async () => {
+      let response;
+
+      if(prompt) {
+        console.log('prompting butterfly')
+        try {
+          response = await axios.post(
+            'http://localhost:3005/engine/intent',
+            { prompt },
+            {
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }
+          );
+          console.log('Butterfly:', response);
+        } catch (error) {
+          console.error('Error calling Butterfly API:', error);
+          response = error;
+        }
+      } else if(command) {
+        console.log('posting to butterfly service')
+        const {
+          service_id,
+          function_name,
+          function_arguments: body
+        } = command;
+
+        try {
+          response = await axios.post(
+            `http://localhost:3005/services/${service_id}/${function_name}`,
+            body,
+            {
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }
+          );
+          console.log('Butterfly:', response);
+        } catch (error) {
+          console.error('Error calling Butterfly API:', error);
+          response = error;
+        }
+      }
+
+      onResponse(response)
+    }
+
+    if(prompt || command) {
+      butterfly();
+    };
+  }, [prompt, command]);
 }

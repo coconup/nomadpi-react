@@ -80,7 +80,6 @@ function App() {
           <Route path="/monitor"><MonitorPage /></Route>
           <Route path="/settings"><SettingsPage /></Route>
           <Route path="/heater"><HeatersPage /></Route>
-          <Route path="/voice"><VoiceAssistantProvider /></Route>
         </Box>
       </Box>
     )
@@ -89,6 +88,7 @@ function App() {
   return (
     <ThemeProvider theme={theme(state.nightMode)}>
       <ResourceStateProvider />
+      <VoiceAssistantProvider />
       {
         !prefersDarkMode && (
           <DayNightIndicator

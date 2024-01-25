@@ -13,10 +13,7 @@ import { Icon } from '@mui/material';
 
 import ModeSwitch from '../../models/ModeSwitch';
 
-import { 
-  usePostRelaysStateMutation,
-  usePostModeStateMutation
-} from '../../apis/van-pi/vanpi-app-api';
+import { usePostSwitchStateMutation } from '../../apis/van-pi/vanpi-app-api';
 
 export default function SwitchControl({switchItem, relays, wifiRelays, relaysState, modesState}) {
   const itemType = switchItem.snakecaseType;
@@ -37,63 +34,18 @@ export default function SwitchControl({switchItem, relays, wifiRelays, relaysSta
   }
 
   const [
-    postRelaysStateTrigger, 
-    relayStateResponse
-  ] = usePostRelaysStateMutation();
-
-  const [
-    postModeStateTrigger, 
-    modeStateResponse
-  ] = usePostModeStateMutation();
-
-  const relayStatePayload = (relayItem, actor, state) => {
-    const {
-      snakecaseType,
-      relay_position,
-    } = relayItem;
-
-    return {
-      relay_type: snakecaseType,
-      ...snakecaseType === 'wifi_relay' ? {
-        vendor_id: relayItem.vendor_id,
-        mqtt_topic: relayItem.mqtt_topic
-      } : {},
-      relay_position,
-      actor,
-      mode: state ? 'subscribe' : 'unsubscribe',
-      ...state ? {state: true} : {}
-    }
-  }
+    postSwitchStateTrigger, 
+    switchStateResponse
+  ] = usePostSwitchStateMutation();
 
   const handleClick = () => {
-    if(['relay', 'wifi_relay'].includes(snakecaseType)) {
-      const payload = relayStatePayload(
-        switchItem,
-        actor,
-        !state
-      );
-
-      postRelaysStateTrigger([payload]);
-    } else if(snakecaseType === 'action_switch') {
-      const payload = switchItem.switches.map(({switch_type, switch_id, on_state}) => {
-        let relay;
-        if(switch_type === 'relay') {
-          relay = relays.find(({id}) => id === switch_id);
-        } else if (switch_type === 'wifi_relay') {
-          relay = wifiRelays.find(({id}) => id === switch_id);
-        };
-
-        return {
-          ...relayStatePayload(relay, actor, !state),
-          ...!state ? {state: on_state} : {}
-        }
-      })
-
-      postRelaysStateTrigger(payload);
-    } else if(snakecaseType === 'mode') {
-      postModeStateTrigger({ mode_key: switchItem.mode_key, state: !state});
-    }
-  }
+    postSwitchStateTrigger({
+      switch_type: snakecaseType,
+      switch_id: switchItem.id,
+      actor,
+      state: !state
+    });
+  };
 
   const transform = state ? 'scale(0.95)' : null;
 
