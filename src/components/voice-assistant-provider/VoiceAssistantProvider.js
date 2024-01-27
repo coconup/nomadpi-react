@@ -283,7 +283,7 @@ export default function VoiceAssistantPipeline() {
 }
 
 const WakeWordProvider = ({ onListen, pause }) => {
-  const websocketURL = `${process.env.REACT_APP_API_BASE_URL.replace(/^https?:\/\//, 'ws://')}/ws/open_wake_word`;
+  const websocketURL = `${process.env.REACT_APP_API_BASE_URL.replace('https://', 'wss://').replace('http://', 'ws://')}/ws/open_wake_word`;
 
   const {
     sendMessage,
