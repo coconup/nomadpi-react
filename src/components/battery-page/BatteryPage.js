@@ -198,7 +198,7 @@ export default function BatteryPage({ battery, compact=false }) {
                       fontWeight: 300
                     }}
                   >
-                    { capacity.remaining.toFixed(2) }
+                    { capacity.remaining.toFixed(1) }
                   </Typography>
                   <Typography 
                     variant="h5" 

@@ -47,7 +47,7 @@ export default function WaterTankPage({ waterTank, compact=false }) {
       total_volume_liters,
       remaining_volume_liters
     } = waterTankState;
-    
+
     let subArcs = [
       ...alert_on === 'empty' && [
         {
@@ -62,7 +62,7 @@ export default function WaterTankPage({ waterTank, compact=false }) {
         },
         {
           limit: 100,
-          color: theme.palette.mode === 'dark' ? theme.palette.grey[700] : theme.palette.grey[50],
+          color: theme.palette.grey[300],
         },
       ] || [],
 

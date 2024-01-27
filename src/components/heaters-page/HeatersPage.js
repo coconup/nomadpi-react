@@ -75,7 +75,11 @@ export default function HeatersPage() {
   };
 
   const refetchData = () => {
-    apiHeaters.refetch().then((result) => setState({...state, heaters: result.data}));
+    try {
+      apiHeaters.refetch().then((result) => setState({...state, heaters: result.data}));  
+    } catch(e) {
+      console.error('error refetching heaters: ', e);
+    }
   };
 
   const saveHeaters = () => {

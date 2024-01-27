@@ -2,7 +2,7 @@ import { useState } from 'react';
 import logo from './logo.svg';
 import store from "./app/store";
 
-import { Route } from "wouter";
+import { Route, Switch, Redirect } from "wouter";
 import { useSelector } from 'react-redux';
 
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -72,14 +72,17 @@ function App() {
             display: 'flex'
           }}
         >
-          <Route path="/home"><HomePanel /></Route>
-          <Route path="/weather">
-            <WeatherForecast />
-          </Route>
-          <Route path="/control-panel"><SwitchGroupsPage /></Route>
-          <Route path="/monitor"><MonitorPage /></Route>
-          <Route path="/settings"><SettingsPage /></Route>
-          <Route path="/heater"><HeatersPage /></Route>
+          <Switch>
+            <Route path="/"><HomePanel /></Route>
+            <Route path="/weather">
+              <WeatherForecast />
+            </Route>
+            <Route path="/control-panel"><SwitchGroupsPage /></Route>
+            <Route path="/monitor"><MonitorPage /></Route>
+            <Route path="/settings"><SettingsPage /></Route>
+            <Route path="/heater"><HeatersPage /></Route>
+            <Route><Redirect to={'/'} /></Route>
+          </Switch>
         </Box>
       </Box>
     )
@@ -99,7 +102,7 @@ function App() {
       <Box 
         className="App"
         sx={{
-          backgroundColor: 'background.paper'
+          backgroundColor: 'background.default'
         }}
       >
         {content}

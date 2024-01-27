@@ -93,7 +93,7 @@ export default function WeatherCard() {
       todayDescFontColor: textColor,
       todayInfoFontColor: textColor,
       todayIconColor: '#FFF',
-      forecastBackgroundColor: theme.palette.mode === 'dark' ? theme.palette.grey[800] : theme.palette.background.default,
+      forecastBackgroundColor: theme.palette.mode === 'dark' ? theme.palette.grey[800] : theme.palette.background.paper,
       forecastSeparatorColor: '#FFF',
       forecastDateColor: theme.palette.text.primary,
       forecastDescColor: theme.palette.text.primary,

@@ -24,7 +24,7 @@ export default function NavigationDrawer({ open, toggleDrawer }) {
     {
       label: 'Home',
       icon: <TerrainIcon />,
-      path: '/home'
+      path: '/'
     },
     {
       label: 'Control panel',

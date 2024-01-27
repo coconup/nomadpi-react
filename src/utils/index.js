@@ -35,10 +35,13 @@ const snakeToCamelCase = (string) => {
   );
 };
 
+const getRandomArrayElement = (array) => array[Math.floor(Math.random() * array.length)];
+
 module.exports = {
   getApisState,
   uppercaseFirstLetter,
   lowercaseFirstLetter,
   toSnakeCase,
-  snakeToCamelCase
+  snakeToCamelCase,
+  getRandomArrayElement
 };

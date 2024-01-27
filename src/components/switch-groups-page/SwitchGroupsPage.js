@@ -16,8 +16,6 @@ import {
   useGetModesQuery, 
   useGetActionSwitchesQuery, 
   useGetSwitchGroupsQuery,
-  useGetRelaysStateQuery,
-  useGetModesStateQuery
 } from '../../apis/van-pi/vanpi-app-api';
 
 import SwitchGroupItem from '../switch-group-item/SwitchGroupItem';
@@ -40,8 +38,6 @@ const SwitchGroupsPage = () => {
   const apiModeSwitches = useGetModesQuery();
   const apiActionSwitches = useGetActionSwitchesQuery();
   const apiSwitchGroups = useGetSwitchGroupsQuery();
-  const apiRelaysState = useGetRelaysStateQuery();
-  const apiModesState = useGetModesStateQuery();
 
   const {
     isLoading,
@@ -54,9 +50,7 @@ const SwitchGroupsPage = () => {
     apiWifiRelaySwitches,
     apiActionSwitches,
     apiSwitchGroups,
-    apiRelaysState,
     apiModeSwitches,
-    apiModesState
   ]);
 
   if(!state.init && isSuccess) {
@@ -69,8 +63,6 @@ const SwitchGroupsPage = () => {
       relaySwitches: apiRelaySwitches.data,
       wifiRelaySwitches: apiWifiRelaySwitches.data,
       actionSwitches: apiActionSwitches.data,
-      relaysState: apiRelaysState.data,
-      modesState: apiModesState.data,
       init: true, 
       selectedSwitchGroup: sortedSwitchGroups[0] && sortedSwitchGroups[0].name || initialState.selectedSwitchGroup
     })

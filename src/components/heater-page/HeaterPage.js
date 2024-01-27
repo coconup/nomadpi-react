@@ -9,6 +9,7 @@ import {
   Button,
   Chip,
   Unstable_Grid2 as Grid,
+  Paper,
   ToggleButton,
   ToggleButtonGroup
 } from '@mui/material';
@@ -59,144 +60,148 @@ export default function HeaterPage({ heater, onChange }) {
   };
 
   return (
-    <Grid
-      container
-      spacing={2}
-      sx={{
-        flex: 1,
-        justifyContent: 'center',
-        flexGrow: 1,
-        display: 'flex'
-      }}
-    >
+    <Paper sx={{
+      padding: '25px 5px'
+    }}>
       <Grid
         container
         spacing={2}
-        lg={3}
-        md={12}
         sx={{
-          [theme.breakpoints.down('lg')]: {
-            justifyContent: 'center',
-            alignItems: 'center'
-          },
+          flex: 1,
+          justifyContent: 'center',
+          flexGrow: 1,
+          display: 'flex'
         }}
       >
-        <Grid 
-          lg={12}
-          md={4}
-          xs={12}
-          sx={{ width: '100%' }}
+        <Grid
+          container
+          spacing={2}
+          lg={3}
+          md={12}
+          sx={{
+            [theme.breakpoints.down('lg')]: {
+              justifyContent: 'center',
+              alignItems: 'center'
+            },
+          }}
         >
-          <ToggleButtonGroup
-            color="primary"
-            value={mode}
-            exclusive
-            onChange={(event) => {
-              onChange(heater, {heater_settings: {...heater_settings, thermostat: {...thermostat, mode: event.target.value, timer_from, timer_to}}})
-            }}
-            sx={{
-              margin: '15px 15px 15px 0px'
-            }}
+          <Grid 
+            lg={12}
+            md={4}
+            xs={12}
+            sx={{ width: '100%' }}
           >
-            <ToggleButton value="off" sx={{width: 70}}>Off</ToggleButton>
-            <ToggleButton value="on" sx={{width: 70}}>On</ToggleButton>
-            <ToggleButton value="timer" sx={{width: 70}}>Timer</ToggleButton>
-          </ToggleButtonGroup>
+            <ToggleButtonGroup
+              color="primary"
+              value={mode}
+              exclusive
+              onChange={(event) => {
+                onChange(heater, {heater_settings: {...heater_settings, thermostat: {...thermostat, mode: event.target.value, timer_from, timer_to}}})
+              }}
+              sx={{
+                margin: '15px 15px 15px 0px'
+              }}
+            >
+              <ToggleButton value="off" sx={{width: 70}}>Off</ToggleButton>
+              <ToggleButton value="on" sx={{width: 70}}>On</ToggleButton>
+              <ToggleButton value="timer" sx={{width: 70}}>Timer</ToggleButton>
+            </ToggleButtonGroup>
+          </Grid>
+          <Grid 
+            lg={12}
+            md={3}
+            xs={12}
+          >
+            <Metric
+              label="Thermostat temperature"
+              value={`20°`}
+              unit="C"
+            />
+          </Grid>
+          <Grid 
+            lg={12}
+            md={3}
+            xs={12}
+          >
+            <Metric
+              label="Heater temperature"
+              value={`80°`}
+              unit="C"
+            />
+          </Grid>
+          <Grid 
+            lg={12}
+            md={2}
+            xs={12}
+          >
+            <Metric
+              label="Status"
+              value={
+                <Chip 
+                  label={'Heating'}
+                  sx={{
+                    // backgroundColor: status.color,
+                    // color: status.textColor
+                  }}
+                />
+              }
+            />
+          </Grid>
         </Grid>
         <Grid 
-          lg={12}
-          md={3}
           xs={12}
-        >
-          <Metric
-            label="Thermostat temperature"
-            value={`20°`}
-            unit="C"
-          />
-        </Grid>
-        <Grid 
-          lg={12}
-          md={3}
-          xs={12}
-        >
-          <Metric
-            label="Heater temperature"
-            value={`80°`}
-            unit="C"
-          />
-        </Grid>
-        <Grid 
-          lg={12}
-          md={2}
-          xs={12}
-        >
-          <Metric
-            label="Status"
-            value={
-              <Chip 
-                label={'Heating'}
-                sx={{
-                  // backgroundColor: status.color,
-                  // color: status.textColor
-                }}
-              />
-            }
-          />
-        </Grid>
-      </Grid>
-      <Grid 
-        xs={12}
-        md={6}
-        lg={4}
-        sx={{
-          textAlign: 'center'
-        }}
-      >
-        <Gauge
-          disabled={mode === 'off'}
-          min={ 5 }
-          max={ 30 }
-          pathStartAngle={ 135 }
-          pathEndAngle={ 45 }
-          step={ 0.5 }
-          arrowStep={ 1 }
-          round={ 1 }
-          ticksCount={ 75 }
-          ticksGroupSize={ 15 }
-          textSuffix={ '°' }
-          tickValuesSuffix={ '°' }
-          pointers={[{ value: target_temperature }]}
-          onChange={(event) => {
-            const value = event[0].value;
-            onChange(heater, {heater_settings: {...heater_settings, thermostat: {...thermostat, target_temperature: value}}})
+          md={6}
+          lg={4}
+          sx={{
+            textAlign: 'center'
           }}
-        />
-      </Grid>
-      <Grid 
-        xs={12}
-        md={6}
-        lg={4}
-        sx={{
-          textAlign: 'center'
-        }}
-      >
-        <Gauge
-          disabled={mode !== 'timer'}
-          data={hours}
-          textBetween={ ' - ' }
-          textFontSize={ 24 }
-          ticksCount={ 24 }
-          ticksGroupSize={ 6 }
-          pointers={[{ value: decimalToTime(timer_from) }, { value: decimalToTime(timer_to) }]}
-          onChange={(events, value) => {
-            const [
-              { value: newTimerFrom },
-              { value: newTimerTo }
-            ] = events;
-            onChange(heater, {heater_settings: {...heater_settings, thermostat: {...thermostat, timer_from: timeToDecimal(newTimerFrom), timer_to: timeToDecimal(newTimerTo)}}})
+        >
+          <Gauge
+            disabled={mode === 'off'}
+            min={ 5 }
+            max={ 30 }
+            pathStartAngle={ 135 }
+            pathEndAngle={ 45 }
+            step={ 0.5 }
+            arrowStep={ 1 }
+            round={ 1 }
+            ticksCount={ 75 }
+            ticksGroupSize={ 15 }
+            textSuffix={ '°' }
+            tickValuesSuffix={ '°' }
+            pointers={[{ value: target_temperature }]}
+            onChange={(event) => {
+              const value = event[0].value;
+              onChange(heater, {heater_settings: {...heater_settings, thermostat: {...thermostat, target_temperature: value}}})
+            }}
+          />
+        </Grid>
+        <Grid 
+          xs={12}
+          md={6}
+          lg={4}
+          sx={{
+            textAlign: 'center'
           }}
-        />
+        >
+          <Gauge
+            disabled={mode !== 'timer'}
+            data={hours}
+            textBetween={ ' - ' }
+            textFontSize={ 24 }
+            ticksCount={ 24 }
+            ticksGroupSize={ 6 }
+            pointers={[{ value: decimalToTime(timer_from) }, { value: decimalToTime(timer_to) }]}
+            onChange={(events, value) => {
+              const [
+                { value: newTimerFrom },
+                { value: newTimerTo }
+              ] = events;
+              onChange(heater, {heater_settings: {...heater_settings, thermostat: {...thermostat, timer_from: timeToDecimal(newTimerFrom), timer_to: timeToDecimal(newTimerTo)}}})
+            }}
+          />
+        </Grid>
       </Grid>
-    </Grid>
+    </Paper>
   );
 }
