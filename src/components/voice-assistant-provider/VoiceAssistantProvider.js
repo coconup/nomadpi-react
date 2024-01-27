@@ -283,11 +283,13 @@ export default function VoiceAssistantPipeline() {
 }
 
 const WakeWordProvider = ({ onListen, pause }) => {
+  const websocketURL = `${process.env.REACT_APP_API_BASE_URL.replace(/^https?:\/\//, 'ws://')}/ws/open_wake_word`;
+
   const {
     sendMessage,
     readyState
   } = useWebSocket(
-    'ws://localhost:9002/ws', 
+    websocketURL, 
     {
       onOpen: () => console.log('WebSocket connection is open'),
       onMessage: message => {
@@ -454,6 +456,8 @@ const WhisperProvider = ({ file, onTranscript, onError }) => {
 }
 
 const ButterflyProvider = ({ prompt, command, commandConfirmations, onProcessing=()=>{}, onError, onResponse }) => {
+  const baseUrl = `${process.env.REACT_APP_API_BASE_URL}/butterfly`;
+
   const [processing, setProcessing] = useState(false);
   const [processed, setProcessed] = useState(false);
 
@@ -480,7 +484,7 @@ const ButterflyProvider = ({ prompt, command, commandConfirmations, onProcessing
       let payload;
 
       if(prompt) {
-        url = 'http://localhost:3005/engine/intent';
+        url = `${baseUrl}/engine/intent`;
         payload = { prompt };
       } else if (command) {
         const {
@@ -490,13 +494,13 @@ const ButterflyProvider = ({ prompt, command, commandConfirmations, onProcessing
           function_arguments: body
         } = command;
 
-        url = `http://localhost:3005/services/${service_id}/${function_name}`;
+        url = `${baseUrl}/services/${service_id}/${function_name}`;
         payload = {
           original_prompt,
           ...body
         };
       } else if(commandConfirmations) {
-        url = 'http://localhost:3005/engine/command_confirmation';
+        url = `${baseUrl}/engine/command_confirmation`;
         payload = { commands: commandConfirmations };
       }
 
@@ -567,7 +571,6 @@ const VoiceProvider = ({ prompt, onError, onResponse }) => {
   useEffect(() => {
     const elevenlabs = async () => {
       try {
-        // Replace 'YOUR_API_ENDPOINT' with the actual API endpoint to fetch the audio file
         const response = await axios.post(
           'https://api.elevenlabs.io/v1/text-to-speech/JFEEeeDJFfkQ7CFhBTSM', 
           {
