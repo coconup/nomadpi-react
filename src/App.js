@@ -32,12 +32,19 @@ import HeatersForm from './components/heaters-form/HeatersForm';
 import TemperatureSensorsForm from './components/temperature-sensors-form/TemperatureSensorsForm';
 import SolarChargeControllersForm from './components/solar-charge-controllers-form/SolarChargeControllersForm';
 
-import { useLoginMutation, useCheckAuthStatusQuery } from './apis/van-pi/vanpi-app-api';
+import {
+  useGetSettingsQuery,
+  useLoginMutation,
+  useCheckAuthStatusQuery
+} from './apis/van-pi/vanpi-app-api';
 
 import { ThemeProvider } from '@mui/material/styles';
 import theme from './app/theme';
 
 function App() {
+  useCheckAuthStatusQuery();
+  useGetSettingsQuery();
+
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
 
   const [state, setState] = useState({
@@ -51,8 +58,7 @@ function App() {
   ] = useLoginMutation();
 
   const { loggedIn } = useSelector(state => state.auth);
-
-  useCheckAuthStatusQuery();
+  const { settings } = useSelector(state => state.settings);
 
   const handleNightModeChange = (isNight) => {
     console.log(`Night mode is ${isNight ? 'on' : 'off'}`);

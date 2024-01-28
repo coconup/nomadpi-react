@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { styled } from '@mui/material/styles';
 
 import {
@@ -60,16 +61,24 @@ import VoiceAssistantProvider from './VoiceAssistantProvider';
 export default function VoiceAssistantToggle() {
   const [active, setActive] = useState(true);
 
-  return (
-    <Box>
-      <MaterialUISwitch
-        checked={active}
-        onChange={() => setActive(!active)}
-      />
-      {
-        active && <VoiceAssistantProvider />
-      }
-    </Box>
-  )
+  const { settings } = useSelector(state => state.settings);
+  if(settings) {
+    const voiceAssistantEnabledSetting = settings.find(({ setting_key }) => setting_key === 'voice_assistant_enabled');
 
+    const enabled = JSON.parse(voiceAssistantEnabledSetting.value);
+
+    if(enabled) {
+      return (
+        <Box>
+          <MaterialUISwitch
+            checked={active}
+            onChange={() => setActive(!active)}
+          />
+          {
+            active && <VoiceAssistantProvider />
+          }
+        </Box>
+      )
+    }
+  }
 }

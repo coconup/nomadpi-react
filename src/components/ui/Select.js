@@ -18,8 +18,8 @@ const SelectComponent = ({ label, value, options, onChange, sx={} }) => {
         onChange={onChange}
       >
         {
-          options.map(({label: optionLabel, value: optionValue}) => {
-            return <MenuItem key={`${label}-${optionValue}`} value={optionValue}>{ optionLabel }</MenuItem>
+          options.map(({label: optionLabel, value: optionValue}, i) => {
+            return <MenuItem key={`${label}-${optionValue}-${i}`} value={optionValue}>{ optionLabel }</MenuItem>
           })
         }
       </Select>

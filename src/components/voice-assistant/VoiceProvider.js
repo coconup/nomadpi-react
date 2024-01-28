@@ -1,7 +1,17 @@
 import { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import axios from 'axios';
 
-export default function VoiceProvider({ prompt, onError, onResponse, voiceId="JFEEeeDJFfkQ7CFhBTSM" }) {
+export default function VoiceProvider({ prompt, onError, onResponse }) {
+  const { settings } = useSelector(state => state.settings);
+
+  let voiceId;
+  
+  if(settings) {
+    const voiceAssistantVoiceIdSetting = settings.find(({ setting_key }) => setting_key === 'voice_assistant_voice_id');
+    voiceId = voiceAssistantVoiceIdSetting.value;
+  };
+
   const [processing, setProcessing] = useState(false);
 
   useEffect(() => {

@@ -1,71 +1,44 @@
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
 
 import { getApisState } from '../../utils';
 
 import {
   Icon,
   Box,
-  Typography,
-  TextField,
   Fab,
-  MenuItem
+  FormGroup,
+  FormControlLabel,
+  Paper,
+  Switch,
+  TextField,
+  Typography,
 } from '@mui/material';
 
+import Container from '../ui/Container';
 import Select from '../ui/Select';
 
-import {
-  useGetSettingsQuery,
-  useUpdateSettingMutation,
-  useGetUsbDevicesQuery
-} from '../../apis/van-pi/vanpi-app-api';
+import UsbDeviceSelect from '../usb-device-select/UsbDeviceSelect';
+
+import { useUpdateSettingMutation } from '../../apis/van-pi/vanpi-app-api';
 
 const SettingsForm = () => {
-  const initialState = {
-    settings: [],
-    usbDevices: [],
-    init: false
+  const { settings: storeSettings } = useSelector(state => state.settings);
+
+  const [settings, setSettings] = useState(null);
+
+  if(storeSettings && !settings) {
+    setSettings(storeSettings);
   };
-
-  const [state, setState] = useState(initialState);  
-
-  let apiSettings = useGetSettingsQuery();
-  let apiUsbDevices = useGetUsbDevicesQuery();
 
   const [
     updateSettingTrigger, 
     updateSettingState
   ] = useUpdateSettingMutation();
 
-  const {
-    isLoading,
-    isFetching,
-    isSuccess,
-    isError,
-    errors,
-  } = getApisState([
-    apiSettings,
-    apiUsbDevices
-  ]);
-
-  if(isSuccess && !state.init) {
-    setState({
-      ...state,
-      settings: apiSettings.data,
-      usbDevices: apiUsbDevices.data,
-      init: true
-    });
-  };
-
-  const {
-    settings,
-    usbDevices
-  } = state;
-
-  console.log(settings)
-
-  const onSettingChange = (settingKey, attrs) => {
+  const onSettingChange = ({ setting_key }, attrs) => {
     const newSettings = settings.map(item => {
-      if(item.setting_key === settingKey) {
+      if(item.setting_key === setting_key) {
         const newItem = item.clone();
         Object.keys(attrs).forEach(k => newItem[k] = attrs[k]);
         return newItem;
@@ -74,104 +47,104 @@ const SettingsForm = () => {
       }
     })
 
-    setState({...state, settings: newSettings})
-  };
-
-  const refetchData = () => {
-    apiSettings.refetch().then((result) => setState({...state, settings: result.data}));
+    setSettings(newSettings);
   };
 
   const saveSettings = () => {
     settings.forEach(item => {
-      updateSettingTrigger(item.toJSONPayload()).then(refetchData);
+      updateSettingTrigger(item.toJSONPayload());
     });
   };
 
-  const getSetting = (settingKey) => {
-    return settings.find(({setting_key}) => setting_key === settingKey);
-  }
-
-  const [
-    portainerTokenSetting,
-    gpsdSetting,
-    zigbeeSetting,
-    microphoneSetting
-  ] = [
-    getSetting('portainer_access_token'),
-    getSetting('gpsd_usb_device'),
-    getSetting('zigbee_usb_device'),
-    getSetting('microphone_usb_device')
-  ];
-
   let content;
-  if (isLoading) {
+  if (!settings) {
     content = <div>Loading</div>
-  } else if(isSuccess && state.init) {
-    const usbOptions = usbDevices.map(({vendor_id, product_id, product_name, vendor_name}) => {
-      const value = JSON.stringify({
-        vendor_id,
-        product_id
-      });
+  } else {
+    const [
+      portainerTokenSetting,
+      gpsdSetting,
+      zigbeeSetting,
+      voiceAssistantVoiceIdSetting,
+      voiceAssistantEnabledSetting,
+    ] = [
+      settings.find(({ setting_key }) => setting_key === 'portainer_access_token'),
+      settings.find(({ setting_key }) => setting_key === 'gpsd_usb_device'),
+      settings.find(({ setting_key }) => setting_key === 'zigbee_usb_device'),
+      settings.find(({ setting_key }) => setting_key === 'voice_assistant_voice_id'),
+      settings.find(({ setting_key }) => setting_key === 'voice_assistant_enabled'),
+    ];
 
-      return {
-        value,
-        label: (
-          <Box>
-            <Typography variant="body1" component="h2">
-              {product_name}
-            </Typography>
-            <Typography variant="caption" component="h2">
-               {vendor_name}
-            </Typography>
-          </Box>
-        )
-      }
-    });
+    const parsedValues = {
+      voiceAssistantEnabled: JSON.parse(voiceAssistantEnabledSetting.value)
+    };
+
+    const title = (label) => {
+      return (
+        <Typography 
+          variant="h5"
+          sx={{ margin: '15px 0px 0px 15px'}}
+        >
+          {label}
+        </Typography>
+      )
+    }
 
     content = (
       <Box sx={{display: 'flex', flexDirection: 'column', flex: 1, maxWidth: 600}}>
-        <Typography variant="h6">
-          General
-        </Typography>
+        { title('General') }
         <TextField
           type="password"
-          label="Portainer access token"
+          label={portainerTokenSetting.label}
           value={portainerTokenSetting.value || ''}
           sx={{margin: '15px', display: 'flex'}}
-          onChange={(event) => onSettingChange(portainerTokenSetting.setting_key, {value: event.target.value})}
+          onChange={(event) => onSettingChange(portainerTokenSetting, {value: event.target.value})}
         />
 
-        <Select
+        { title('Devices') }
+        <UsbDeviceSelect
           label={gpsdSetting.label}
           value={gpsdSetting.value}
-          onChange={(event) => onSettingChange(gpsdSetting.setting_key, {value: event.target.value})}
-          options={usbOptions}
+          onChange={(value) => onSettingChange(gpsdSetting, { value })}
         />
-        <Select
+        <UsbDeviceSelect
           label={zigbeeSetting.label}
           value={zigbeeSetting.value}
-          onChange={(event) => onSettingChange(zigbeeSetting.setting_key, {value: event.target.value})}
-          options={usbOptions}
+          onChange={(value) => onSettingChange(zigbeeSetting, { value })}
         />
-        <Select
-          label={microphoneSetting.label}
-          value={microphoneSetting.value}
-          onChange={(event) => onSettingChange(microphoneSetting.setting_key, {value: event.target.value})}
-          options={usbOptions}
+
+        { title('Voice assistant') }
+        <FormGroup sx={{ margin: '15px' }}>
+          <FormControlLabel 
+            control={
+              <Switch
+                checked={parsedValues.voiceAssistantEnabled}
+                onChange={(event) => onSettingChange(voiceAssistantEnabledSetting, {value: JSON.stringify(event.target.checked)})}
+              />
+            } 
+            label={voiceAssistantEnabledSetting.label}
+          />
+        </FormGroup>
+        <TextField
+          disabled={!parsedValues.voiceAssistantEnabled}
+          label={voiceAssistantVoiceIdSetting.label}
+          value={voiceAssistantVoiceIdSetting.value || ''}
+          sx={{margin: '15px', display: 'flex'}}
+          onChange={(event) => onSettingChange(voiceAssistantVoiceIdSetting, {value: event.target.value})}
         />
       </Box>
     );
-  } else if (isError) {
-  	const {status, error: message} = errors[0];
-    content = <div>{message}</div>
   }
 
   return (
-    <Box
-      sx={{
-        margin: '0px auto'
-      }}
-    >
+    <Container>
+      <Paper sx={{
+        flex: 1,
+        padding: '25px'
+      }}>
+        <Box sx={{display: 'flex', flexDirection: 'row'}}>
+          {content}
+        </Box>
+      </Paper>
       <Box
         sx={{
           position: 'fixed',
@@ -189,10 +162,7 @@ const SettingsForm = () => {
           <Icon>check</Icon>
         </Fab>
       </Box>
-      <Box sx={{display: 'flex', flexDirection: 'row'}}>
-        {content}
-      </Box>
-    </Box>
+    </Container>
   )
 }
 
