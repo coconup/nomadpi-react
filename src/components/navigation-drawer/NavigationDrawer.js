@@ -1,78 +1,218 @@
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import Drawer from '@mui/material/Drawer';
-import Button from '@mui/material/Button';
-import List from '@mui/material/List';
-import Divider from '@mui/material/Divider';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import TerrainIcon from '@mui/icons-material/Terrain';
-import TuneIcon from '@mui/icons-material/Tune';
-import WhatshotIcon from '@mui/icons-material/Whatshot';
-import QueryStatsIcon from '@mui/icons-material/QueryStats';
-import SecurityIcon from '@mui/icons-material/Security';
-import SettingsIcon from '@mui/icons-material/Settings';
+import { useState } from 'react';
+import { useTheme } from '@mui/material/styles';
+
+import {
+  Box,
+  Divider,
+  Drawer,
+  Icon,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  ListSubheader,
+  Slide,
+} from '@mui/material';
 
 import { useLocation } from "wouter";
 
 export default function NavigationDrawer({ open, toggleDrawer }) {
+  const theme = useTheme();
+
   const [location, setLocation] = useLocation();
+  const [subMenu, setSubMenu] = useState(false);
   
-  const menuItems = [
+  const mainMenuItems = [
     {
       label: 'Home',
-      icon: <TerrainIcon />,
+      icon: <Icon>terrain</Icon>,
       path: '/'
     },
     {
       label: 'Control panel',
-      icon: <TuneIcon />,
+      icon: <Icon>tune</Icon>,
       path: '/control-panel'
     },
     {
       label: 'Heater',
-      icon: <WhatshotIcon />,
+      icon: <Icon>whatshot</Icon>,
       path: '/heater'
     },
     {
       label: 'Monitor',
-      icon: <QueryStatsIcon />,
+      icon: <Icon>query_stats</Icon>,
       path: '/monitor'
     },
     {
-      label: 'Security',
-      icon: <SecurityIcon />,
-      path: '/security'
-    },
-    {
       label: 'Settings',
-      icon: <SettingsIcon />,
-      path: '/settings'
+      icon: <Icon>settings</Icon>,
+      path: '/settings',
+      subMenuItems: [
+        {
+          label: 'General',
+          icon: <Icon>app_settings_alt</Icon>,
+          path: '/settings/general'
+        },
+        {
+          type: 'subheader',
+          label: 'Power'
+        },
+        {
+          label: 'Batteries',
+          icon: <Icon>bolt</Icon>,
+          path: '/settings/batteries'
+        },
+        {
+          label: 'Solar charge controllers',
+          icon: <Icon>solar_power</Icon>,
+          path: '/settings/solar-charge-controllers'
+        },
+        {
+          type: 'subheader',
+          label: 'Temperature'
+        },
+        {
+          label: 'Heaters',
+          icon: <Icon>whatshot</Icon>,
+          path: '/settings/heaters'
+        },
+        {
+          label: 'Temperature sensors',
+          icon: <Icon>thermostat</Icon>,
+          path: '/settings/temperature-sensors'
+        },
+        {
+          type: 'subheader',
+          label: 'Water'
+        },
+        {
+          label: 'Water tanks',
+          icon: <Icon>water</Icon>,
+          path: '/settings/water-tanks'
+        },
+        {
+          type: 'subheader',
+          label: 'Switches'
+        },
+        {
+          label: 'Control panel',
+          icon: <Icon>grid_view</Icon>,
+          path: '/settings/switch-groups'
+        },
+        {
+          label: 'Relays',
+          icon: <Icon>toggle_on</Icon>,
+          path: '/settings/relays'
+        },
+        {
+          label: 'WiFi relays',
+          icon: <Icon>toggle_on</Icon>,
+          path: '/settings/wifi-relays'
+        },
+        {
+          label: 'Mode switches',
+          icon: <Icon>toggle_on</Icon>,
+          path: '/settings/mode-switches'
+        },
+        {
+          label: 'Action switches',
+          icon: <Icon>double_arrow</Icon>,
+          path: '/settings/action-switches'
+        },
+        {
+          type: 'subheader',
+          label: 'Security'
+        },
+        {
+          label: 'Cameras',
+          icon: <Icon>camera</Icon>,
+          path: '/settings/cameras'
+        },
+        {
+          type: 'subheader',
+          label: 'Other'
+        },
+        {
+          label: 'Sensors',
+          icon: <Icon>sensors</Icon>,
+          path: '/settings/sensors'
+        }
+      ]
     },
-  ]
+  ];
+
+  const [menuItems, setMenuItems] = useState(mainMenuItems);
+
+  const handleClick = ({ path, subMenuItems }) => {
+    if(subMenuItems) {
+      setSubMenu(true);
+      setMenuItems(subMenuItems);
+    } else {
+      toggleDrawer(false);
+      setLocation(path);
+    }
+  };
+
+  const handleSubMenuClose = () => {
+    setMenuItems(mainMenuItems);
+    setSubMenu(false);
+  }
 
   const list = () => (
     <Box
       sx={{ width: 250 }}
       role="presentation"
-      onClick={toggleDrawer(false)}
-      onKeyDown={toggleDrawer(false)}
     >
-      <List>
-        {menuItems.map(({label, icon, path}) => (
-          <ListItem key={label} disablePadding>
-            <ListItemButton onClick={() => setLocation(path)}>
-              <ListItemIcon>
-                {icon}
-              </ListItemIcon>
-              <ListItemText primary={label} />
-            </ListItemButton>
-          </ListItem>
-        ))}
+      <List sx={subMenu ? { padding: 0 } : {}}>
+        {
+          subMenu && (
+            <Box>
+
+              <ListItem 
+                disablePadding
+                sx={{ 
+                  backgroundColor: theme.palette.grey[100], 
+                  pt: '8px' 
+                }}
+              >
+                <ListItemButton onClick={handleSubMenuClose}>
+                  <ListItemIcon>
+                    <Icon>arrow_back</Icon>
+                  </ListItemIcon>
+                  <ListItemText primary="Main menu" sx={{ color: theme.palette.text.secondary }} />
+                </ListItemButton>
+              </ListItem>
+              <Divider />
+            </Box>
+          )
+        }
+        {menuItems.map(({type, label, icon, path, subMenuItems}) => {
+          if(type === 'divider') {
+            return <Divider />
+          } else if(type === 'subheader') {
+            return (
+              <Box>
+                <Divider />
+                <ListSubheader>
+                  {label}
+                </ListSubheader>
+              </Box>
+            )
+          } else {
+            return (
+              <ListItem key={label} disablePadding>
+                <ListItemButton onClick={() => handleClick({ path, subMenuItems })}>
+                  <ListItemIcon>
+                    {icon}
+                  </ListItemIcon>
+                  <ListItemText primary={label} />
+                </ListItemButton>
+              </ListItem>
+            )
+          }
+        })}
       </List>
-      {/*<Divider />*/}
     </Box>
   );
 
@@ -80,9 +220,15 @@ export default function NavigationDrawer({ open, toggleDrawer }) {
     <Drawer
       anchor={'left'}
       open={open}
-      onClose={toggleDrawer(false)}
+      onClose={() => toggleDrawer(false)}
     >
-      {list()}
+      <Slide
+        key={`${subMenu ? 'sub-' : ''}menu`} 
+        direction={subMenu ? 'left' : 'right'}
+        in={true}
+      >
+        {list()}
+      </Slide>
     </Drawer>
   );
 }

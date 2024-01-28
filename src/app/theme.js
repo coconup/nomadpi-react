@@ -2,7 +2,8 @@ import { createTheme } from '@mui/material/styles';
 import { grey, red } from '@mui/material/colors';
 
 const theme = (nightMode) => {
-  const mode = nightMode ? 'dark' : 'light';
+  // const mode = nightMode ? 'dark' : 'light';
+  const mode = 'light'
 
   return createTheme({
     palette: {

@@ -37,11 +37,7 @@ function ResponsiveAppBar() {
     open: false
   });
 
-  const toggleDrawer = (open) => (event) => {
-    if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
-      return;
-    }
-
+  const toggleDrawer = (open) => {
     setState({ ...state, open });
   };
 
@@ -65,7 +61,7 @@ function ResponsiveAppBar() {
                 color="inherit"
                 aria-label="menu"
                 sx={{ mr: 2 }}
-                onClick={toggleDrawer(true)}
+                onClick={() => toggleDrawer(true)}
               >
                 <Icon>menu</Icon>
               </IconButton>
