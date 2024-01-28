@@ -12,8 +12,7 @@ import {
 } from '@mui/material';
 
 import NavigationDrawer from '../navigation-drawer/NavigationDrawer';
-
-// import vanpi_logo from '../../../public/vanpi_logo.png';
+import VoiceAssistantToggle from '../voice-assistant/VoiceAssistantToggle';
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = useState(null);
@@ -54,22 +53,28 @@ function ResponsiveAppBar() {
             open={state.open} 
             toggleDrawer={toggleDrawer}
           />
-          <Box sx={{ flexGrow: 0 }}>
-            <IconButton
-              size="large"
-              edge="start"
-              color="inherit"
-              aria-label="menu"
-              sx={{ mr: 2 }}
-              onClick={toggleDrawer(true)}
-            >
-              <Icon>menu</Icon>
-            </IconButton>
+          <Box sx={{
+            display: 'flex',
+            alignItems: 'center',
+            flex: 1
+          }}>
+            <Box sx={{ flexGrow: 0 }}>
+              <IconButton
+                size="large"
+                edge="start"
+                color="inherit"
+                aria-label="menu"
+                sx={{ mr: 2 }}
+                onClick={toggleDrawer(true)}
+              >
+                <Icon>menu</Icon>
+              </IconButton>
+            </Box>
+            <img 
+              src={process.env.PUBLIC_URL + '/vanpi_logo.png'}
+              height='64'
+            />
           </Box>
-          <img 
-            src={process.env.PUBLIC_URL + '/vanpi_logo.png'}
-            height='64'
-          />
           {/*<Typography
             variant="h6"
             noWrap
@@ -87,6 +92,9 @@ function ResponsiveAppBar() {
           >
             Van name
           </Typography>*/}
+          <Box>
+            <VoiceAssistantToggle />
+          </Box>
         </Toolbar>
       </Container>
     </AppBar>
