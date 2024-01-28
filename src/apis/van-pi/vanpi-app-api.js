@@ -139,7 +139,31 @@ export const vanPiAppAPI = createApi({
             return [{type: 'Settings'}]
           }
         }
-      })
+      }),
+
+      postButterflyIntent: builder.mutation({
+        query: (data) => ({
+          url: `butterfly/engine/intent`,
+          method: 'post',
+          body: data
+        })
+      }),
+
+      postButterflyCommandConfirmation: builder.mutation({
+        query: (data) => ({
+          url: `butterfly/engine/command_confirmation`,
+          method: 'post',
+          body: data
+        })
+      }),
+
+      postButterflyServiceFunction: builder.mutation({
+        query: ({ service_id, function_name, ...body }) => ({
+          url: `butterfly/services/${service_id}/${function_name}`,
+          method: 'post',
+          body
+        })
+      }),
     };
 
     // Resource State endpoints
@@ -319,4 +343,8 @@ export const {
   useGetWaterTanksStateQuery,
   useGetTemperatureSensorsStateQuery,
   useGetSolarChargeControllersStateQuery,
+
+  usePostButterflyIntentMutation,
+  usePostButterflyCommandConfirmationMutation,
+  usePostButterflyServiceFunctionMutation,
 } = vanPiAppAPI;

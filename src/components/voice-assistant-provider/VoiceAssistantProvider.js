@@ -7,6 +7,12 @@ import { getRandomArrayElement } from '../../utils';
 
 import axios from 'axios';
 
+import {
+  usePostButterflyIntentMutation,
+  usePostButterflyCommandConfirmationMutation,
+  usePostButterflyServiceFunctionMutation,
+} from '../../apis/van-pi/vanpi-app-api';
+
 ort.env.wasm.wasmPaths = {
   "ort-wasm-simd-threaded.wasm": process.env.PUBLIC_URL + "/ort-wasm-simd-threaded.wasm",
   "ort-wasm-simd.wasm": process.env.PUBLIC_URL + "/ort-wasm-simd.wasm",
@@ -456,10 +462,25 @@ const WhisperProvider = ({ file, onTranscript, onError }) => {
 }
 
 const ButterflyProvider = ({ prompt, command, commandConfirmations, onProcessing=()=>{}, onError, onResponse }) => {
-  const baseUrl = `${process.env.REACT_APP_API_BASE_URL}/butterfly`;
+  const baseUrl = `${process.env.REACT_APP_API_BASE_URL}`;
 
   const [processing, setProcessing] = useState(false);
   const [processed, setProcessed] = useState(false);
+
+  const [
+    postButterflyIntentTrigger, 
+    postButterflyIntentState
+  ] = usePostButterflyIntentMutation();
+
+  const [
+    postButterflyCommandConfirmationTrigger, 
+    postButterflyCommandConfirmationState
+  ] = usePostButterflyCommandConfirmationMutation();
+
+  const [
+    postButterflyServiceFunctionTrigger, 
+    postButterflyServiceFunctionState
+  ] = usePostButterflyServiceFunctionMutation();
 
   useEffect(() => {
     if (processing && !processed) {
@@ -480,12 +501,12 @@ const ButterflyProvider = ({ prompt, command, commandConfirmations, onProcessing
       setProcessed(false);
       onProcessing();
 
-      let url;
-      let payload;
+      let response;
+      let error;
 
       if(prompt) {
-        url = `${baseUrl}/engine/intent`;
-        payload = { prompt };
+        response = await postButterflyIntentTrigger({ prompt });
+        error = postButterflyIntentState.error;
       } else if (command) {
         const {
           original_prompt,
@@ -494,32 +515,18 @@ const ButterflyProvider = ({ prompt, command, commandConfirmations, onProcessing
           function_arguments: body
         } = command;
 
-        url = `${baseUrl}/services/${service_id}/${function_name}`;
-        payload = {
-          original_prompt,
-          ...body
-        };
+        response = await postButterflyServiceFunctionTrigger({ service_id, function_name, original_prompt, ...body });
+        error = postButterflyCommandConfirmationState.error;
       } else if(commandConfirmations) {
-        url = `${baseUrl}/engine/command_confirmation`;
-        payload = { commands: commandConfirmations };
+        response = await postButterflyCommandConfirmationTrigger({ commands: commandConfirmations });
+        error = postButterflyServiceFunctionState.error;
       }
 
-      try {
-        const response = await axios.post(
-          url,
-          payload,
-          {
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          }
-        );
-        console.log('butterfly response', response);
-        onResponse(response);
-        setProcessed(true);
-      } catch (error) {
-        console.error('Error calling Butterfly API:', error);
+      if(error || response.error) {
+        console.error('Error calling Butterfly API:', error || response.error);
         onError();
+      } else {
+        onResponse(response);
         setProcessed(true);
       }
     };
