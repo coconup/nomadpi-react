@@ -13,7 +13,7 @@ import { Icon} from '@mui/material';
 import {
   useBlinkCamerasLoginMutation,
   useBlinkCamerasVerifyMutation
-} from '../../apis/van-pi/vanpi-services-api';
+} from '../../apis/van-pi/vanpi-app-api';
 
 const BlinkCredentialsCredentialsSelector = ({credentials: credentialsList=[], credentialServices, addCredentials, onCredentialsChange, saveCredentials}) => {
   const initialState = {

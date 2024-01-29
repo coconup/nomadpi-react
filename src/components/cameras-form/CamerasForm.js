@@ -1,12 +1,24 @@
 import { useState } from 'react';
-import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
-import Typography from '@mui/material/Typography';
-import Fab from '@mui/material/Fab';
-import { Icon} from '@mui/material';
 
-import { useGetCamerasQuery, useUpdateCameraMutation, useCreateCameraMutation } from '../../apis/van-pi/vanpi-app-api';
-import { useGetCredentialsQuery, useUpdateCredentialsMutation, useCreateCredentialsMutation } from '../../apis/van-pi/vanpi-services-api';
+import {
+  getApisState
+} from '../../utils';
+
+import {
+  Box,
+  Fab,
+  Icon
+} from '@mui/material';
+
+import {
+  useGetCamerasQuery,
+  useUpdateCameraMutation,
+  useCreateCameraMutation,
+
+  useGetCredentialsQuery,
+  useUpdateCredentialsMutation,
+  useCreateCredentialsMutation
+} from '../../apis/van-pi/vanpi-app-api';
 
 import CameraForm from '../camera-form/CameraForm';
 
@@ -26,59 +38,37 @@ const CamerasForm = () => {
 
   const [
     updateCameraTrigger, 
-    {
-      // data={},
-      // isLoading,
-      // isFetching,
-      // isSuccess,
-      // isError,
-      // error,
-    }
+    updateCameraState
   ] = useUpdateCameraMutation();
 
   const [
     createCameraTrigger, 
-    {
-      // data={},
-      // isLoading,
-      // isFetching,
-      // isSuccess,
-      // isError,
-      // error,
-    }
+    createCameraState
   ] = useCreateCameraMutation();
 
   let apiCredentials = useGetCredentialsQuery();
 
   const [
-    updateCredentialsTrigger, 
-    {
-      // data={},
-      // isLoading,
-      // isFetching,
-      // isSuccess,
-      // isError,
-      // error,
-    }
+    updateCredentialsTrigger,
+    updateCredentialsState
   ] = useUpdateCredentialsMutation();
 
   const [
-    createCredentialsTrigger, 
-    {
-      // data={},
-      // isLoading,
-      // isFetching,
-      // isSuccess,
-      // isError,
-      // error,
-    }
+    createCredentialsTrigger,
+    createCredentialsState
   ] = useCreateCredentialsMutation();
 
-  const isLoading = apiCameras.isLoading || apiCredentials.isLoading;
-  const isFetching = apiCameras.isFetching || apiCredentials.isFetching;
-  const isSuccess = apiCameras.isSuccess && apiCredentials.isSuccess;
-  const isError = apiCameras.isError || apiCredentials.isError;
-  const error = apiCameras.error || apiCredentials.error;
+
+  const {
+    isLoading,
+    isFetching,
+    isSuccess,
+    isError,
+    errors
+  } = getApisState([
+    apiCameras,
+    apiCredentials
+  ]);
 
   const { 
     cameras,
@@ -207,7 +197,7 @@ const CamerasForm = () => {
       </Box>
     );
   } else if (isError) {
-  	const {status, error: message} = error;
+  	const {status, error: message} = errors[0];
     content = <div>{message}</div>
   }
 

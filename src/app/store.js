@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { vanPiAppAPI, useAuthStatusQuery } from '../apis/van-pi/vanpi-app-api';
-import { vanPiServicesAPI } from '../apis/van-pi/vanpi-services-api';
+// import { vanPiServicesAPI } from '../apis/van-pi/vanpi-services-api';
 
 import { authMiddleware, authReducer } from './authMiddleware';
 import { settingsMiddleware, settingsReducer } from './settingsMiddleware';
@@ -10,7 +10,7 @@ import { createSelector } from 'reselect';
 
 let reducer = {
   [vanPiAppAPI.reducerPath]: vanPiAppAPI.reducer,
-  [vanPiServicesAPI.reducerPath]: vanPiServicesAPI.reducer,
+  // [vanPiServicesAPI.reducerPath]: vanPiServicesAPI.reducer,
   auth: authReducer,
   settings: settingsReducer,
 };
@@ -24,7 +24,7 @@ const store = configureStore({
   middleware: (getDefaultMiddleware) => (
     getDefaultMiddleware({serializableCheck: false})
       .concat(vanPiAppAPI.middleware)
-      .concat(vanPiServicesAPI.middleware)
+      // .concat(vanPiServicesAPI.middleware)
       .concat(authMiddleware)
       .concat(settingsMiddleware)
       .concat(

@@ -1,10 +1,50 @@
 import { useEffect, useState, useCallback, memo } from 'react'
-import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
+import { GoogleMap, Marker, Polyline, useJsApiLoader } from '@react-google-maps/api';
 
 import { useTheme } from '@mui/material/styles';
 
-function MyComponent({ latitude, longitude, containerStyle={} }) {
+function MyComponent({ latitude: latitudeProp, longitude: longitudeProp, containerStyle={} }) {
   const theme = useTheme();
+
+  const [position, setPosition] = useState({
+    latitude: latitudeProp,
+    longitude: longitudeProp
+  });
+
+  const {
+    latitude,
+    longitude
+  } = position;
+
+  function calculateDistance(lat1, lon1, lat2, lon2) {
+    const R = 6371e3; // Earth radius in meters
+    const phi1 = lat1 * (Math.PI / 180);
+    const phi2 = lat2 * (Math.PI / 180);
+    const deltaPhi = (lat2 - lat1) * (Math.PI / 180);
+    const deltaLambda = (lon2 - lon1) * (Math.PI / 180);
+
+    const a = Math.sin(deltaPhi / 2) * Math.sin(deltaPhi / 2) +
+              Math.cos(phi1) * Math.cos(phi2) *
+              Math.sin(deltaLambda / 2) * Math.sin(deltaLambda / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+    const distance = R * c; // Distance in meters
+
+    return distance;
+  }
+
+  const shouldUpdate = (
+    calculateDistance(latitude, longitude, latitudeProp, longitudeProp) > 10
+    || (!latitude && latitudeProp)
+  );
+
+  if(shouldUpdate) {
+    console.log('updating position')
+    setPosition({
+      latitude: latitudeProp,
+      longitude: longitudeProp
+    })
+  };
 
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
@@ -229,25 +269,56 @@ function MyComponent({ latitude, longitude, containerStyle={} }) {
 
     map.mapTypes.set("styled_map", styledMapTypes[theme.palette.mode]);
     map.setMapTypeId("styled_map");
+    map.setCenter(center)
   }
+
+  // const path = [
+  //   {
+  //     lat: ...,
+  //     lng: ...
+  //   },
+  //   {
+  //     lat: ...,
+  //     lng: ...
+  //   },
+  // ]
 
   if(isLoaded && latitude && longitude) {
     return (
       <GoogleMap
         key={`google-map-${theme.palette.mode}`}
         mapContainerStyle={containerStyle}
-        center={center}
+        // center={center}
         onLoad={onLoad}
         // onUnmount={...}
+        zoom={14}
         options={{
-          zoom: 14,
           fullscreenControl: false,
           streetViewControl: false,
           zoomControl: false,
           mapTypeControl: false
         }}
       >
-        { /* Child components, such as markers, info windows, etc. */ }
+        {/*<Polyline
+          traffic={new window.google.maps.TrafficLayer()}
+          path={path}
+          options={{
+            strokeColor: "red",
+            strokeWeight: 6,
+            strokeOpacity: 0.6,
+          }}
+        />*/}
+        <Marker
+          position={center}
+          icon={{
+            path: window.google.maps.SymbolPath.CIRCLE,
+            scale: 8,
+            fillOpacity: 0.6,
+            strokeWeight: 2,
+            fillColor: theme.palette.info.light,
+            strokeColor: theme.palette.info.main,
+          }}
+        />
       </GoogleMap>
     )
   }

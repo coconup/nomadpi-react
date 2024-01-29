@@ -9,6 +9,7 @@ import {
 
 import { resourceNames } from '../../app/resourceStateMiddleware';
 
+import Credentials from '../../models/Credentials';
 import RelaySwitch from '../../models/RelaySwitch';
 import WifiRelaySwitch from '../../models/WifiRelaySwitch';
 import ModeSwitch from '../../models/ModeSwitch';
@@ -164,6 +165,33 @@ export const vanPiAppAPI = createApi({
           body
         })
       }),
+
+      blinkCamerasLogin: builder.mutation({
+        query: ({email, password}) => ({
+          url: `services/blink-cameras/login`,
+          method: 'post',
+          body: {
+            email,
+            password
+          },
+        })
+      }),
+
+      blinkCamerasVerify: builder.mutation({
+        query: ({tier, account_id, client_id, auth_token, verification_code}) => ({
+          url: `/services/blink-cameras/login-verify`,
+          method: 'post',
+          body: {
+            pin: parseInt(verification_code),
+            auth_token,
+            tier,
+            account_id,
+            client_id
+          }
+        })
+      }),
+
+
     };
 
     // Resource State endpoints
@@ -253,6 +281,12 @@ export const vanPiAppAPI = createApi({
         model: SolarChargeController,
         resourceNameSingular: 'SolarChargeController',
         resourceNamePlural: 'SolarChargeControllers'
+      },
+      {
+        apiPath: 'services/credentials',
+        model: Credentials,
+        resourceNameSingular: 'Credentials',
+        resourceNamePlural: 'Credentials'
       }
     ].forEach(spec => {
       endpoints = {
@@ -347,4 +381,12 @@ export const {
   usePostButterflyIntentMutation,
   usePostButterflyCommandConfirmationMutation,
   usePostButterflyServiceFunctionMutation,
+
+  useBlinkCamerasLoginMutation,
+  useBlinkCamerasVerifyMutation,
+  
+  useGetCredentialsQuery,
+  useUpdateCredentialsMutation,
+  useCreateCredentialsMutation,
+  useDeleteCredentialsMutation
 } = vanPiAppAPI;
