@@ -8,6 +8,7 @@
     "@fontsource/roboto": "^5.0.8",
     "@mui/icons-material": "^5.14.19",
     "@mui/material": "^5.14.19",
+    "@react-google-maps/api": "^2.19.2",
     "@reduxjs/toolkit": "^1.9.7",
     "@ricky0123/vad-react": "^0.0.21",
     "@ricky0123/vad-web": "^0.0.16",

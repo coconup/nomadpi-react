@@ -47,6 +47,15 @@ function App() {
 
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
 
+  const gpsState = useSelector(state => {
+    return state.gps.gpsState;
+  });
+
+  const {
+    latitude,
+    longitude
+  } = gpsState;
+
   const [state, setState] = useState({
     nightMode: prefersDarkMode,
     init: false
@@ -126,6 +135,8 @@ function App() {
         !prefersDarkMode && (
           <DayNightIndicator
             onNightMode={handleNightModeChange}
+            latitude={latitude}
+            longitude={longitude}
           />
         )
       }

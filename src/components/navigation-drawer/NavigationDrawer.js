@@ -194,7 +194,7 @@ export default function NavigationDrawer({ open, toggleDrawer }) {
             return (
               <Box>
                 <Divider />
-                <ListSubheader>
+                <ListSubheader sx={{ backgroundColor: theme.palette.grey[100] }}>
                   {label}
                 </ListSubheader>
               </Box>

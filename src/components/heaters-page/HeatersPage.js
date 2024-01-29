@@ -110,13 +110,17 @@ export default function HeatersPage() {
           />
         )
       }
-      <BottomNavigation
-        tabs={heaters.map(({ name }) => ({name}))}
-        value={state.selectedTab}
-        onChange={(event, value) => {
-          setState({...state, selectedTab: value})
-        }}
-      />
+      {
+        heaters.length > 1 && (
+          <BottomNavigation
+            tabs={heaters.map(({ name }) => ({name}))}
+            value={state.selectedTab}
+            onChange={(event, value) => {
+              setState({...state, selectedTab: value})
+            }}
+          />
+        )
+      }
     </Container>
   );
 }

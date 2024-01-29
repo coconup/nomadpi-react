@@ -1,3 +1,5 @@
+import { useSelector } from 'react-redux';
+
 import {
   Box,
   Unstable_Grid2 as Grid,
@@ -13,6 +15,7 @@ import TemperatureSensorsPage from '../temperature-sensors-page/TemperatureSenso
 import BatteriesPage from '../batteries-page/BatteriesPage';
 import WaterTanksPage from '../water-tanks-page/WaterTanksPage';
 import SolarChargeControllersPage from '../solar-charge-controllers-page/SolarChargeControllersPage';
+import MapsPage from '../maps-page/MapsPage';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -23,18 +26,61 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 export default function HomePanel() {
+  const gpsState = useSelector(state => {
+    return state.gps.gpsState;
+  });
+
+  const {
+    latitude,
+    longitude
+  } = gpsState;
+
   return (
     <Container>
       <Box sx={{ flexGrow: 1, padding: 3 }}>
         <Grid container spacing={2}>
+          <Grid xs={12}>
+            <CurrentTimeCard
+              latitude={latitude}
+              longitude={longitude}
+            />
+          </Grid>
           <Grid xs={12} sm={8} md={6}>
             <WeatherCard />
           </Grid>
           <Grid xs={6}>
-            <CurrentTimeCard
-              latitude={52.50}
-              longitude={13.43}
-            />
+            <Box
+              sx={{
+                height: '100%',
+                display: 'flex',
+                flexDirection: 'column'
+              }}
+            >
+              <Box
+                sx={{
+                  // mt: '15px',
+                  display: 'flex',
+                  flexGrow: 1
+                }}
+              >
+                <Paper
+                  sx={{
+                    flexGrow: 1,
+                    mb: '20px',
+                    display: 'flex'
+                  }}
+                >
+                  <MapsPage
+                    latitude={latitude}
+                    longitude={longitude}
+                    containerStyle={{
+                      borderRadius: '4px',
+                      flex: 1
+                    }}
+                  />
+                </Paper>
+              </Box>
+            </Box>
           </Grid>
           <Grid 
             md={3}

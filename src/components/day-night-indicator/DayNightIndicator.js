@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import SunCalc from 'suncalc';
 
 export default function DayNightIndicator({ onNightMode }) {
-  const [isNight, setIsNight] = useState(false);
+  const [isNight, setIsNight] = useState(null);
 
   const gpsState = useSelector(state => {
     return state.gps.gpsState;

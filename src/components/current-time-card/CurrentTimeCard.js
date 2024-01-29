@@ -11,19 +11,21 @@ import {
 export default function CurrentTimeCard({latitude, longitude}) {
   const theme = useTheme();
 
-  const timezone = tzlookup(latitude, longitude);
+  if(latitude && longitude) {
+    const timezone = tzlookup(latitude, longitude);
 
-  return (
-    <Paper
-      sx={{padding: '20px'}}
-    >
-      <Typography variant="h3">
-        <Clock
-          format={'HH:mm:ss'}
-          ticking={true}
-          timezone={timezone}
-        />
-      </Typography>
-    </Paper>
-  );
+    return (
+      // <Paper
+      //   sx={{padding: '20px'}}
+      // >
+        <Typography color="text.secondary" variant="h4" sx={{ textAlign: 'right' }}>
+          <Clock
+            format={'HH:mm:ss'}
+            ticking={true}
+            timezone={timezone}
+          />
+        </Typography>
+      // </Paper>
+    )
+  };
 };
