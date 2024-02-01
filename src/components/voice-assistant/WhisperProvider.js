@@ -2,24 +2,9 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 
 export default function WhisperProvider({ file, onTranscript, onError }) {
-  const [processing, setProcessing] = useState(false);
-
-  useEffect(() => {
-    if (processing) {
-      const timeoutId = setTimeout(onError, 10000);
-      console.log('setting whisper timeout', timeoutId);
-
-      return () => {
-        console.log('clearing whisper timeout')
-        clearTimeout(timeoutId);
-      };
-    }
-  }, [processing]);
-
   useEffect(() => {
     const whisper = async () => {
       console.log('processing audio')
-      setProcessing(true);
       let response;
       
       const formData = new FormData();
@@ -32,6 +17,7 @@ export default function WhisperProvider({ file, onTranscript, onError }) {
           'https://api.openai.com/v1/audio/transcriptions',
           formData,
           {
+            timeout: 10000,
             headers: {
               'Authorization': `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`,
               'Content-Type': 'multipart/form-data',

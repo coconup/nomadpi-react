@@ -1,21 +1,21 @@
 import { useState, useEffect } from 'react';
-import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
-import Typography from '@mui/material/Typography';
-import TextField from '@mui/material/TextField';
-import Divider from '@mui/material/Divider';
-import Modal from '@mui/material/Modal';
-import Container from '@mui/material/Container';
-import Button from '@mui/material/Button';
-import Fab from '@mui/material/Fab';
-import { Icon} from '@mui/material';
+import {
+  Box,
+  Button,
+  Fab,
+  Icon,
+  Modal,
+  Paper,
+  TextField,
+  Typography,
+} from '@mui/material';
 
 import {
   useBlinkCamerasLoginMutation,
   useBlinkCamerasVerifyMutation
 } from '../../apis/van-pi/vanpi-app-api';
 
-const BlinkCredentialsCredentialsSelector = ({credentials: credentialsList=[], credentialServices, addCredentials, onCredentialsChange, saveCredentials}) => {
+const BlinkCredentialsCredentialsSelector = ({credentials: credentialsList=[], credentialServices, addCredentials, onCredentialsChange, saveCredentials, onCredentialsLoad}) => {
   const initialState = {
     verification_code: '',
     edit_mode: false
@@ -106,7 +106,6 @@ const BlinkCredentialsCredentialsSelector = ({credentials: credentialsList=[], c
 
     content = (
       <Box sx={{display: 'flex', flexDirection: 'column', flex: 1}}>
-        <Divider sx={{margin: '15px'}} />
         {
           edit_mode && (
             <Box sx={{display: 'flex', flexDirection: 'column', flex: 1}}>

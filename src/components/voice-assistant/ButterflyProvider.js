@@ -9,9 +9,6 @@ import {
 export default function ButterflyProvider({ prompt, command, commandConfirmations, onProcessing=()=>{}, onError, onResponse }) {
   const baseUrl = `${process.env.REACT_APP_API_BASE_URL}`;
 
-  const [processing, setProcessing] = useState(false);
-  const [processed, setProcessed] = useState(false);
-
   const [
     postButterflyIntentTrigger, 
     postButterflyIntentState
@@ -28,22 +25,8 @@ export default function ButterflyProvider({ prompt, command, commandConfirmation
   ] = usePostButterflyServiceFunctionMutation();
 
   useEffect(() => {
-    if (processing && !processed) {
-      const timeoutId = setTimeout(onError, 10000);
-      console.log('setting butterfly timeout', timeoutId);
-
-      return () => {
-        console.log('clearing butterfly timeout')
-        clearTimeout(timeoutId);
-      };
-    }
-  }, [processing, processed]);
-
-  useEffect(() => {
     const butterfly = async () => {
       console.log('calling butterfly', prompt || command || commandConfirmations)
-      setProcessing(true);
-      setProcessed(false);
       onProcessing();
 
       let response;
@@ -72,7 +55,6 @@ export default function ButterflyProvider({ prompt, command, commandConfirmation
         onError();
       } else {
         onResponse(response);
-        setProcessed(true);
       }
     };
 

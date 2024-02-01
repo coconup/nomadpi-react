@@ -12,20 +12,6 @@ export default function VoiceProvider({ prompt, onError, onResponse }) {
     voiceId = voiceAssistantVoiceIdSetting.value;
   };
 
-  const [processing, setProcessing] = useState(false);
-
-  useEffect(() => {
-    if (processing) {
-      const timeoutId = setTimeout(onError, 15000);
-      console.log('setting elevenlabs timeout', timeoutId);
-
-      return () => {
-        console.log('clearing elevenlabs timeout')
-        clearTimeout(timeoutId);
-      };
-    }
-  }, [processing]);
-
   useEffect(() => {
     const elevenlabs = async () => {
       try {
@@ -42,6 +28,7 @@ export default function VoiceProvider({ prompt, onError, onResponse }) {
             }
           },
           { 
+            timeout: 20000,
             headers: {
               accept: 'audio/mpeg',
               contentType: 'application/json',

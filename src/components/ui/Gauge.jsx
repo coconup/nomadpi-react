@@ -37,7 +37,7 @@ export default function Gauge(props) {
         pointerRadius={ 10 }
         pointerBgColor={ theme.palette.primary.light }
         pointerBorder={ 8 }
-        pointerBorderColor={ theme.palette.background.default }
+        pointerBorderColor={ theme.palette.background.paper }
 
         enableTicks={ true }
         ticksWidth={ 1 }

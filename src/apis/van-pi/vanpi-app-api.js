@@ -146,7 +146,8 @@ export const vanPiAppAPI = createApi({
         query: (data) => ({
           url: `butterfly/engine/intent`,
           method: 'post',
-          body: data
+          body: data,
+          timeout: 20000
         })
       }),
 
@@ -154,7 +155,8 @@ export const vanPiAppAPI = createApi({
         query: (data) => ({
           url: `butterfly/engine/command_confirmation`,
           method: 'post',
-          body: data
+          body: data,
+          timeout: 20000
         })
       }),
 
@@ -162,7 +164,8 @@ export const vanPiAppAPI = createApi({
         query: ({ service_id, function_name, ...body }) => ({
           url: `butterfly/services/${service_id}/${function_name}`,
           method: 'post',
-          body
+          body,
+          timeout: 20000
         })
       }),
 
@@ -191,7 +194,26 @@ export const vanPiAppAPI = createApi({
         })
       }),
 
+      blinkCamerasHomescreen: builder.query({
+        query: () => `/services/blink-cameras/homescreen`,
+        transformResponse: (result, meta) => {
+          return result
+        },
+        providesTags: (result) => {
+          return [{type: 'blinkCamerasLogin'}]
+        }
+      }),
 
+      blinkCamerasLiveStream: builder.query({
+        query: ({ network_id, camera_id }) => `/services/blink-cameras/live-stream?network_id=${network_id}&camera_id=${camera_id}`,
+        transformResponse: (result, meta) => {
+          console.log('livestream result', result)
+          return result
+        },
+        providesTags: (result) => {
+          return [{type: 'blinkCamerasLogin'}]
+        }
+      }),
     };
 
     // Resource State endpoints
@@ -384,6 +406,8 @@ export const {
 
   useBlinkCamerasLoginMutation,
   useBlinkCamerasVerifyMutation,
+  useBlinkCamerasHomescreenQuery,
+  useBlinkCamerasLiveStreamQuery,
   
   useGetCredentialsQuery,
   useUpdateCredentialsMutation,

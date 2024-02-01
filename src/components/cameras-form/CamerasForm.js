@@ -32,7 +32,12 @@ const CamerasForm = () => {
     init: false
   };
 
-  const [state, setState] = useState(initialState);  
+  const [state, setState] = useState(initialState);
+
+  const { 
+    cameras,
+    credentials
+  } = state;
 
   let apiCameras = useGetCamerasQuery();
 
@@ -58,7 +63,6 @@ const CamerasForm = () => {
     createCredentialsState
   ] = useCreateCredentialsMutation();
 
-
   const {
     isLoading,
     isFetching,
@@ -69,11 +73,6 @@ const CamerasForm = () => {
     apiCameras,
     apiCredentials
   ]);
-
-  const { 
-    cameras,
-    credentials
-  } = state;
 
   const credentialServices = {
     amazon_blink: 'blink-cameras'

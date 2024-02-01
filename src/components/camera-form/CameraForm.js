@@ -11,11 +11,18 @@ import {
   TextField,
 } from '@mui/material';
 
+import {
+  useBlinkCamerasLiveStreamQuery
+} from '../../apis/van-pi/vanpi-app-api';
+
 import Camera from '../../models/Camera';
 
-import BlinkCamerasCredentialsSelector from '../blink-cameras-credentials-selector/BlinkCamerasCredentialsSelector';
+import BlinkCamerasCredentialsSelector from '../blink-cameras/BlinkCamerasCredentialsSelector';
+import BlinkCameraSelector from '../blink-cameras/BlinkCameraSelector';
 
 export default function CameraForm({camera, credentials, addCredentials, saveCredentials, onChange, onCredentialsChange, editable, credentialServices}) {
+  const [rtspUrl, setRtspUrl] = useState(null);
+
   const {
     name,
     vendor_id,
@@ -24,8 +31,17 @@ export default function CameraForm({camera, credentials, addCredentials, saveCre
     product_id_options,
     connection_type_options,
     connection_type,
-    connection_params
+    connection_params={}
   } = camera;
+
+  const {
+    camera_id,
+    network_id
+  } = connection_params;
+
+  // const apiLiveStream = useBlinkCamerasLiveStreamQuery({ camera_id, network_id });
+
+  const blinkCredentials = credentials.find(c => c.service_id === credentialServices.amazon_blink);
 
   return (
     <Card sx={{ width: 400, margin: '20px' }}>
@@ -90,6 +106,14 @@ export default function CameraForm({camera, credentials, addCredentials, saveCre
                 saveCredentials={saveCredentials}
                 credentialServices={credentialServices}
               />
+              {
+                blinkCredentials.id && (
+                  <BlinkCameraSelector
+                    cameraId={camera_id}
+                    onChange={({ camera_id, network_id}) => onChange(camera, {connection_params: { ...connection_params, camera_id, network_id }})}
+                  />
+                )
+              }
             </Box>
           )
         }
