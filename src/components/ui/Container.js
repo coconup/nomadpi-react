@@ -8,9 +8,9 @@ const ContainerComponent = ({ children }) => {
 
   return (
     <Box sx={{
-      padding: '0vw 10vw',
+      padding: '20px 10vw',
       [theme.breakpoints.up('xl')]: {
-        padding: '0vw 20vw',
+        padding: '20px 20vw',
       },
       flexGrow: 1,
       display: 'flex',

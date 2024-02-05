@@ -1,4 +1,7 @@
 import { useState, useEffect } from 'react';
+
+import { getApisState } from '../../utils';
+
 import {
   Box,
   Button,
@@ -11,88 +14,55 @@ import {
 } from '@mui/material';
 
 import {
-  useBlinkCamerasLoginMutation,
-  useBlinkCamerasVerifyMutation
+  useGetCredentialsQuery,
+  useUpdateCredentialsMutation,
+  useCreateCredentialsMutation
 } from '../../apis/van-pi/vanpi-app-api';
 
-const BlinkCredentialsCredentialsSelector = ({credentials: credentialsList=[], credentialServices, addCredentials, onCredentialsChange, saveCredentials, onCredentialsLoad}) => {
+import Credentials from '../../models/Credentials';
+
+const CallMeBotCredentialsSelector = () => {
+  useGetCredentialsQuery();
+
+  const [
+    updateCredentialsTrigger,
+    updateCredentialsState
+  ] = useUpdateCredentialsMutation();
+
+  const [
+    createCredentialsTrigger,
+    createCredentialsState
+  ] = useCreateCredentialsMutation();
+
+  const {
+    isLoading,
+    isFetching,
+    isSuccess,
+    isError,
+    errors
+  } = getApisState([
+    apiCredentials
+  ]);
+
   const initialState = {
-    verification_code: '',
     edit_mode: false
   }
 
   const [state, setState] = useState(initialState);
 
   const {
-    verification_code,
     edit_mode
   } = state;
 
-  const [
-    loginTrigger, 
-    loginRequest
-  ] = useBlinkCamerasLoginMutation();
-
-  const [
-    verifyTrigger, 
-    verifyRequest
-  ] = useBlinkCamerasVerifyMutation();
-
-  const credentials = credentialsList.find(c => c.service_id === credentialServices.amazon_blink);
-
-  const onLogin = () => {
-    const {
-      email,
-      password
-    } = credentials.value;
-
-    const payload = {
-      unique_id: crypto.randomUUID(),
-      reauth: true,
-      email,
-      password
-    };
-
-    loginTrigger(payload).then(({data}) => {
-      if(data) {
-        onCredentialsChange(
-          credentials,
-          {
-            ...credentials,
-            client_verification_required: data.account.client_verification_required,
-            value: {
-              ...credentials.value,
-              auth_token: data.auth.token,
-              account_id: data.account.account_id,
-              client_id: data.account.client_id,
-              tier: data.account.tier,
-            }
-          }
-        )
-      }
-    });
-  };
-
-  const onVerificationSubmit = () => {
-    const {
-      tier,
-      account_id,
-      client_id,
-      auth_token
-    } = credentials.value;
-
-    verifyTrigger({tier, account_id, client_id, auth_token, verification_code}).then(({data={}}) => {
-      if(data.valid) {
-        saveCredentials(credentials, () => setState(initialState));
-      }
-    })
+  const onSave = () => {
+    saveCredentials(credentials, () => setState(initialState));
   };
   
   let content;
   if(!credentials) {
     addCredentials({
-      name: 'Blink cameras',
-      service_id: credentialServices.amazon_blink
+      name: 'CallMeBot',
+      service_id: 'call_me_bot'
     })
   } else {
     const {
@@ -211,4 +181,4 @@ const BlinkCredentialsCredentialsSelector = ({credentials: credentialsList=[], c
   )
 }
 
-export default BlinkCredentialsCredentialsSelector;
+export default CallMeBotCredentialsSelector;

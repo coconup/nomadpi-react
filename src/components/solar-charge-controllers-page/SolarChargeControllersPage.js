@@ -57,6 +57,8 @@ export default function SolarChargeControllersPage({ compact=false }) {
     content = <div>Loading</div>
   } else if(isSuccess && state.init) {
     if(compact) {
+      if(!selectedSolarChargeController) return null;
+
       return (
         <Box onClick={selectNextSolarChargeController}>
           <ButtonBase sx={{width: '100%'}}>

@@ -20,7 +20,7 @@ export default function SolarChargeControllerPage({ solarChargeController, compa
   } = solarChargeController;
 
   const solarChargeControllerState = useSelector(state => {
-    return state.solarChargeControllers.solarChargeControllersState[id];
+    return state.state.solarChargeControllers[id];
   });
 
   let content;

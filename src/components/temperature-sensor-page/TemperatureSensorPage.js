@@ -17,7 +17,7 @@ export default function TemperatureSensorPage({ temperatureSensor, compact=false
   } = temperatureSensor;
 
   const temperatureSensorState = useSelector(state => {
-    return state.temperatureSensors.temperatureSensorsState[id];
+    return state.state.temperatureSensors[id];
   });
 
   let content;

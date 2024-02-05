@@ -5,15 +5,15 @@ import {
 } from '../../utils';
 
 import {
-  useBlinkCamerasHomescreenQuery
+  useGetFrigateConfigQuery
 } from '../../apis/van-pi/vanpi-app-api';
 
 import Select from '../ui/Select';
 
-const BlinkCameraSelector = ({ cameraId, onChange }) => {
+const FrigateCameraSelector = ({ cameraId, onChange }) => {
   const [cameras, setCameras] = useState(null);
 
-  const apiBlinkCamerasHomescreen = useBlinkCamerasHomescreenQuery();
+  const apiFrigateConfig = useGetFrigateConfigQuery();
 
   const {
     isLoading,
@@ -22,34 +22,44 @@ const BlinkCameraSelector = ({ cameraId, onChange }) => {
     isError,
     errors
   } = getApisState([
-    apiBlinkCamerasHomescreen
+    apiFrigateConfig
   ]);
 
   if(isSuccess && !cameras) {
-    setCameras(apiBlinkCamerasHomescreen.data.cameras);
+    const apiCameras = Object.keys(apiFrigateConfig.data.cameras).map(camera_id => {
+      const {
+        name
+      } = apiFrigateConfig.data.cameras[camera_id];
+      
+      return {
+        camera_id,
+        name
+      }
+    });
+
+    setCameras(apiCameras);
   }
   
   if (isLoading) {
     return <div>Loading</div>
   } else if(isSuccess && cameras) {
-    const options = cameras.map(({ id: value, name: label }) => ({
+    const options = cameras.map(({ camera_id: value, name: label }) => ({
       label,
       value
     }))
 
     return (
       <Select
-        label="Blink camera"
+        label="Camera"
         value={cameraId}
         onChange={(event) => {
-          const camera = cameras.find(c => c.id === event.target.value);
+          const camera = cameras.find(c => c.camera_id === event.target.value);
           
           const {
-            network_id,
-            id: camera_id
+            camera_id
           } = camera;
 
-          onChange({ network_id, camera_id });
+          onChange({ camera_id });
         }}
         options={options}
       />
@@ -60,4 +70,4 @@ const BlinkCameraSelector = ({ cameraId, onChange }) => {
   }
 }
 
-export default BlinkCameraSelector;
+export default FrigateCameraSelector;

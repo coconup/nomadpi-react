@@ -1,8 +1,6 @@
 import { useState } from 'react';
 
-import {
-  getApisState
-} from '../../utils';
+import { getApisState } from '../../utils';
 
 import {
   Box,
@@ -14,20 +12,14 @@ import {
   useGetCamerasQuery,
   useUpdateCameraMutation,
   useCreateCameraMutation,
-
-  useGetCredentialsQuery,
-  useUpdateCredentialsMutation,
-  useCreateCredentialsMutation
 } from '../../apis/van-pi/vanpi-app-api';
 
 import CameraForm from '../camera-form/CameraForm';
 
 import Camera from '../../models/Camera';
-import Credentials from '../../models/Credentials';
 
 const CamerasForm = () => {
   const initialState = {
-    credentials: [],
     cameras: [],
     init: false
   };
@@ -35,8 +27,7 @@ const CamerasForm = () => {
   const [state, setState] = useState(initialState);
 
   const { 
-    cameras,
-    credentials
+    cameras
   } = state;
 
   let apiCameras = useGetCamerasQuery();
@@ -51,18 +42,6 @@ const CamerasForm = () => {
     createCameraState
   ] = useCreateCameraMutation();
 
-  let apiCredentials = useGetCredentialsQuery();
-
-  const [
-    updateCredentialsTrigger,
-    updateCredentialsState
-  ] = useUpdateCredentialsMutation();
-
-  const [
-    createCredentialsTrigger,
-    createCredentialsState
-  ] = useCreateCredentialsMutation();
-
   const {
     isLoading,
     isFetching,
@@ -70,26 +49,13 @@ const CamerasForm = () => {
     isError,
     errors
   } = getApisState([
-    apiCameras,
-    apiCredentials
+    apiCameras
   ]);
 
-  const credentialServices = {
-    amazon_blink: 'blink-cameras'
-  };
-
   if(isSuccess && !state.init) {
-    const missingCredentials = Object.values(credentialServices).filter(s => !apiCredentials.data.find(a => a.service_id === s)).map(service_id => {
-      return new Credentials({service_id});
-    });
-
     setState({
       ...state,
       cameras: apiCameras.data,
-      credentials: [
-        ...apiCredentials.data,
-        ...missingCredentials
-      ],
       init: true
     });
   };
@@ -134,44 +100,6 @@ const CamerasForm = () => {
     });
   };
 
-  const addCredentials = (attrs) => {
-    const newCredentials = new Credentials(attrs);
-
-    setState({
-      ...state,
-      credentials: [
-        ...credentials,
-        newCredentials
-      ]
-    })
-  };
-
-  const onCredentialsChange = (credentialsItem, attrs) => {
-    const newCredentials = credentials.map(item => {
-      if((item.id || item.pseudoId) === (credentialsItem.id || credentialsItem.pseudoId)) {
-        const newItem = item.clone();
-        Object.keys(attrs).forEach(k => newItem[k] = attrs[k]);
-        return newItem;
-      } else {
-        return item;
-      }
-    })
-
-    setState({...state, credentials: newCredentials});
-  };
-
-  const refetchCredentialsData = () => {
-    apiCredentials.refetch().then((result) => setState({...state, credentials: result.data}));
-  };
-
-  const saveCredentials = (item, callback) => {
-    if(!!item.id) {
-      updateCredentialsTrigger(item.toJSONPayload()).then(refetchCredentialsData).then(callback);
-    } else {
-      createCredentialsTrigger(item.toJSONPayload()).then(refetchCredentialsData).then(callback);
-    };
-  };
-
   let content;
   if (isLoading) {
     content = <div>Loading</div>
@@ -181,11 +109,6 @@ const CamerasForm = () => {
         {
           cameras.map(item =>(
             <CameraForm
-              credentials={credentials}
-              addCredentials={addCredentials}
-              saveCredentials={saveCredentials}
-              onCredentialsChange={onCredentialsChange}
-              credentialServices={credentialServices}
               editable
               key={item.key}
               camera={item}

@@ -13,6 +13,7 @@ import ResponsiveAppBar from './components/responsive-app-bar/ResponsiveAppBar';
 import HomePanel from './components/home-panel/HomePanel';
 import SwitchGroupsPage from './components/switch-groups-page/SwitchGroupsPage';
 import MonitorPage from './components/monitor-page/MonitorPage';
+import CamerasPage from './components/cameras-page/CamerasPage';
 import HeatersPage from './components/heaters-page/HeatersPage';
 import DayNightIndicator from './components/day-night-indicator/DayNightIndicator';
 import WeatherForecast from './components/weather-forecast/WeatherForecast';
@@ -28,6 +29,7 @@ import BatteriesForm from './components/batteries-form/BatteriesForm';
 import WaterTanksForm from './components/water-tanks-form/WaterTanksForm';
 import SensorsForm from './components/sensors-form/SensorsForm';
 import CamerasForm from './components/cameras-form/CamerasForm';
+import SecurityAlarmForm from './components/security-alarm-form/SecurityAlarmForm';
 import HeatersForm from './components/heaters-form/HeatersForm';
 import TemperatureSensorsForm from './components/temperature-sensors-form/TemperatureSensorsForm';
 import SolarChargeControllersForm from './components/solar-charge-controllers-form/SolarChargeControllersForm';
@@ -48,7 +50,7 @@ function App() {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
 
   const gpsState = useSelector(state => {
-    return state.gps.gpsState;
+    return state.state.gps;
   });
 
   const {
@@ -106,6 +108,7 @@ function App() {
             </Route>
             <Route path="/control-panel"><SwitchGroupsPage /></Route>
             <Route path="/monitor"><MonitorPage /></Route>
+            <Route path="/cameras"><CamerasPage /></Route>
             <Route path="/heater"><HeatersPage /></Route>
 
             <Route path="/settings/general"><SettingsForm /></Route>
@@ -113,6 +116,7 @@ function App() {
             <Route path="/settings/solar-charge-controllers"><SolarChargeControllersForm /></Route>
             <Route path="/settings/water-tanks"><WaterTanksForm /></Route>
             <Route path="/settings/cameras"><CamerasForm /></Route>
+            <Route path="/settings/security-alarm"><SecurityAlarmForm /></Route>
             <Route path="/settings/heaters"><HeatersForm /></Route>
             <Route path="/settings/temperature-sensors"><TemperatureSensorsForm /></Route>
             <Route path="/settings/sensors"><SensorsForm /></Route>

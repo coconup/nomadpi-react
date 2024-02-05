@@ -7,7 +7,7 @@ export default function DayNightIndicator({ onNightMode }) {
   const [isNight, setIsNight] = useState(null);
 
   const gpsState = useSelector(state => {
-    return state.gps.gpsState;
+    return state.state.gps;
   });
 
   const {

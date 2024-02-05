@@ -28,7 +28,17 @@ const SettingsForm = () => {
   const [settings, setSettings] = useState(null);
 
   if(storeSettings && !settings) {
-    setSettings(storeSettings);
+    setSettings(
+      storeSettings.filter(({ setting_key }) => {
+        return [
+          'portainer_access_token',
+          'gpsd_usb_device',
+          'zigbee_usb_device',
+          'voice_assistant_voice_id',
+          'voice_assistant_enabled',
+        ].includes(setting_key);
+      })
+    );
   };
 
   const [
@@ -74,24 +84,22 @@ const SettingsForm = () => {
       settings.find(({ setting_key }) => setting_key === 'voice_assistant_enabled'),
     ];
 
-    const parsedValues = {
-      voiceAssistantEnabled: JSON.parse(voiceAssistantEnabledSetting.value)
-    };
-
-    const title = (label) => {
+    const Title = ({ label }) => {
       return (
         <Typography 
           variant="h5"
           sx={{ margin: '15px 0px 0px 15px'}}
         >
-          {label}
+          { label }
         </Typography>
       )
     }
 
     content = (
       <Box sx={{display: 'flex', flexDirection: 'column', flex: 1, maxWidth: 600}}>
-        { title('General') }
+        <Title
+          label="General"
+        />
         <TextField
           type="password"
           label={portainerTokenSetting.label}
@@ -100,7 +108,9 @@ const SettingsForm = () => {
           onChange={(event) => onSettingChange(portainerTokenSetting, {value: event.target.value})}
         />
 
-        { title('Devices') }
+        <Title
+          label="Devices"
+        />
         <UsbDeviceSelect
           label={gpsdSetting.label}
           value={gpsdSetting.value}
@@ -112,24 +122,30 @@ const SettingsForm = () => {
           onChange={(value) => onSettingChange(zigbeeSetting, { value })}
         />
 
-        { title('Voice assistant') }
+        <Title
+          label="Voice assistant"
+        />
         <FormGroup sx={{ margin: '15px' }}>
           <FormControlLabel 
             control={
               <Switch
-                checked={parsedValues.voiceAssistantEnabled}
-                onChange={(event) => onSettingChange(voiceAssistantEnabledSetting, {value: JSON.stringify(event.target.checked)})}
+                checked={voiceAssistantEnabledSetting.value}
+                onChange={(event) => onSettingChange(voiceAssistantEnabledSetting, {value: event.target.checked})}
               />
             } 
             label={voiceAssistantEnabledSetting.label}
           />
         </FormGroup>
         <TextField
-          disabled={!parsedValues.voiceAssistantEnabled}
+          disabled={!voiceAssistantEnabledSetting.value}
           label={voiceAssistantVoiceIdSetting.label}
           value={voiceAssistantVoiceIdSetting.value || ''}
           sx={{margin: '15px', display: 'flex'}}
           onChange={(event) => onSettingChange(voiceAssistantVoiceIdSetting, {value: event.target.value})}
+        />
+
+        <Title
+          label="Notifications"
         />
       </Box>
     );

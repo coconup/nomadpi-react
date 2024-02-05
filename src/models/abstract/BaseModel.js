@@ -1,5 +1,5 @@
 const BaseModel = (parentClass = Object) => class extends parentClass {
-  constructor(attributes) {
+  constructor(attributes={}) {
     super();
     Object.keys(attributes).map(k => this[k] = attributes[k]);
 

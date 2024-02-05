@@ -169,49 +169,13 @@ export const vanPiAppAPI = createApi({
         })
       }),
 
-      blinkCamerasLogin: builder.mutation({
-        query: ({email, password}) => ({
-          url: `services/blink-cameras/login`,
-          method: 'post',
-          body: {
-            email,
-            password
-          },
-        })
-      }),
-
-      blinkCamerasVerify: builder.mutation({
-        query: ({tier, account_id, client_id, auth_token, verification_code}) => ({
-          url: `/services/blink-cameras/login-verify`,
-          method: 'post',
-          body: {
-            pin: parseInt(verification_code),
-            auth_token,
-            tier,
-            account_id,
-            client_id
-          }
-        })
-      }),
-
-      blinkCamerasHomescreen: builder.query({
-        query: () => `/services/blink-cameras/homescreen`,
+      getFrigateConfig: builder.query({
+        query: () => `/frigate/config`,
         transformResponse: (result, meta) => {
           return result
         },
         providesTags: (result) => {
-          return [{type: 'blinkCamerasLogin'}]
-        }
-      }),
-
-      blinkCamerasLiveStream: builder.query({
-        query: ({ network_id, camera_id }) => `/services/blink-cameras/live-stream?network_id=${network_id}&camera_id=${camera_id}`,
-        transformResponse: (result, meta) => {
-          console.log('livestream result', result)
-          return result
-        },
-        providesTags: (result) => {
-          return [{type: 'blinkCamerasLogin'}]
+          return [{type: 'FrigateConfig'}]
         }
       }),
     };
@@ -404,10 +368,7 @@ export const {
   usePostButterflyCommandConfirmationMutation,
   usePostButterflyServiceFunctionMutation,
 
-  useBlinkCamerasLoginMutation,
-  useBlinkCamerasVerifyMutation,
-  useBlinkCamerasHomescreenQuery,
-  useBlinkCamerasLiveStreamQuery,
+  useGetFrigateConfigQuery,
   
   useGetCredentialsQuery,
   useUpdateCredentialsMutation,

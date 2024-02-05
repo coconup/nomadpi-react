@@ -15,7 +15,7 @@ import ModeSwitch from '../../models/ModeSwitch';
 
 import { usePostSwitchStateMutation } from '../../apis/van-pi/vanpi-app-api';
 
-export default function SwitchControl({switchItem, relays, wifiRelays, relaysState, modesState}) {
+export default function SwitchGroupItem({switchItem, relays, wifiRelays, relaysState, modesState}) {
   const itemType = switchItem.snakecaseType;
   const {
     snakecaseType,

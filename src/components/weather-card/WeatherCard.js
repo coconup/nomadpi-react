@@ -18,7 +18,7 @@ export default function WeatherCard() {
   const apiKey = '908ad75f36452c11ff4306cd53162218';
 
   const gpsState = useSelector(state => {
-    return state.gps.gpsState;
+    return state.state.gps;
   });
 
   const [state, setState] = useState({

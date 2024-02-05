@@ -27,7 +27,7 @@ const Item = styled(Paper)(({ theme }) => ({
 
 export default function HomePanel() {
   const gpsState = useSelector(state => {
-    return state.gps.gpsState;
+    return state.state.gps;
   });
 
   const {

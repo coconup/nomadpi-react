@@ -4,19 +4,21 @@ import { vanPiAppAPI, useAuthStatusQuery } from '../apis/van-pi/vanpi-app-api';
 
 import { authMiddleware, authReducer } from './authMiddleware';
 import { settingsMiddleware, settingsReducer } from './settingsMiddleware';
-import { states, resourceNames } from './resourceStateMiddleware';
+import { frigateMiddleware, frigateReducer } from './frigateMiddleware';
+import { resourcesStateMiddleware, resourcesStateReducer } from './resourceStateMiddleware';
+import { resources, resourceNames as crudResourceNames } from './crudResourcesMiddleware';
 
 import { createSelector } from 'reselect';
 
 let reducer = {
   [vanPiAppAPI.reducerPath]: vanPiAppAPI.reducer,
-  // [vanPiServicesAPI.reducerPath]: vanPiServicesAPI.reducer,
   auth: authReducer,
-  settings: settingsReducer,
+  frigate: frigateReducer,
+  state: resourcesStateReducer
 };
 
-resourceNames.forEach(name => {
-  reducer[name] = states[`${name}Reducer`];
+crudResourceNames.forEach(name => {
+  reducer[name] = resources[`${name}Reducer`];
 });
 
 const store = configureStore({
@@ -24,11 +26,11 @@ const store = configureStore({
   middleware: (getDefaultMiddleware) => (
     getDefaultMiddleware({serializableCheck: false})
       .concat(vanPiAppAPI.middleware)
-      // .concat(vanPiServicesAPI.middleware)
       .concat(authMiddleware)
-      .concat(settingsMiddleware)
+      .concat(frigateMiddleware)
+      .concat(resourcesStateMiddleware)
       .concat(
-        resourceNames.map(name => states[`${name}Middleware`])
+        crudResourceNames.map(name => resources[`${name}Middleware`])
       )
   )
 });

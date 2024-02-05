@@ -14,38 +14,45 @@ const resourceNames = [
 
 const states = {};
 
-resourceNames.forEach(resourceName => {
-  const uppercaseResourceName = uppercaseFirstLetter(resourceName);
-  const slice = createSlice({
-    name: resourceName,
-    initialState: {
-      [`${resourceName}State`]: {}
-    },
-    reducers: {
-      [`set${uppercaseResourceName}State`]: (state, action) => {
-        state[`${resourceName}State`] = action.payload;
-      },
-    }
-  });
+let initialState = {};
+let reducers = {};
+let actionNames = [];
 
-  const setState = slice.actions[`set${uppercaseResourceName}State`];
-  const reducer = slice.reducer;
+resourceNames.forEach(name => {
+  const uppercaseResourceName = uppercaseFirstLetter(name);
 
-  const middleware = () => (next) => async (action) => {
-    if (action.type === 'vanpi-app-api/executeQuery/fulfilled') {
-      if(action.meta.arg.endpointName === `get${uppercaseResourceName}State`) {
-        store.dispatch(setState(action.payload));
-      }
-    }
+  initialState[name] = {};
 
-    return next(action);
+  reducers[`set${uppercaseResourceName}State`] = (state, action) => {
+    state[name] = action.payload;
   };
 
-  states[`${resourceName}Middleware`] = middleware;
-  states[`${resourceName}Reducer`] = reducer;
+  actionNames.push(`get${uppercaseResourceName}State`);
+})
+
+const slice = createSlice({
+  name: `state`,
+  initialState,
+  reducers
 });
 
+const middleware = () => (next) => async (action) => {
+  if (action.type === 'vanpi-app-api/executeQuery/fulfilled') {
+    const actionName = actionNames.find(a => a === action.meta.arg.endpointName);
+    if(actionName) {
+      const setter = slice.actions[actionName.replace(/^get/, 'set')];
+      store.dispatch(setter(action.payload));
+    }
+  }
+
+  return next(action);
+};
+
+const resourcesStateReducer = slice.reducer;
+const resourcesStateMiddleware = middleware;
+
 export {
-  states,
+  resourcesStateReducer,
+  resourcesStateMiddleware,
   resourceNames
 };

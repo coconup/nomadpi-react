@@ -70,8 +70,8 @@ export default function UsbDeviceSelect({ label, value, onChange}) {
     return (
       <Select
         label={label}
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
+        value={JSON.stringify(value)}
+        onChange={(event) => onChange(JSON.parse(event.target.value))}
         options={usbOptions}
       />
     )

@@ -6,13 +6,14 @@ import {
   MenuItem
 } from '@mui/material';
 
-const SelectComponent = ({ label, value, options, onChange, sx={} }) => {
+const SelectComponent = ({ label, value, options, onChange, disabled, sx={} }) => {
   const theme = useTheme();
 
   return (
     <FormControl sx={{display: 'flex', margin: '15px', ...sx}}>
       <InputLabel>{ label }</InputLabel>
       <Select
+        disabled={disabled || false}
         value={value || ''}
         label={label}
         onChange={onChange}

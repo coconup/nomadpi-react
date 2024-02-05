@@ -99,11 +99,11 @@ const SwitchGroupsPage = () => {
   };
 
   const relaysState = useSelector(state => {
-    return state.relays.relaysState;
+    return state.state.relays;
   });
 
   const modesState = useSelector(state => {
-    return state.modes.modesState;
+    return state.state.modes;
   });
 
   let content;

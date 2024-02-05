@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useTheme } from '@mui/material/styles';
 
 import { getApisState } from '../../utils';
@@ -71,7 +71,9 @@ export default function HeatersPage() {
     })
     clearTimeout(saveTimeout);
     setState({...state, heaters: newHeaters});
-    setIsSaved(false);
+    saveTimeout = setTimeout(() => {
+      setIsSaved(false);
+    }, 1000);
   };
 
   const refetchData = () => {
@@ -89,13 +91,10 @@ export default function HeatersPage() {
   };
 
   useEffect(() => {
-    saveTimeout = setTimeout(() => {
-      if(!isSaved) {
-        setIsSaved(true);
-      } else {
-        saveHeaters();
-      }
-    }, 1000);
+    if(!isSaved) {
+      setIsSaved(true);
+      saveHeaters();
+    }
   }, [isSaved]);
 
   const selectedHeater = heaters.find(h => h.name === state.selectedTab);

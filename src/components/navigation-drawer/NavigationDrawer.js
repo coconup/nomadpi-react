@@ -45,6 +45,11 @@ export default function NavigationDrawer({ open, toggleDrawer }) {
       path: '/monitor'
     },
     {
+      label: 'Cameras',
+      icon: <Icon>camera</Icon>,
+      path: '/cameras'
+    },
+    {
       label: 'Settings',
       icon: <Icon>settings</Icon>,
       path: '/settings',
@@ -123,6 +128,11 @@ export default function NavigationDrawer({ open, toggleDrawer }) {
         {
           type: 'subheader',
           label: 'Security'
+        },
+        {
+          label: 'Security alarm',
+          icon: <Icon>security</Icon>,
+          path: '/settings/security-alarm'
         },
         {
           label: 'Cameras',

@@ -36,7 +36,7 @@ export default function WaterTankPage({ waterTank, compact=false }) {
   }[color] || lightBlue;
 
   const waterTankState = useSelector(state => {
-    return state.waterTanks.waterTanksState[id];
+    return state.state.waterTanks[id];
   });
 
   let content;

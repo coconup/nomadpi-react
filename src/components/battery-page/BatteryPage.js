@@ -20,7 +20,7 @@ export default function BatteryPage({ battery, compact=false }) {
   } = battery;
 
   const batteryState = useSelector(state => {
-    return state.batteries.batteriesState[id];
+    return state.state.batteries[id];
   });
 
   let content;
