@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import axios from 'axios';
 
 export default function VoiceProvider({ prompt, onError, onResponse }) {
-  const { settings } = useSelector(state => state.settings);
+  const settings = useSelector(state => state.settings);
 
   let voiceId;
   

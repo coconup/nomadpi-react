@@ -91,8 +91,9 @@ export default function CamerasPage() {
                 label={
                   <Typography
                     variant="h5"
+                    color={alarmStateResponse.isLoading ? "text.disabled" : "text.primary"}
                   >
-                    Alarm
+                    Alarm {armed ? 'active' : 'not active'}
                   </Typography>
                 }
               />

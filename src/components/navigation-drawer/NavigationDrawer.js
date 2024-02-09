@@ -45,9 +45,9 @@ export default function NavigationDrawer({ open, toggleDrawer }) {
       path: '/monitor'
     },
     {
-      label: 'Cameras',
-      icon: <Icon>camera</Icon>,
-      path: '/cameras'
+      label: 'Security',
+      icon: <Icon>security</Icon>,
+      path: '/security'
     },
     {
       label: 'Settings',

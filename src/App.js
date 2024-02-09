@@ -104,7 +104,7 @@ function App() {
             </Route>
             <Route path="/control-panel"><SwitchGroupsPage /></Route>
             <Route path="/monitor"><MonitorPage /></Route>
-            <Route path="/cameras"><CamerasPage /></Route>
+            <Route path="/security"><CamerasPage /></Route>
             <Route path="/heater"><HeatersPage /></Route>
 
             <Route path="/settings/general"><SettingsForm /></Route>
