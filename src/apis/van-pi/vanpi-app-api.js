@@ -68,6 +68,7 @@ export const vanPiAppAPI = createApi({
     'SensorState',
     'UsbDevices',
     'Settings',
+    'AlarmState',
   ],
   baseQuery: fetchBaseQuery({ 
     baseUrl: BASE_URL,
@@ -101,6 +102,24 @@ export const vanPiAppAPI = createApi({
         invalidatesTags: (result, error, payload, request) => {
           if(result) {
             return [{type: `RelaysState`}];
+          }
+        }
+      }),
+
+      postAlarmState: builder.mutation({
+        query: (body) => {
+          return {
+            url: `alarm/state`,
+            method: 'post',
+            body
+          }
+        },
+        invalidatesTags: (result, error, payload, request) => {
+          if(result) {
+            return [
+              {type: `AlarmState`},
+              {type: `FrigateConfig`}
+            ];
           }
         }
       }),
@@ -290,6 +309,7 @@ export const {
   useCheckAuthStatusQuery,
 
   usePostSwitchStateMutation,
+  usePostAlarmStateMutation,
   
   useUpdateSettingMutation,
   useGetSettingsQuery,
@@ -363,6 +383,7 @@ export const {
   useGetWaterTanksStateQuery,
   useGetTemperatureSensorsStateQuery,
   useGetSolarChargeControllersStateQuery,
+  useGetAlarmStateQuery,
 
   usePostButterflyIntentMutation,
   usePostButterflyCommandConfirmationMutation,

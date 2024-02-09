@@ -61,7 +61,7 @@ import VoiceAssistantProvider from './VoiceAssistantProvider';
 export default function VoiceAssistantToggle() {
   const [active, setActive] = useState(true);
 
-  const { settings } = useSelector(state => state.settings);
+  const settings = useSelector(state => state.settings);
   if(settings) {
     const voiceAssistantEnabledSetting = settings.find(({ setting_key }) => setting_key === 'voice_assistant_enabled');
 

@@ -28,21 +28,7 @@ export default function CameraPage({ camera }) {
     camera_id
   } = connection_params;
 
-  const cameraConfig = useSelector(state => {
-    return state.frigate.config.cameras[camera_id];
-  });
-
-  const {
-    motion,
-    detect,
-    snapshots,
-    record
-  } = cameraConfig;
-
-  const motionEnabled = !!motion;
-  const detectEnabled = detect.enabled;
-  const snapshotsEnabled = snapshots.enabled;
-  const recordEnabled = record.enabled;
+  const frigateConfig = useSelector(state => state.frigate.config);
 
   useEffect(() => {
     const intervalId = setInterval(() => setTs(Math.floor(Date.now() / 1000)), 5000);
@@ -52,12 +38,22 @@ export default function CameraPage({ camera }) {
   }, []);
 
   let content;
-  if (!cameraConfig) {
+  if (!frigateConfig) {
     content = <div>Loading</div>
   } else {
+    const cameraConfig = frigateConfig.cameras[camera_id];
+
     const {
-      // ...
+      motion,
+      detect,
+      snapshots,
+      record
     } = cameraConfig;
+
+    const motionEnabled = !!motion;
+    const detectEnabled = detect.enabled;
+    const snapshotsEnabled = snapshots.enabled;
+    const recordEnabled = record.enabled;
 
     content = (
       <Card>

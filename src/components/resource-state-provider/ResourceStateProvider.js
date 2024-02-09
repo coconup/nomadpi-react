@@ -10,6 +10,7 @@ import {
   useGetWaterTanksStateQuery,
   useGetTemperatureSensorsStateQuery,
   useGetSolarChargeControllersStateQuery,
+  useGetAlarmStateQuery,
 } from '../../apis/van-pi/vanpi-app-api';
 
 const ResourceStateProvider = () => {
@@ -20,6 +21,7 @@ const ResourceStateProvider = () => {
   const apiWaterTanksState = useGetWaterTanksStateQuery();
   const apiTemperatureSensorsState = useGetTemperatureSensorsStateQuery();
   const apiSolarChargeControllersState = useGetSolarChargeControllersStateQuery();
+  const apiAlarmState = useGetAlarmStateQuery();
 
   const {
     isLoading,
@@ -34,7 +36,8 @@ const ResourceStateProvider = () => {
     apiBatteriesState,
     apiWaterTanksState,
     apiTemperatureSensorsState,
-    apiSolarChargeControllersState
+    apiSolarChargeControllersState,
+    apiAlarmState
   ]);
 
   const refetch = async () => {

@@ -19,11 +19,12 @@ import Container from '../ui/Container';
 import Select from '../ui/Select';
 
 import UsbDeviceSelect from '../usb-device-select/UsbDeviceSelect';
+import CallMeBotCredentialsSelector from '../call-me-bot-credentials-selector/CallMeBotCredentialsSelector';
 
 import { useUpdateSettingMutation } from '../../apis/van-pi/vanpi-app-api';
 
 const SettingsForm = () => {
-  const { settings: storeSettings } = useSelector(state => state.settings);
+  const storeSettings = useSelector(state => state.settings);
 
   const [settings, setSettings] = useState(null);
 
@@ -36,6 +37,7 @@ const SettingsForm = () => {
           'zigbee_usb_device',
           'voice_assistant_voice_id',
           'voice_assistant_enabled',
+          'notifications_whatsapp_number',
         ].includes(setting_key);
       })
     );
@@ -76,12 +78,14 @@ const SettingsForm = () => {
       zigbeeSetting,
       voiceAssistantVoiceIdSetting,
       voiceAssistantEnabledSetting,
+      notificationsWhatsappNumberSetting,
     ] = [
       settings.find(({ setting_key }) => setting_key === 'portainer_access_token'),
       settings.find(({ setting_key }) => setting_key === 'gpsd_usb_device'),
       settings.find(({ setting_key }) => setting_key === 'zigbee_usb_device'),
       settings.find(({ setting_key }) => setting_key === 'voice_assistant_voice_id'),
       settings.find(({ setting_key }) => setting_key === 'voice_assistant_enabled'),
+      settings.find(({ setting_key }) => setting_key === 'notifications_whatsapp_number'),
     ];
 
     const Title = ({ label }) => {
@@ -147,6 +151,13 @@ const SettingsForm = () => {
         <Title
           label="Notifications"
         />
+        <TextField
+          label={notificationsWhatsappNumberSetting.label}
+          value={notificationsWhatsappNumberSetting.value || ''}
+          sx={{margin: '15px', display: 'flex'}}
+          onChange={(event) => onSettingChange(notificationsWhatsappNumberSetting, {value: event.target.value})}
+        />
+        <CallMeBotCredentialsSelector />
       </Box>
     );
   }

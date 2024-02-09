@@ -32,9 +32,9 @@ const SecurityAlarmForm = () => {
   useGetCamerasQuery();
   useGetSensorsQuery();
 
-  const { settings: storeSettings } = useSelector(state => state.settings);
-  const { cameras } = useSelector(state => state.cameras);
-  const { sensors } = useSelector(state => state.sensors);
+  const storeSettings = useSelector(state => state.settings);
+  const cameras = useSelector(state => state.cameras);
+  const sensors = useSelector(state => state.sensors);
 
   const [settings, setSettings] = useState(null);
 
@@ -279,31 +279,37 @@ const SecurityAlarmForm = () => {
                     disabled={disabled}
                     label="Arm when"
                     value={arm_on}
-                    onChange={(event) => onCameraRuleChange({ arm_on: event.target.value })}
+                    onChange={(event) => onCameraRuleChange({ arm_on: event.target.value, trigger_on_detect: false, trigger_on_motion: false })}
                     options={arm_on_options}
                   />
-                  <FormControlLabel
-                    sx={{ margin: '15px' }}
-                    control={
-                      <Switch
-                        disabled={disabled}
-                        checked={trigger_on_motion || false}
-                        onChange={(event) => onCameraRuleChange({ trigger_on_motion: event.target.checked })}
-                      />
-                    } 
-                    label={'Trigger alarm when motion is detected'}
-                  />
-                  <FormControlLabel
-                    sx={{ margin: '15px' }}
-                    control={
-                      <Switch
-                        disabled={disabled}
-                        checked={trigger_on_detect || false}
-                        onChange={(event) => onCameraRuleChange({ trigger_on_detect: event.target.checked })}
-                      />
-                    } 
-                    label={'Trigger alarm when object is detected'}
-                  />
+                  {
+                    arm_on === 'alarm_on' && (
+                      <Box>
+                        <FormControlLabel
+                          sx={{ margin: '15px' }}
+                          control={
+                            <Switch
+                              disabled={disabled}
+                              checked={trigger_on_motion || false}
+                              onChange={(event) => onCameraRuleChange({ trigger_on_motion: event.target.checked })}
+                            />
+                          } 
+                          label={'Trigger alarm when motion is detected'}
+                        />
+                        <FormControlLabel
+                          sx={{ margin: '15px' }}
+                          control={
+                            <Switch
+                              disabled={disabled}
+                              checked={trigger_on_detect || false}
+                              onChange={(event) => onCameraRuleChange({ trigger_on_detect: event.target.checked })}
+                            />
+                          } 
+                          label={'Trigger alarm when object is detected'}
+                        />
+                      </Box>
+                    )
+                  }
                 </Box>
               </Paper>
             )

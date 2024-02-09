@@ -21,10 +21,7 @@ export default function CameraForm({camera, onChange, editable }) {
     connection_params={}
   } = camera;
 
-  const {
-    camera_id,
-    network_id
-  } = connection_params;
+  const { camera_id } = connection_params;
 
   return (
     <Card sx={{ width: 400, margin: '20px' }}>

@@ -24,12 +24,10 @@ resourceNames.forEach(resourceName => {
   const uppercaseResourceName = uppercaseFirstLetter(resourceName);
   const slice = createSlice({
     name: resourceName,
-    initialState: {
-      [`${resourceName}`]: null
-    },
+    initialState: null,
     reducers: {
       [`set${uppercaseResourceName}`]: (state, action) => {
-        state[`${resourceName}`] = action.payload;
+        return action.payload;
       },
     }
   });

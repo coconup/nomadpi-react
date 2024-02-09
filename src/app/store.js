@@ -3,7 +3,6 @@ import { vanPiAppAPI, useAuthStatusQuery } from '../apis/van-pi/vanpi-app-api';
 // import { vanPiServicesAPI } from '../apis/van-pi/vanpi-services-api';
 
 import { authMiddleware, authReducer } from './authMiddleware';
-import { settingsMiddleware, settingsReducer } from './settingsMiddleware';
 import { frigateMiddleware, frigateReducer } from './frigateMiddleware';
 import { resourcesStateMiddleware, resourcesStateReducer } from './resourceStateMiddleware';
 import { resources, resourceNames as crudResourceNames } from './crudResourcesMiddleware';

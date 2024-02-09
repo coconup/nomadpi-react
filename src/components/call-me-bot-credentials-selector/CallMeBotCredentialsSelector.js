@@ -22,7 +22,7 @@ import {
 import Credentials from '../../models/Credentials';
 
 const CallMeBotCredentialsSelector = () => {
-  useGetCredentialsQuery();
+  const apiCredentials = useGetCredentialsQuery();
 
   const [
     updateCredentialsTrigger,
@@ -44,60 +44,61 @@ const CallMeBotCredentialsSelector = () => {
     apiCredentials
   ]);
 
-  const initialState = {
-    edit_mode: false
-  }
-
-  const [state, setState] = useState(initialState);
-
-  const {
-    edit_mode
-  } = state;
+  const [editMode, setEditMode] = useState(false);
+  const [credentials, setCredentials] = useState(null);
 
   const onSave = () => {
-    saveCredentials(credentials, () => setState(initialState));
+    if(credentials.id) {
+      updateCredentialsTrigger(credentials.toJSONPayload()).then(() => setEditMode(false));
+    } else {
+      createCredentialsTrigger(credentials.toJSONPayload()).then(() => setEditMode(false));
+    }
   };
+
+  const onChange = (attrs) => {
+    let newCredentials = credentials.clone();
+    Object.keys(attrs).forEach(k => newCredentials[k] = attrs[k]);
+    setCredentials(newCredentials);
+  }
   
   let content;
-  if(!credentials) {
-    addCredentials({
-      name: 'CallMeBot',
-      service_id: 'call_me_bot'
-    })
-  } else {
-    const {
-      email,
-      password
-    } = credentials.value;
 
-    if(!state.edit_mode && !credentials.id) {
-      setState({...state, edit_mode: true});
-    };
+  if(isLoading) {
+    content = <div>Loading</div>
+  } else if(!credentials) {
+    const serviceId = 'call-me-bot';
+    const credentialsFromApi = apiCredentials.data.find(c => c.service_id === serviceId);
+    if(credentialsFromApi) {
+      setCredentials(credentialsFromApi);
+    } else {
+      const newCredentials = new Credentials({
+        name: 'CallMeBot',
+        service_id: serviceId
+      });
+      setCredentials(newCredentials);
+      setEditMode(true);
+    }
+  } else {
+    const { api_key } = credentials.value;
 
     content = (
       <Box sx={{display: 'flex', flexDirection: 'column', flex: 1}}>
         {
-          edit_mode && (
+          editMode && (
             <Box sx={{display: 'flex', flexDirection: 'column', flex: 1}}>
-              <TextField
-                label="Email"
-                value={email || ''}
-                sx={{margin: '15px 15px 15px', flex: 1}}
-                onChange={(event) => onCredentialsChange(credentials, {value: {...credentials.value, email: event.target.value}})}
-              />
               <Box sx={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
                 <TextField
-                  label="Password"
+                  label="CallMeBot API Key"
                   type="password"
-                  value={password || ''}
-                  sx={{margin: '5px 15px', flex: 1}}
-                  onChange={(event) => onCredentialsChange(credentials, {value: {...credentials.value, password: event.target.value}})}
+                  value={api_key || ''}
+                  sx={{margin: '15px 15px 15px', flex: 1}}
+                  onChange={(event) => onChange({ value: { api_key: event.target.value } })}
                 />
                 <Fab 
                   size="small"
                   color="primary" 
-                  aria-label="edit"
-                  onClick={onLogin}
+                  aria-label="save"
+                  onClick={onSave}
                   sx={{
                     marginRight: '15px'
                   }}
@@ -110,7 +111,7 @@ const CallMeBotCredentialsSelector = () => {
                       size="small"
                       color="primary" 
                       aria-label="edit"
-                      onClick={() => setState({...state, edit_mode: false})}
+                      onClick={() => setEditMode(false)}
                       sx={{
                         marginRight: '15px'
                       }}
@@ -133,7 +134,7 @@ const CallMeBotCredentialsSelector = () => {
                 size="small"
                 color="primary" 
                 aria-label="edit"
-                onClick={() => setState({...state, edit_mode: true})}
+                onClick={() => setEditMode(true)}
                 sx={{
                   marginRight: '5px'
                 }}
@@ -147,35 +148,20 @@ const CallMeBotCredentialsSelector = () => {
     );
   }
 
-  const modalStyle = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4,
-  };
+  // const modalStyle = {
+  //   position: 'absolute',
+  //   top: '50%',
+  //   left: '50%',
+  //   transform: 'translate(-50%, -50%)',
+  //   width: 400,
+  //   bgcolor: 'background.paper',
+  //   border: '2px solid #000',
+  //   boxShadow: 24,
+  //   p: 4,
+  // };
 
   return (
     <Box>
-      <Modal open={credentials.client_verification_required || false}>
-        <Box sx={modalStyle}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            Verification required
-          </Typography>
-          <TextField
-            type="number"
-            label="Verification code"
-            value={verification_code}
-            sx={{margin: '15px', display: 'flex'}}
-            onChange={(event) => setState({...state, verification_code: event.target.value})}
-          />
-          <Button variant="contained" onClick={onVerificationSubmit}>Submit</Button>
-        </Box>
-      </Modal>
       {content}
     </Box>
   )

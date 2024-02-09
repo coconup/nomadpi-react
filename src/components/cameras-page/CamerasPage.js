@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
 
 import {
   getApisState
@@ -7,7 +8,10 @@ import {
 import {
   Box,
   ButtonBase,
-  Unstable_Grid2 as Grid
+  FormControlLabel,
+  Unstable_Grid2 as Grid,
+  Switch,
+  Typography
 } from '@mui/material';
 
 import Container from '../ui/Container';
@@ -16,17 +20,11 @@ import CameraPage from '../camera-page/CameraPage';
 
 import {
   useGetCamerasQuery,
-  useGetFrigateConfigQuery
+  useGetFrigateConfigQuery,
+  usePostAlarmStateMutation
 } from '../../apis/van-pi/vanpi-app-api';
 
 export default function CamerasPage() {
-  const initialState = {
-    cameras: [],
-    init: false
-  };
-
-  const [state, setState] = useState(initialState);  
-
   const apiCameras = useGetCamerasQuery();
   const apiFrigateConfig = useGetFrigateConfigQuery();
 
@@ -41,42 +39,35 @@ export default function CamerasPage() {
     apiFrigateConfig
   ]);
 
-  if(isSuccess && !state.init) {
-    setState({
-      ...state,
-      cameras: apiCameras.data,
-      init: true
-    });
+  const [
+    postAlarmStateTrigger, 
+    alarmStateResponse
+  ] = usePostAlarmStateMutation();
+
+  const cameras = useSelector(state => state.cameras);
+  const settings = useSelector(state => state.settings);
+  const alarmState = useSelector(state => state.state.alarm);
+
+  const { armed } = alarmState;
+
+  const handleAlarmToggle = (armed) => {
+    postAlarmStateTrigger({ armed });
   };
 
-  const {
-    cameras
-  } = state;
-
   let content;
-  if (isLoading) {
+  if (!cameras || !settings) {
     content = <div>Loading</div>
-  } else if(isSuccess && state.init) {
-    content = cameras.map(camera => (
-      <Grid 
-        key={camera.key}
-        xs={12}
-        sm={8}
-        md={6}
-        // lg={4}
-      >
-        <CameraPage
-          camera={camera}
-        />
-      </Grid>
-    ));
   } else if (isError) {
     const {status, error: message} = errors[0];
     content = <div>{message}</div>
-  }
+  } else {
+    const alarmEnabledSetting = settings.find(({ setting_key }) => setting_key === 'security_alarm_enabled');
 
-  return (
-    <Container>
+    const {
+      value: alarmEnabled
+    } = alarmEnabledSetting;
+
+    content = (
       <Grid
         container
         spacing={2}
@@ -86,8 +77,50 @@ export default function CamerasPage() {
           alignItems: 'center'
         }}
       >
-        {content}
+        {
+          alarmEnabled && (
+            <Grid xs={12}>
+              <FormControlLabel
+                control={
+                  <Switch
+                    disabled={alarmStateResponse.isLoading}
+                    checked={armed || false}
+                    onChange={(event) => handleAlarmToggle(event.target.checked)}
+                  />
+                } 
+                label={
+                  <Typography
+                    variant="h5"
+                  >
+                    Alarm
+                  </Typography>
+                }
+              />
+            </Grid>
+          )
+        }
+        {
+          cameras.map(camera => (
+            <Grid 
+              key={camera.key}
+              xs={12}
+              sm={8}
+              md={6}
+              // lg={4}
+            >
+              <CameraPage
+                camera={camera}
+              />
+            </Grid>
+          ))
+        }
       </Grid>
+    );
+  };
+
+  return (
+    <Container>
+      { content }
     </Container>
   );
 }

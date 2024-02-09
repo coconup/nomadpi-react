@@ -58,10 +58,7 @@ function App() {
     longitude
   } = gpsState;
 
-  const [state, setState] = useState({
-    nightMode: prefersDarkMode,
-    init: false
-  });
+  const [nightMode, setNightMode] = useState(prefersDarkMode);
 
   const [
     loginTrigger, 
@@ -69,12 +66,11 @@ function App() {
   ] = useLoginMutation();
 
   const { loggedIn } = useSelector(state => state.auth);
-  const { settings } = useSelector(state => state.settings);
 
   const handleNightModeChange = (isNight) => {
     console.log(`Night mode is ${isNight ? 'on' : 'off'}`);
-    if(state.nightMode !== isNight) {
-      setState({...state, nightMode: isNight});  
+    if(nightMode !== isNight) {
+      setNightMode(isNight);  
     }
   };
 
@@ -133,7 +129,7 @@ function App() {
   };
 
   return (
-    <ThemeProvider theme={theme(state.nightMode)}>
+    <ThemeProvider theme={theme(nightMode)}>
       <ResourceStateProvider />
       {
         !prefersDarkMode && (

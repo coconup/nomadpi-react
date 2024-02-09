@@ -9,7 +9,8 @@ const resourceNames = [
   'batteries',
   'waterTanks',
   'temperatureSensors',
-  'solarChargeControllers'
+  'solarChargeControllers',
+  'alarm'
 ];
 
 const states = {};
