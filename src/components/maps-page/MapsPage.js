@@ -3,7 +3,7 @@ import { GoogleMap, Marker, Polyline, useJsApiLoader } from '@react-google-maps/
 
 import { useTheme } from '@mui/material/styles';
 
-function MyComponent({ latitude: latitudeProp, longitude: longitudeProp, containerStyle={} }) {
+function MapsPage({ latitude: latitudeProp, longitude: longitudeProp, containerStyle={} }) {
   const theme = useTheme();
 
   const [position, setPosition] = useState({
@@ -324,4 +324,4 @@ function MyComponent({ latitude: latitudeProp, longitude: longitudeProp, contain
   }
 }
 
-export default MyComponent
+export default MapsPage

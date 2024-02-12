@@ -1,15 +1,17 @@
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import CardHeader from '@mui/material/CardHeader';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import Button from '@mui/material/Button';
-import Container from '@mui/material/Container';
-import Switch from '@mui/material/Switch';
-import Typography from '@mui/material/Typography';
+import { useEffect } from 'react';
 
-import { Icon } from '@mui/material';
+import { setError } from '../../app/notificationBarMiddleware';
+import store from '../../app/store';
+
+import {
+  Box,
+  Card,
+  CardHeader,
+  CardContent,
+  Icon,
+  Switch,
+  Typography,
+} from '@mui/material';
 
 import ModeSwitch from '../../models/ModeSwitch';
 
@@ -38,6 +40,8 @@ export default function SwitchGroupItem({switchItem, relays, wifiRelays, relaysS
     switchStateResponse
   ] = usePostSwitchStateMutation();
 
+  const { isError } = switchStateResponse;
+
   const handleClick = () => {
     postSwitchStateTrigger({
       switch_type: snakecaseType,
@@ -47,69 +51,76 @@ export default function SwitchGroupItem({switchItem, relays, wifiRelays, relaysS
     });
   };
 
+  useEffect(() => {
+    if(isError) {
+      const { error={} } = switchStateResponse;
+      if(error.data) {
+        const { type } = error.data.error.message;
+
+        if(type === 'conflicting_actors_found') {
+          store.dispatch(setError(`Cannot toggle ${switchItem.name} because it conflicts with other active switches`));
+        }
+      }
+    }
+  }, [isError]);
+
   const transform = state ? 'scale(0.95)' : null;
 
   return (
-    // <Button color='secondary' sx={{
-    //   '& .MuiPaper-root': {
-    //     // ...(state === true ? {} : {backgroundColor: 'grey.200'})
-    //   }
-    // }}>
-      <Card 
-        onClick={handleClick}
-        raised
-        elevation={state ? 1 : 2}
-        sx={{
-          padding: state ? '0px' : '3px',
-          margin: state ? '3px' : '0px'
-        }}
-      >
-        <CardContent>
-          <CardHeader
-            avatar={
-              <Typography sx={{ 
-                fontSize: 14, 
-                fontWeight: 500, 
-                marginBottom: '0px', 
-                alignSelf: 'center',
-                color: state === true ? 'primary.light' : 'text.disabled'
-              }} color="primary" gutterBottom>
-                {state ? 'ON' : 'OFF'}
-              </Typography>
-            }
-            action={
-              <Switch checked={state}/>
-            }
-          />
-          <Box
+    <Card 
+      onClick={handleClick}
+      raised
+      elevation={state ? 1 : 2}
+      sx={{
+        padding: state ? '0px' : '3px',
+        margin: state ? '3px' : '0px'
+      }}
+    >
+      <CardContent>
+        <CardHeader
+          avatar={
+            <Typography sx={{ 
+              fontSize: 14, 
+              fontWeight: 500, 
+              marginBottom: '0px', 
+              alignSelf: 'center',
+              color: state === true ? 'primary.light' : 'text.disabled'
+            }} color="primary" gutterBottom>
+              {state ? 'ON' : 'OFF'}
+            </Typography>
+          }
+          action={
+            <Switch checked={state}/>
+          }
+        />
+        <Box
+          sx={{
+            textAlign: 'center'
+          }}
+        >
+          <Icon 
             sx={{
-              textAlign: 'center'
+              fontSize: '64px', 
+              color: state ? 'primary.main' : 'action.disabled',
+              transform
             }}
           >
-            <Icon 
-              sx={{
-                fontSize: '64px', 
-                color: state ? 'primary.main' : 'action.disabled',
-                transform
-              }}
-            >
-              {icon}
-            </Icon>
-            <Typography 
-              sx={{
-                fontSize: 20,
-                fontWeight: 500,
-                margin: '20px',
-                color: state ? 'primary.main' : 'text.secondary',
-                transform
-              }} 
-              color="text.primary"
-            >
-              {name}
-            </Typography>
-          </Box>
-        </CardContent>
-      </Card>
-    // </Button>
+            {icon}
+          </Icon>
+          <Typography 
+            sx={{
+              fontSize: 20,
+              fontWeight: 500,
+              margin: '20px',
+              color: state ? 'primary.main' : 'text.secondary',
+              transform
+            }} 
+            color="text.primary"
+          >
+            {name}
+          </Typography>
+        </Box>
+      </CardContent>
+    </Card>
   );
 }

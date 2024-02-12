@@ -5,11 +5,14 @@ import store from "./app/store";
 import { Route, Switch, Redirect } from "wouter";
 import { useSelector } from 'react-redux';
 
-import useMediaQuery from '@mui/material/useMediaQuery';
-import Box from '@mui/material/Box';
+import {
+  Box,
+  useMediaQuery
+} from '@mui/material';
 
 import LoginForm from './components/login-form/LoginForm';
 import ResponsiveAppBar from './components/responsive-app-bar/ResponsiveAppBar';
+import NotificationBar from './components/notification-bar/NotificationBar';
 import HomePanel from './components/home-panel/HomePanel';
 import SwitchGroupsPage from './components/switch-groups-page/SwitchGroupsPage';
 import MonitorPage from './components/monitor-page/MonitorPage';
@@ -91,6 +94,7 @@ function App() {
           flexDirection: 'column'
         }}>
         <ResponsiveAppBar />
+        <NotificationBar />
         <Box
           sx={{
             flexGrow: 1,

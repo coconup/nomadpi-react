@@ -35,6 +35,12 @@ const snakeToCamelCase = (string) => {
   );
 };
 
+const toReadableName = (string) => {
+  return uppercaseFirstLetter(
+    toSnakeCase(string).replaceAll('_', ' ')
+  );
+}
+
 const getRandomArrayElement = (array) => array[Math.floor(Math.random() * array.length)];
 
 module.exports = {
@@ -43,5 +49,6 @@ module.exports = {
   lowercaseFirstLetter,
   toSnakeCase,
   snakeToCamelCase,
-  getRandomArrayElement
+  toReadableName,
+  getRandomArrayElement,
 };

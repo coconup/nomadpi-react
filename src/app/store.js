@@ -4,6 +4,7 @@ import { vanPiAppAPI, useAuthStatusQuery } from '../apis/van-pi/vanpi-app-api';
 
 import { authMiddleware, authReducer } from './authMiddleware';
 import { frigateMiddleware, frigateReducer } from './frigateMiddleware';
+import { notificationBarMiddleware, notificationBarReducer } from './notificationBarMiddleware';
 import { resourcesStateMiddleware, resourcesStateReducer } from './resourceStateMiddleware';
 import { resources, resourceNames as crudResourceNames } from './crudResourcesMiddleware';
 
@@ -13,6 +14,7 @@ let reducer = {
   [vanPiAppAPI.reducerPath]: vanPiAppAPI.reducer,
   auth: authReducer,
   frigate: frigateReducer,
+  notification_bar: notificationBarReducer,
   state: resourcesStateReducer
 };
 
@@ -27,6 +29,7 @@ const store = configureStore({
       .concat(vanPiAppAPI.middleware)
       .concat(authMiddleware)
       .concat(frigateMiddleware)
+      .concat(notificationBarMiddleware)
       .concat(resourcesStateMiddleware)
       .concat(
         crudResourceNames.map(name => resources[`${name}Middleware`])

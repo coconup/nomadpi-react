@@ -39,7 +39,9 @@ resourceNames.forEach(resourceName => {
     if (action.type === 'vanpi-app-api/executeQuery/fulfilled') {
       if(action.meta.arg.endpointName === `get${uppercaseResourceName}`) {
         store.dispatch(setState(action.payload));
+        
       }
+    } else {
     }
 
     return next(action);
