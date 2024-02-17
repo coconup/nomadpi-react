@@ -66,10 +66,11 @@ function ResponsiveAppBar() {
                 <Icon>menu</Icon>
               </IconButton>
             </Box>
-            <img 
+            {/*<img 
               src={process.env.PUBLIC_URL + '/vanpi_logo.png'}
               height='64'
-            />
+            />*/}
+            <Typography sx={{ fontFamily: 'Honk', fontSize: '42px' }}>VanPi</Typography>
           </Box>
           {/*<Typography
             variant="h6"

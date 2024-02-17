@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
+import { selectAlarmState } from '../../app/store';
 
 import {
   getApisState
@@ -46,7 +47,7 @@ export default function CamerasPage() {
 
   const cameras = useSelector(state => state.cameras);
   const settings = useSelector(state => state.settings);
-  const alarmState = useSelector(state => state.state.alarm);
+  const alarmState = useSelector(selectAlarmState);
 
   const { armed } = alarmState;
 

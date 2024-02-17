@@ -4,12 +4,6 @@ This project provides a React-based UI for the VanPi API. It allows to interact 
 
 This project is undergoing active development and has to be treated as work in progress.
 
-## Getting Started
-
-1. Clone the repository to your [VanPi docker stack](https://github.com/coconup/vanpi-docker-stack) under `/volumes`.
-2. Navigate to the project directory.
-3. Create a `.env` file based on the provided `.env.example` file.
-
 ## Features
 
 * **Settings:** Easily configure various parameters for your Campervan, such as batteries, GPS, and Zigbee USB devices.

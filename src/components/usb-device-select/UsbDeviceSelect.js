@@ -10,7 +10,15 @@ import Select from '../ui/Select';
 
 import { useGetUsbDevicesQuery } from '../../apis/van-pi/vanpi-app-api';
 
-export default function UsbDeviceSelect({ label, value, onChange}) {
+export default function UsbDeviceSelect({
+  label,
+  value,
+  attributes=[
+    'vendor_id',
+    'product_id'
+  ],
+  onChange
+}) {
   const initialState = {
     usbDevices: [],
     init: false
@@ -46,10 +54,23 @@ export default function UsbDeviceSelect({ label, value, onChange}) {
   if (isLoading) {
     return <div>Loading</div>
   } else if(isSuccess && state.init) {
-    const usbOptions = usbDevices.map(({vendor_id, product_id, product_name, vendor_name}, i) => {
-      const value = JSON.stringify({
+    const usbOptions = usbDevices.map((item, i) => {
+      const {
+        bus_id,
+        device_id,
+        product_id,
+        product_name,
         vendor_id,
-        product_id
+        vendor_name,
+        serial_id,
+      } = item;
+      
+      const value = JSON.stringify({
+        ...attributes.includes('vendor_id') ? { vendor_id } : {},
+        ...attributes.includes('product_id') ? { product_id } : {},
+        ...attributes.includes('bus_id') ? { bus_id } : {},
+        ...attributes.includes('device_id') ? { device_id } : {},
+        ...attributes.includes('serial_id') ? { serial_id } : {},
       });
 
       return {
@@ -70,7 +91,7 @@ export default function UsbDeviceSelect({ label, value, onChange}) {
     return (
       <Select
         label={label}
-        value={JSON.stringify(value)}
+        value={value ? JSON.stringify(value) : ''}
         onChange={(event) => onChange(JSON.parse(event.target.value))}
         options={usbOptions}
       />

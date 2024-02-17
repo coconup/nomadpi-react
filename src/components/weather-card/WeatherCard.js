@@ -4,6 +4,8 @@ import { useSelector } from 'react-redux';
 import { useState } from 'react';
 import { useTheme } from '@mui/material/styles';
 
+import { selectGpsState } from '../../app/store';
+
 import {
   Box,
   Paper,
@@ -17,9 +19,7 @@ export default function WeatherCard() {
 
   const apiKey = '908ad75f36452c11ff4306cd53162218';
 
-  const gpsState = useSelector(state => {
-    return state.state.gps;
-  });
+  const gpsState = useSelector(selectGpsState);
 
   const [state, setState] = useState({
     weatherForecastOpen: false

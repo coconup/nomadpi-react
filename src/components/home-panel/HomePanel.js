@@ -1,4 +1,5 @@
 import { useSelector } from 'react-redux';
+import { selectGpsState } from '../../app/store';
 
 import {
   Box,
@@ -17,6 +18,8 @@ import WaterTanksPage from '../water-tanks-page/WaterTanksPage';
 import SolarChargeControllersPage from '../solar-charge-controllers-page/SolarChargeControllersPage';
 import MapsPage from '../maps-page/MapsPage';
 
+import { selectServiceCredentials } from '../../app/store';
+
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
   ...theme.typography.body2,
@@ -26,9 +29,11 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 export default function HomePanel() {
-  const gpsState = useSelector(state => {
-    return state.state.gps;
-  });
+  const gpsState = useSelector(selectGpsState);
+
+  const googleMapsCredentials = useSelector(selectServiceCredentials('google-maps'));
+
+  const { api_key: googleMapsApiKey } = googleMapsCredentials.value || {};
 
   const {
     latitude,
@@ -70,14 +75,19 @@ export default function HomePanel() {
                     display: 'flex'
                   }}
                 >
-                  <MapsPage
-                    latitude={latitude}
-                    longitude={longitude}
-                    containerStyle={{
-                      borderRadius: '4px',
-                      flex: 1
-                    }}
-                  />
+                  {
+                    googleMapsApiKey && (
+                      <MapsPage
+                        googleMapsApiKey={googleMapsApiKey}
+                        latitude={latitude}
+                        longitude={longitude}
+                        containerStyle={{
+                          borderRadius: '4px',
+                          flex: 1
+                        }}
+                      />
+                    )
+                  }
                 </Paper>
               </Box>
             </Box>

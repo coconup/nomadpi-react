@@ -7,8 +7,6 @@ import {
 } from '../../apis/van-pi/vanpi-app-api';
 
 export default function ButterflyProvider({ prompt, command, commandConfirmations, onProcessing=()=>{}, onError, onResponse }) {
-  const baseUrl = `${process.env.REACT_APP_API_BASE_URL}`;
-
   const [
     postButterflyIntentTrigger, 
     postButterflyIntentState

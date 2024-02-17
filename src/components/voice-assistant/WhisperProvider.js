@@ -1,7 +1,13 @@
 import { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+
 import axios from 'axios';
+import { selectServiceCredentials } from '../../app/store';
 
 export default function WhisperProvider({ file, onTranscript, onError }) {
+  const openAiCredentials = useSelector(selectServiceCredentials('open-ai'));
+  const { api_key: openAiApiKey } = openAiCredentials.value || {};
+
   useEffect(() => {
     const whisper = async () => {
       console.log('processing audio')
@@ -19,7 +25,7 @@ export default function WhisperProvider({ file, onTranscript, onError }) {
           {
             timeout: 10000,
             headers: {
-              'Authorization': `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`,
+              'Authorization': `Bearer ${openAiApiKey}`,
               'Content-Type': 'multipart/form-data',
             },
           }

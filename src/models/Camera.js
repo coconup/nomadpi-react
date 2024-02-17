@@ -1,4 +1,5 @@
 import BaseModel from './abstract/BaseModel';
+import { BASE_URL } from '../apis/van-pi/vanpi-app-api';
 
 // Initializer
 class Camera extends BaseModel() {
@@ -21,7 +22,7 @@ class Camera extends BaseModel() {
   };
 
   get thumbnailUrl() {
-    return `${process.env.REACT_APP_API_BASE_URL}/frigate/${this.connection_params.camera_id}/latest.jpg`;
+    return `${BASE_URL}/frigate/${this.connection_params.camera_id}/latest.jpg`;
   };
 
   toJSONPayload() {

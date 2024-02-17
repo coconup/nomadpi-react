@@ -3,6 +3,8 @@ import { useEffect } from 'react';
 import { setError } from '../../app/notificationBarMiddleware';
 import store from '../../app/store';
 
+import { useSelector } from 'react-redux';
+
 import {
   Box,
   Card,
@@ -17,7 +19,7 @@ import ModeSwitch from '../../models/ModeSwitch';
 
 import { usePostSwitchStateMutation } from '../../apis/van-pi/vanpi-app-api';
 
-export default function SwitchGroupItem({switchItem, relays, wifiRelays, relaysState, modesState}) {
+export default function SwitchGroupItem({switchItem, relays, wifiRelays}) {
   const itemType = switchItem.snakecaseType;
   const {
     snakecaseType,
@@ -25,6 +27,14 @@ export default function SwitchGroupItem({switchItem, relays, wifiRelays, relaysS
     icon,
     actor
   } = switchItem;
+  
+  const relaysState = useSelector(state => {
+    return state['vanpi-app-api'].queries['getRelaysState(undefined)'].data
+  });
+
+  const modesState = useSelector(state => {
+    return state['vanpi-app-api'].queries['getModesState(undefined)'].data
+  });
 
   let state;
   if(switchItem.constructor === ModeSwitch) {

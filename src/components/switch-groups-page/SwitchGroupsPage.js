@@ -98,14 +98,6 @@ const SwitchGroupsPage = () => {
     )
   };
 
-  const relaysState = useSelector(state => {
-    return state.state.relays;
-  });
-
-  const modesState = useSelector(state => {
-    return state.state.modes;
-  });
-
   let content;
 
   if (isLoading) {
@@ -135,8 +127,6 @@ const SwitchGroupsPage = () => {
                   switchItem={switchItem}
                   wifiRelays={wifiRelaySwitches}
                   relays={relaySwitches}
-                  relaysState={relaysState}
-                  modesState={modesState}
                 />
               </Grid>
             ))

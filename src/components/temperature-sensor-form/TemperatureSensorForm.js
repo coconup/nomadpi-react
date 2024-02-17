@@ -22,7 +22,9 @@ export default function TemperatureSensorForm({temperatureSensor, onChange}) {
   } = temperatureSensor;
 
   const {
-    one_wire_index=''
+    one_wire_index='',
+    mqtt_topic='',
+    mqtt_payload_property=''
   } = connection_params;
 
   return (
@@ -63,6 +65,24 @@ export default function TemperatureSensorForm({temperatureSensor, onChange}) {
                 <MenuItem value={3}>3</MenuItem>
               </Select>
             </FormControl>
+          )
+        }
+        {
+          connection_type === 'mqtt' && (
+            <Box>
+              <TextField
+                label="MQTT topic"
+                value={mqtt_topic || ''}
+                sx={{margin: '15px', display: 'flex'}}
+                onChange={(event) => onChange(temperatureSensor, {connection_params: { ...connection_params, mqtt_topic: event.target.value }})}
+              />
+              <TextField
+                label="Payload property"
+                value={mqtt_payload_property || ''}
+                sx={{margin: '15px', display: 'flex'}}
+                onChange={(event) => onChange(temperatureSensor, {connection_params: { ...connection_params, mqtt_payload_property: event.target.value }})}
+              />
+            </Box>
           )
         }
 

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import logo from './logo.svg';
-import store from "./app/store";
+import store from './app/store';
 
 import { Route, Switch, Redirect } from "wouter";
 import { useSelector } from 'react-redux';
@@ -20,7 +20,7 @@ import CamerasPage from './components/cameras-page/CamerasPage';
 import HeatersPage from './components/heaters-page/HeatersPage';
 import DayNightIndicator from './components/day-night-indicator/DayNightIndicator';
 import WeatherForecast from './components/weather-forecast/WeatherForecast';
-import ResourceStateProvider from './components/resource-state-provider/ResourceStateProvider';
+import InitialStateProvider from './components/initial-state-provider/InitialStateProvider';
 
 import RelaySwitchesForm from './components/relay-switches-form/RelaySwitchesForm';
 import WifiRelaySwitchesForm from './components/wifi-relay-switches-form/WifiRelaySwitchesForm';
@@ -52,15 +52,6 @@ function App() {
 
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
 
-  const gpsState = useSelector(state => {
-    return state.state.gps;
-  });
-
-  const {
-    latitude,
-    longitude
-  } = gpsState;
-
   const [nightMode, setNightMode] = useState(prefersDarkMode);
 
   const [
@@ -71,8 +62,8 @@ function App() {
   const { loggedIn } = useSelector(state => state.auth);
 
   const handleNightModeChange = (isNight) => {
-    console.log(`Night mode is ${isNight ? 'on' : 'off'}`);
     if(nightMode !== isNight) {
+      console.log(`Night mode is ${isNight ? 'on' : 'off'}`);
       setNightMode(isNight);  
     }
   };
@@ -134,13 +125,11 @@ function App() {
 
   return (
     <ThemeProvider theme={theme(nightMode)}>
-      <ResourceStateProvider />
+      <InitialStateProvider />
       {
         !prefersDarkMode && (
           <DayNightIndicator
             onNightMode={handleNightModeChange}
-            latitude={latitude}
-            longitude={longitude}
           />
         )
       }

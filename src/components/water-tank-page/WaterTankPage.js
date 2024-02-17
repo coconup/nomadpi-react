@@ -1,5 +1,6 @@
 import { useSelector } from 'react-redux';
 import { useTheme } from '@mui/material/styles';
+import { selectWaterTanksState } from '../../app/store';
 
 import {
   lightBlue,
@@ -35,9 +36,7 @@ export default function WaterTankPage({ waterTank, compact=false }) {
     grey: blueGrey
   }[color] || lightBlue;
 
-  const waterTankState = useSelector(state => {
-    return state.state.waterTanks[id];
-  });
+  const waterTankState = useSelector(selectWaterTanksState)[id];
 
   let content;
   if (!waterTankState) {

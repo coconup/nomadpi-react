@@ -1,9 +1,11 @@
 import { useEffect, useState, useCallback, memo } from 'react'
+import { useSelector } from 'react-redux';
+
 import { GoogleMap, Marker, Polyline, useJsApiLoader } from '@react-google-maps/api';
 
 import { useTheme } from '@mui/material/styles';
 
-function MapsPage({ latitude: latitudeProp, longitude: longitudeProp, containerStyle={} }) {
+function MapsPage({ googleMapsApiKey, latitude: latitudeProp, longitude: longitudeProp, containerStyle={} }) {
   const theme = useTheme();
 
   const [position, setPosition] = useState({
@@ -48,7 +50,7 @@ function MapsPage({ latitude: latitudeProp, longitude: longitudeProp, containerS
 
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY
+    googleMapsApiKey
   })
 
   const center = {

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
+import { selectSolarChargeControllersState } from '../../app/store';
 
 import {
   Box,
@@ -19,9 +20,7 @@ export default function SolarChargeControllerPage({ solarChargeController, compa
     name
   } = solarChargeController;
 
-  const solarChargeControllerState = useSelector(state => {
-    return state.state.solarChargeControllers[id];
-  });
+  const solarChargeControllerState = useSelector(selectSolarChargeControllersState)[id];
 
   let content;
   if (!solarChargeControllerState) {

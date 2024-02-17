@@ -19,7 +19,7 @@ import Container from '../ui/Container';
 import Select from '../ui/Select';
 
 import UsbDeviceSelect from '../usb-device-select/UsbDeviceSelect';
-import CallMeBotCredentialsSelector from '../call-me-bot-credentials-selector/CallMeBotCredentialsSelector';
+import CredentialsSelector from '../credentials-selector/CredentialsSelector';
 
 import { useUpdateSettingMutation } from '../../apis/van-pi/vanpi-app-api';
 
@@ -32,12 +32,15 @@ const SettingsForm = () => {
     setSettings(
       storeSettings.filter(({ setting_key }) => {
         return [
-          'portainer_access_token',
           'gpsd_usb_device',
           'zigbee_usb_device',
           'voice_assistant_voice_id',
           'voice_assistant_enabled',
           'notifications_whatsapp_number',
+          'cloudflare_enabled',
+          'cloudflare_app_url',
+          'nextcloud_enabled',
+          'nextcloud_url',
         ].includes(setting_key);
       })
     );
@@ -73,26 +76,32 @@ const SettingsForm = () => {
     content = <div>Loading</div>
   } else {
     const [
-      portainerTokenSetting,
       gpsdSetting,
       zigbeeSetting,
       voiceAssistantVoiceIdSetting,
       voiceAssistantEnabledSetting,
       notificationsWhatsappNumberSetting,
+      cloudflareEnabledSetting,
+      cloudflareAppUrlSetting,
+      nextcloudEnabledSetting,
+      nextcloudUrlSetting,
     ] = [
-      settings.find(({ setting_key }) => setting_key === 'portainer_access_token'),
       settings.find(({ setting_key }) => setting_key === 'gpsd_usb_device'),
       settings.find(({ setting_key }) => setting_key === 'zigbee_usb_device'),
       settings.find(({ setting_key }) => setting_key === 'voice_assistant_voice_id'),
       settings.find(({ setting_key }) => setting_key === 'voice_assistant_enabled'),
       settings.find(({ setting_key }) => setting_key === 'notifications_whatsapp_number'),
+      settings.find(({ setting_key }) => setting_key === 'cloudflare_enabled'),
+      settings.find(({ setting_key }) => setting_key === 'cloudflare_app_url'),
+      settings.find(({ setting_key }) => setting_key === 'nextcloud_enabled'),
+      settings.find(({ setting_key }) => setting_key === 'nextcloud_url'),
     ];
 
     const Title = ({ label }) => {
       return (
         <Typography 
           variant="h5"
-          sx={{ margin: '15px 0px 0px 15px'}}
+          sx={{ margin: '35px 0px 5px 15px'}}
         >
           { label }
         </Typography>
@@ -101,17 +110,6 @@ const SettingsForm = () => {
 
     content = (
       <Box sx={{display: 'flex', flexDirection: 'column', flex: 1, maxWidth: 600}}>
-        <Title
-          label="General"
-        />
-        <TextField
-          type="password"
-          label={portainerTokenSetting.label}
-          value={portainerTokenSetting.value || ''}
-          sx={{margin: '15px', display: 'flex'}}
-          onChange={(event) => onSettingChange(portainerTokenSetting, {value: event.target.value})}
-        />
-
         <Title
           label="Devices"
         />
@@ -124,6 +122,30 @@ const SettingsForm = () => {
           label={zigbeeSetting.label}
           value={zigbeeSetting.value}
           onChange={(value) => onSettingChange(zigbeeSetting, { value })}
+        />
+
+        <Title
+          label="Weather and maps"
+        />
+        <CredentialsSelector
+          serviceId="open-weather-map"
+          serviceName="OpenWeatherMap"
+          fields={[
+            {
+              key: 'api_key',
+              label: 'OpenWeatherMap API key'
+            }
+          ]}
+        />
+        <CredentialsSelector
+          serviceId="google-maps"
+          serviceName="Google Maps"
+          fields={[
+            {
+              key: 'api_key',
+              label: 'Google Maps API key'
+            }
+          ]}
         />
 
         <Title
@@ -148,6 +170,30 @@ const SettingsForm = () => {
           onChange={(event) => onSettingChange(voiceAssistantVoiceIdSetting, {value: event.target.value})}
         />
 
+        <CredentialsSelector
+          disabled={!voiceAssistantEnabledSetting.value}
+          serviceId="open-ai"
+          serviceName="OpenAi"
+          fields={[
+            {
+              key: 'api_key',
+              label: 'OpenAi API Key'
+            }
+          ]}
+        />
+
+        <CredentialsSelector
+          disabled={!voiceAssistantEnabledSetting.value}
+          serviceId="eleven-labs"
+          serviceName="ElevenLabs"
+          fields={[
+            {
+              key: 'api_key',
+              label: 'ElevenLabs API Key'
+            }
+          ]}
+        />
+
         <Title
           label="Notifications"
         />
@@ -157,7 +203,98 @@ const SettingsForm = () => {
           sx={{margin: '15px', display: 'flex'}}
           onChange={(event) => onSettingChange(notificationsWhatsappNumberSetting, {value: event.target.value})}
         />
-        <CallMeBotCredentialsSelector />
+        <CredentialsSelector
+          serviceId="call-me-bot"
+          serviceName="CallMeBot"
+          fields={[
+            {
+              key: 'api_key',
+              label: 'CallMeBot API Key'
+            }
+          ]}
+        />
+
+        <Title
+          label="Cloudflare"
+        />
+        <FormGroup sx={{ margin: '15px' }}>
+          <FormControlLabel 
+            control={
+              <Switch
+                checked={cloudflareEnabledSetting.value}
+                onChange={(event) => onSettingChange(cloudflareEnabledSetting, {value: event.target.checked})}
+              />
+            } 
+            label={cloudflareEnabledSetting.label}
+          />
+        </FormGroup>
+
+        <TextField
+          disabled={!cloudflareEnabledSetting.value}
+          label={cloudflareAppUrlSetting.label}
+          value={cloudflareAppUrlSetting.value || ''}
+          sx={{margin: '15px', display: 'flex'}}
+          onChange={(event) => onSettingChange(cloudflareAppUrlSetting, {value: event.target.value})}
+        />
+
+        <CredentialsSelector
+          disabled={!cloudflareEnabledSetting.value}
+          serviceId="cloudflare"
+          serviceName="Cloudflare"
+          fields={[
+            {
+              key: 'auth_token_client_id',
+              label: 'Auth token client ID'
+            },
+            {
+              key: 'auth_token_secret',
+              label: 'Auth token secret'
+            },
+            {
+              key: 'tunnel_token',
+              label: 'Tunnel token'
+            }
+          ]}
+        />
+
+        <Title
+          label="Nextcloud"
+        />
+        <FormGroup sx={{ margin: '15px' }}>
+          <FormControlLabel 
+            control={
+              <Switch
+                checked={nextcloudEnabledSetting.value}
+                onChange={(event) => onSettingChange(nextcloudEnabledSetting, {value: event.target.checked})}
+              />
+            } 
+            label={nextcloudEnabledSetting.label}
+          />
+        </FormGroup>
+
+        <TextField
+          disabled={!nextcloudEnabledSetting.value}
+          label={nextcloudUrlSetting.label}
+          value={nextcloudUrlSetting.value || ''}
+          sx={{margin: '15px', display: 'flex'}}
+          onChange={(event) => onSettingChange(nextcloudUrlSetting, {value: event.target.value})}
+        />
+
+        <CredentialsSelector
+          disabled={!nextcloudEnabledSetting.value}
+          serviceId="nextcloud"
+          serviceName="Nextcloud"
+          fields={[
+            {
+              key: 'username',
+              label: 'Username'
+            },
+            {
+              key: 'password',
+              label: 'Password'
+            }
+          ]}
+        />
       </Box>
     );
   }

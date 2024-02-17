@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import useWebSocket from 'react-use-websocket';
 
+import { WS_BASE_URL } from '../../apis/van-pi/vanpi-app-api';
+
 import * as ort from "onnxruntime-web"
 
 ort.env.wasm.wasmPaths = {
@@ -20,7 +22,7 @@ export default function WakeWordProvider({ onListen, pause }) {
     navigator.msGetUserMedia
   );
 
-  const websocketURL = `${process.env.REACT_APP_API_BASE_URL.replace('https://', 'wss://').replace('http://', 'ws://')}/ws/open_wake_word`;
+  const websocketURL = `${WS_BASE_URL}/open_wake_word`;
 
   const {
     sendMessage,

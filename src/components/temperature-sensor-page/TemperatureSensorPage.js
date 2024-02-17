@@ -1,4 +1,5 @@
 import { useSelector } from 'react-redux';
+import { selectTemperatureSensorsState } from '../../app/store';
 
 import {
   Box,
@@ -16,9 +17,7 @@ export default function TemperatureSensorPage({ temperatureSensor, compact=false
     name
   } = temperatureSensor;
 
-  const temperatureSensorState = useSelector(state => {
-    return state.state.temperatureSensors[id];
-  });
+  const temperatureSensorState = useSelector(selectTemperatureSensorsState)[id];
 
   let content;
   if (!temperatureSensorState) {

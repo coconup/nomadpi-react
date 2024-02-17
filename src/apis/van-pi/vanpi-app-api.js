@@ -7,8 +7,6 @@ import {
   snakeToCamelCase
 } from '../../utils';
 
-import { resourceNames } from '../../app/resourceStateMiddleware';
-
 import Credentials from '../../models/Credentials';
 import RelaySwitch from '../../models/RelaySwitch';
 import WifiRelaySwitch from '../../models/WifiRelaySwitch';
@@ -24,7 +22,20 @@ import Heater from '../../models/Heater';
 import TemperatureSensor from '../../models/TemperatureSensor';
 import SolarChargeController from '../../models/SolarChargeController';
 
-const BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://raspberrypi.local:3001';
+const inferBaseUrl = () => {
+  const { protocol, hostname, port } = window.location;
+
+  const raspberryPiHostname = process.env.REACT_APP_RPI_HOSTNAME || 'raspberrypi.local';
+
+  if([`${raspberryPiHostname}`, 'localhost'].includes(hostname)) {
+    return `${protocol}//${raspberryPiHostname}:3001`;
+  } else if (protocol === 'https:') {
+    return `${protocol}//api.${hostname}`
+  }
+};
+
+const BASE_URL = inferBaseUrl();
+const WS_BASE_URL = `${BASE_URL.replace('https://', 'wss://').replace('http://', 'ws://')}/ws`;
 
 const toPlural = (resource) => {
   return {
@@ -161,6 +172,13 @@ export const vanPiAppAPI = createApi({
         }
       }),
 
+      getServiceCredentials: builder.query({
+        query: ({ service_id }) => ({
+          url: `/services/credentials/service/${service_id}`,
+          method: 'get'
+        })
+      }),
+
       postButterflyIntent: builder.mutation({
         query: (data) => ({
           url: `butterfly/engine/intent`,
@@ -196,11 +214,22 @@ export const vanPiAppAPI = createApi({
         providesTags: (result) => {
           return [{type: 'FrigateConfig'}]
         }
-      }),
+      })
     };
 
+    const stateResourceNames = [
+      'gps',
+      'modes',
+      'relays',
+      'batteries',
+      'waterTanks',
+      'temperatureSensors',
+      'solarChargeControllers',
+      'alarm'
+    ];
+
     // Resource State endpoints
-    resourceNames.forEach(name => {
+    stateResourceNames.forEach(name => {
       endpoints[`get${uppercaseFirstLetter(name)}State`] = builder.query({
         query: () => `${toSnakeCase(name)}/state`,
         transformResponse: (result, meta) => {
@@ -208,9 +237,35 @@ export const vanPiAppAPI = createApi({
             return result;
           }
         },
-        providesTags: (result) => {
-          return [{type: `${uppercaseFirstLetter(name)}State`}]
-        }
+        // providesTags: (result) => {
+        //   return [{type: `${uppercaseFirstLetter(name)}State`}]
+        // }
+        async onCacheEntryAdded(
+          arg,
+          { updateCachedData, cacheDataLoaded, cacheEntryRemoved }
+        ) {
+          const ws = new WebSocket(`${WS_BASE_URL}/${toSnakeCase(name)}/state`)
+          try {
+            await cacheDataLoaded;
+
+            const listener = (event) => {
+              const data = JSON.parse(event.data);
+
+              updateCachedData((draft) => {
+                Object.assign(draft, data);
+              });
+            }
+
+            ws.addEventListener('message', listener)
+          } catch {
+            // no-op in case `cacheEntryRemoved` resolves before `cacheDataLoaded`,
+            // in which case `cacheDataLoaded` will throw
+          }
+          // cacheEntryRemoved will resolve when the cache subscription is no longer active
+          await cacheEntryRemoved
+          // perform cleanup steps once the `cacheEntryRemoved` promise resolves
+          ws.close()
+        },
       })
     });
 
@@ -302,7 +357,12 @@ export const vanPiAppAPI = createApi({
 
     return endpoints;
   },
-})
+});
+
+export {
+  BASE_URL,
+  WS_BASE_URL
+};
 
 export const {
   useLoginMutation,
@@ -394,5 +454,7 @@ export const {
   useGetCredentialsQuery,
   useUpdateCredentialsMutation,
   useCreateCredentialsMutation,
-  useDeleteCredentialsMutation
+  useDeleteCredentialsMutation,
+
+  useGetServiceCredentialsQuery
 } = vanPiAppAPI;

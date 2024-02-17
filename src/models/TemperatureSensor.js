@@ -16,6 +16,10 @@ class TemperatureSensor extends BaseModel() {
       {
         value: 'one_wire',
         label: '1-Wire'
+      },
+      {
+        value: 'mqtt',
+        label: 'MQTT'
       }
     ]
   };

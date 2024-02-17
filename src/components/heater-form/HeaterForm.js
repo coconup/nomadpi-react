@@ -8,6 +8,8 @@ import {
   TextField,
 } from '@mui/material';
 
+import UsbDeviceSelect from '../usb-device-select/UsbDeviceSelect';
+
 import Select from '../ui/Select';
 
 import Heater from '../../models/Heater';
@@ -21,13 +23,14 @@ export default function HeaterForm({heater, onChange, temperatureSensors=[], swi
     product_id_options,
     connection_type_options,
     connection_type,
-    connection_params,
+    connection_params={},
     heater_settings
   } = heater;
 
   const {
-    usb_product_id,
-    usb_vendor_id
+    product_id: usb_product_id,
+    vendor_id: usb_vendor_id,
+    serial_id
   } = connection_params;
 
   const {
@@ -70,7 +73,12 @@ export default function HeaterForm({heater, onChange, temperatureSensors=[], swi
         />
         {
           connection_type === 'usb' && (
-            <span />
+            <UsbDeviceSelect
+              label="USB Device"
+              value={{ vendor_id: usb_vendor_id, product_id: usb_product_id, serial_id }}
+              attributes={['vendor_id', 'product_id', 'serial_id']}
+              onChange={({ vendor_id, product_id, serial_id }) => onChange(heater, {connection_params: {...connection_params, vendor_id, product_id, serial_id}})}
+            />
           )
         }
         <Divider />

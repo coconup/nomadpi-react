@@ -1,16 +1,18 @@
 import { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
 import axios from 'axios';
 
-export default function VoiceProvider({ prompt, onError, onResponse }) {
-  const settings = useSelector(state => state.settings);
+import { useSelector } from 'react-redux';
+import {
+  selectServiceCredentials,
+  selectSetting
+} from '../../app/store';
 
-  let voiceId;
-  
-  if(settings) {
-    const voiceAssistantVoiceIdSetting = settings.find(({ setting_key }) => setting_key === 'voice_assistant_voice_id');
-    voiceId = voiceAssistantVoiceIdSetting.value;
-  };
+export default function VoiceProvider({ prompt, onError, onResponse }) {
+  const elevenLabsCredentials = useSelector(selectServiceCredentials('eleven-labs'));
+  const { api_key: elevenLabsApiKey } = elevenLabsCredentials.value || {};
+
+  const voiceAssistantVoiceIdSetting = useSelector(selectSetting('voice_assistant_voice_id')) || {};
+  const voiceId = voiceAssistantVoiceIdSetting.value;
 
   useEffect(() => {
     const elevenlabs = async () => {
@@ -32,7 +34,7 @@ export default function VoiceProvider({ prompt, onError, onResponse }) {
             headers: {
               accept: 'audio/mpeg',
               contentType: 'application/json',
-              'xi-api-key': process.env.REACT_APP_ELEVENLABS_API_KEY
+              'xi-api-key': elevenLabsApiKey
             },
             responseType: 'blob'
           }

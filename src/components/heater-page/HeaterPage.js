@@ -29,8 +29,8 @@ export default function HeaterPage({ heater, onChange }) {
     temperature_sensor_id,
     switch_id,
     mode='off',
-    timer_from=9,
-    timer_to=22.5,
+    timer_from='09:00',
+    timer_to='22:00',
     target_temperature=20
   } = thermostat;
 
@@ -45,19 +45,19 @@ export default function HeaterPage({ heater, onChange }) {
     ...hourStrings.slice(0, 12)
   ];
 
-  const decimalToTime = (value) => {
-    const hours = Math.floor(value);
-    const minutes = Math.round((value % 1) * 60);
+  // const decimalToTime = (value) => {
+  //   const hours = Math.floor(value);
+  //   const minutes = Math.round((value % 1) * 60);
 
-    return `${hours}:${minutes < 10 ? '0' : ''}${minutes}`;
-  };
+  //   return `${hours}:${minutes < 10 ? '0' : ''}${minutes}`;
+  // };
 
-  const timeToDecimal = (timeString) => {
-    const [hour, minute] = timeString.split(":");
-    const hourValue = parseInt(hour);
-    const minuteValue = parseFloat(minute) / 60;
-    return hourValue + minuteValue;
-  };
+  // const timeToDecimal = (timeString) => {
+  //   const [hour, minute] = timeString.split(":");
+  //   const hourValue = parseInt(hour);
+  //   const minuteValue = parseFloat(minute) / 60;
+  //   return hourValue + minuteValue;
+  // };
 
   return (
     <Paper sx={{
@@ -191,13 +191,13 @@ export default function HeaterPage({ heater, onChange }) {
             textFontSize={ 24 }
             ticksCount={ 24 }
             ticksGroupSize={ 6 }
-            pointers={[{ value: decimalToTime(timer_from) }, { value: decimalToTime(timer_to) }]}
+            pointers={[{ value: timer_from }, { value: timer_to }]}
             onChange={(events, value) => {
               const [
                 { value: newTimerFrom },
                 { value: newTimerTo }
               ] = events;
-              onChange(heater, {heater_settings: {...heater_settings, thermostat: {...thermostat, timer_from: timeToDecimal(newTimerFrom), timer_to: timeToDecimal(newTimerTo)}}})
+              onChange(heater, {heater_settings: {...heater_settings, thermostat: {...thermostat, timer_from: newTimerFrom, timer_to: newTimerTo}}})
             }}
           />
         </Grid>

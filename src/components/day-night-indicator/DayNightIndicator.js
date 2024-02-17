@@ -1,14 +1,11 @@
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
+import { selectGpsState } from '../../app/store';
 
 import SunCalc from 'suncalc';
 
 export default function DayNightIndicator({ onNightMode }) {
-  const [isNight, setIsNight] = useState(null);
-
-  const gpsState = useSelector(state => {
-    return state.state.gps;
-  });
+  const gpsState = useSelector(selectGpsState);
 
   const {
     latitude,
@@ -25,9 +22,6 @@ export default function DayNightIndicator({ onNightMode }) {
 
     const isNowNight = currentTime < sunrise || currentTime > sunset;
     
-    if(isNight !== isNowNight) {
-      setIsNight(isNowNight);
-      onNightMode(isNowNight);
-    }
+    onNightMode(isNowNight);
   }
 }

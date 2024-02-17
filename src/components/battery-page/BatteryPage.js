@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 
+import { selectBatteriesState } from '../../app/store';
+
 import {
   Box,
   Card,
@@ -19,9 +21,7 @@ export default function BatteryPage({ battery, compact=false }) {
     name
   } = battery;
 
-  const batteryState = useSelector(state => {
-    return state.state.batteries[id];
-  });
+  const batteryState = useSelector(selectBatteriesState)[id];
 
   let content;
   if (!batteryState || !batteryState.voltage) {
