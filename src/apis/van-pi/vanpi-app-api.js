@@ -91,17 +91,6 @@ export const vanPiAppAPI = createApi({
   }),
   endpoints: (builder) => {
     let endpoints = {
-      login: builder.mutation({
-        query: (credentials) => ({
-          url: '/auth/login',
-          method: 'POST',
-          body: credentials,
-        }),
-      }),
-      checkAuthStatus: builder.query({
-        query: () => 'auth/status',
-      }),
-
       postSwitchState: builder.mutation({
         query: ({switch_type, switch_id, ...body}) => {
           return {
@@ -365,9 +354,6 @@ export {
 };
 
 export const {
-  useLoginMutation,
-  useCheckAuthStatusQuery,
-
   usePostSwitchStateMutation,
   usePostAlarmStateMutation,
   

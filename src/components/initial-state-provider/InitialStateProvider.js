@@ -13,6 +13,8 @@ import {
   useGetSolarChargeControllersStateQuery,
   useGetAlarmStateQuery,
 
+  useGetSettingsQuery,
+
   useGetServiceCredentialsQuery
 } from '../../apis/van-pi/vanpi-app-api';
 
@@ -25,6 +27,8 @@ const InitialStateProvider = () => {
   useGetTemperatureSensorsStateQuery();
   useGetSolarChargeControllersStateQuery();
   useGetAlarmStateQuery();
+
+  useGetSettingsQuery();
 
   useGetServiceCredentialsQuery({ service_id: 'google-maps' });
   useGetServiceCredentialsQuery({ service_id: 'open-ai' });
