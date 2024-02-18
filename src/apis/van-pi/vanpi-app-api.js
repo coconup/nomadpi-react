@@ -30,7 +30,8 @@ const inferBaseUrl = () => {
   if([`${raspberryPiHostname}`, 'localhost'].includes(hostname)) {
     return `${protocol}//${raspberryPiHostname}:3001`;
   } else if (protocol === 'https:') {
-    return `${protocol}//api.${hostname}`
+    const host = hostname.split('.').slice(1).join('.');
+    return `${protocol}//api.${host}`
   }
 };
 
