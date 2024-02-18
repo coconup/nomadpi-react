@@ -40,7 +40,7 @@ const SettingsForm = () => {
           'cloudflare_enabled',
           'cloudflare_app_url',
           'nextcloud_enabled',
-          'nextcloud_url',
+          'nextcloud_host',
         ].includes(setting_key);
       })
     );
@@ -84,7 +84,7 @@ const SettingsForm = () => {
       cloudflareEnabledSetting,
       cloudflareAppUrlSetting,
       nextcloudEnabledSetting,
-      nextcloudUrlSetting,
+      nextcloudHostSetting,
     ] = [
       settings.find(({ setting_key }) => setting_key === 'gpsd_usb_device'),
       settings.find(({ setting_key }) => setting_key === 'zigbee_usb_device'),
@@ -94,7 +94,7 @@ const SettingsForm = () => {
       settings.find(({ setting_key }) => setting_key === 'cloudflare_enabled'),
       settings.find(({ setting_key }) => setting_key === 'cloudflare_app_url'),
       settings.find(({ setting_key }) => setting_key === 'nextcloud_enabled'),
-      settings.find(({ setting_key }) => setting_key === 'nextcloud_url'),
+      settings.find(({ setting_key }) => setting_key === 'nextcloud_host'),
     ];
 
     const Title = ({ label }) => {
@@ -243,14 +243,6 @@ const SettingsForm = () => {
           serviceName="Cloudflare"
           fields={[
             {
-              key: 'auth_token_client_id',
-              label: 'Auth token client ID'
-            },
-            {
-              key: 'auth_token_secret',
-              label: 'Auth token secret'
-            },
-            {
               key: 'tunnel_token',
               label: 'Tunnel token'
             }
@@ -274,10 +266,10 @@ const SettingsForm = () => {
 
         <TextField
           disabled={!nextcloudEnabledSetting.value}
-          label={nextcloudUrlSetting.label}
-          value={nextcloudUrlSetting.value || ''}
+          label={nextcloudHostSetting.label}
+          value={nextcloudHostSetting.value || ''}
           sx={{margin: '15px', display: 'flex'}}
-          onChange={(event) => onSettingChange(nextcloudUrlSetting, {value: event.target.value})}
+          onChange={(event) => onSettingChange(nextcloudHostSetting, {value: event.target.value})}
         />
 
         <CredentialsSelector
