@@ -11,6 +11,8 @@ import SensorForm from '../sensor-form/SensorForm';
 
 import Sensor from '../../models/Sensor';
 
+import Loading from '../ui/Loading';
+
 const SensorsForm = () => {
   const initialState = {
     sensors: [],
@@ -103,7 +105,7 @@ const SensorsForm = () => {
 
   let content;
   if (isLoading) {
-    content = <div>Loading</div>
+    return <Loading size={40} fullPage />
   } else if(isSuccess) {
     content = (
       <Box>

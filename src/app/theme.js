@@ -1,7 +1,10 @@
 import { createTheme } from '@mui/material/styles';
 import { grey, red } from '@mui/material/colors';
 
-const theme = (nightMode) => {
+const theme = ({
+  nightMode,
+  primaryColor
+}) => {
   const mode = nightMode ? 'dark' : 'light';
 
   return createTheme({
@@ -13,7 +16,7 @@ const theme = (nightMode) => {
         }
       },
       primary: {
-        main: red[400],
+        main: primaryColor,
       },
       secondary: {
         main: '#FFC857',

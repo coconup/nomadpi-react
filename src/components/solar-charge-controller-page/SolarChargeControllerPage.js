@@ -13,6 +13,7 @@ import {
 } from '@mui/material';
 
 import Metric from '../ui/Metric';
+import Loading from '../ui/Loading';
 
 export default function SolarChargeControllerPage({ solarChargeController, compact=false }) {
   const {
@@ -24,7 +25,7 @@ export default function SolarChargeControllerPage({ solarChargeController, compa
 
   let content;
   if (!solarChargeControllerState) {
-    content = <div>Loading</div>
+    return <Loading fullPage size={compact ? 25 : 40} />
   } else {
     const {
       charging_status,

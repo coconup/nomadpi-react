@@ -29,6 +29,8 @@ import SwitchGroupForm from '../switch-group-form/SwitchGroupForm';
 
 import SwitchGroup from '../../models/SwitchGroup';
 
+import Loading from '../ui/Loading';
+
 const SwitchGroupsForm = () => {
   const initialState = {
     switchGroups: [],
@@ -201,7 +203,7 @@ const SwitchGroupsForm = () => {
 
   let content;
   if (isLoading) {
-    content = <div>Loading</div>
+    return <Loading size={40} fullPage />
   } else if (isSuccess) {
     content = [
       unusedGroup,

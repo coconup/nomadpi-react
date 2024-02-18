@@ -18,6 +18,8 @@ import CameraForm from '../camera-form/CameraForm';
 
 import Camera from '../../models/Camera';
 
+import Loading from '../ui/Loading';
+
 const CamerasForm = () => {
   const initialState = {
     cameras: [],
@@ -102,7 +104,7 @@ const CamerasForm = () => {
 
   let content;
   if (isLoading) {
-    content = <div>Loading</div>
+    return <Loading size={40} fullPage />
   } else if(isSuccess) {
     content = (
       <Box>

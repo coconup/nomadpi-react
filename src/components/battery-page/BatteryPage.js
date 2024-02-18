@@ -14,6 +14,7 @@ import {
 } from '@mui/material';
 
 import Metric from '../ui/Metric';
+import Loading from '../ui/Loading';
 
 export default function BatteryPage({ battery, compact=false }) {
   const {
@@ -25,7 +26,7 @@ export default function BatteryPage({ battery, compact=false }) {
 
   let content;
   if (!batteryState || !batteryState.voltage) {
-    content = <div>Loading</div>
+    return <Loading fullPage size={compact ? 25 : 40} />
   } else {
     const {
       state_of_charge,

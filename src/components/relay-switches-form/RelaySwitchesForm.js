@@ -11,6 +11,8 @@ import RelaySwitchForm from '../relay-switch-form/RelaySwitchForm';
 
 import RelaySwitch from '../../models/RelaySwitch';
 
+import Loading from '../ui/Loading';
+
 const RelaySwitchesForm = () => {
   const initialState = {
     switches: [],
@@ -103,7 +105,7 @@ const RelaySwitchesForm = () => {
 
   let content;
   if (isLoading) {
-    content = <div>Loading</div>
+    return <Loading size={40} fullPage />
   } else if(isSuccess) {
     content = (
       <Box>

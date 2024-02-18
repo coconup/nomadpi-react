@@ -11,10 +11,16 @@ import {
   MenuItem,
 } from '@mui/material';
 
+import { selectSetting } from '../../app/store';
+import { useSelector } from 'react-redux';
+
 import NavigationDrawer from '../navigation-drawer/NavigationDrawer';
 import VoiceAssistantToggle from '../voice-assistant/VoiceAssistantToggle';
 
 function ResponsiveAppBar() {
+  const displayNameSetting = useSelector(selectSetting('appearance_display_name')) || {};
+  const displayName = displayNameSetting.value || '';
+
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
 
@@ -66,11 +72,7 @@ function ResponsiveAppBar() {
                 <Icon>menu</Icon>
               </IconButton>
             </Box>
-            {/*<img 
-              src={process.env.PUBLIC_URL + '/vanpi_logo.png'}
-              height='64'
-            />*/}
-            <Typography sx={{ fontFamily: 'Honk', fontSize: '42px' }}>VanPi</Typography>
+            <Typography sx={{ fontFamily: 'Honk', fontSize: '42px' }}>{ displayName }</Typography>
           </Box>
           {/*<Typography
             variant="h6"

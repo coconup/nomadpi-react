@@ -55,47 +55,45 @@ export default function NavigationDrawer({ open, toggleDrawer }) {
       path: '/settings',
       subMenuItems: [
         {
-          label: 'General',
-          icon: <Icon>app_settings_alt</Icon>,
-          path: '/settings/general'
-        },
-        {
           type: 'subheader',
-          label: 'Power'
+          label: 'General'
         },
         {
-          label: 'Batteries',
-          icon: <Icon>bolt</Icon>,
-          path: '/settings/batteries'
+          label: 'Appearance',
+          icon: <Icon>palette</Icon>,
+          path: '/settings/general#appearance'
         },
         {
-          label: 'Solar charge controllers',
-          icon: <Icon>solar_power</Icon>,
-          path: '/settings/solar-charge-controllers'
+          label: 'Devices',
+          icon: <Icon>usb</Icon>,
+          path: '/settings/general#devices'
         },
         {
-          type: 'subheader',
-          label: 'Temperature'
+          label: 'Weather and maps',
+          icon: <Icon>map</Icon>,
+          path: '/settings/general#weather-and-maps'
         },
         {
-          label: 'Heaters',
-          icon: <Icon>whatshot</Icon>,
-          path: '/settings/heaters'
+          label: 'Voice assistant',
+          icon: <Icon>settings_voice</Icon>,
+          path: '/settings/general#voice-assistant'
         },
         {
-          label: 'Temperature sensors',
-          icon: <Icon>thermostat</Icon>,
-          path: '/settings/temperature-sensors'
+          label: 'Notifications',
+          icon: <Icon>notifications_active</Icon>,
+          path: '/settings/general#notifications'
         },
         {
-          type: 'subheader',
-          label: 'Water'
+          label: 'Remote access',
+          icon: <Icon>devices</Icon>,
+          path: '/settings/general#cloudflare'
         },
         {
-          label: 'Water tanks',
-          icon: <Icon>water</Icon>,
-          path: '/settings/water-tanks'
+          label: 'Cloud sync',
+          icon: <Icon>cloud_upload</Icon>,
+          path: '/settings/general#nextcloud'
         },
+
         {
           type: 'subheader',
           label: 'Switches'
@@ -125,6 +123,47 @@ export default function NavigationDrawer({ open, toggleDrawer }) {
           icon: <Icon>double_arrow</Icon>,
           path: '/settings/action-switches'
         },
+
+        {
+          type: 'subheader',
+          label: 'Power'
+        },
+        {
+          label: 'Batteries',
+          icon: <Icon>bolt</Icon>,
+          path: '/settings/batteries'
+        },
+        {
+          label: 'Solar charge controllers',
+          icon: <Icon>solar_power</Icon>,
+          path: '/settings/solar-charge-controllers'
+        },
+
+        {
+          type: 'subheader',
+          label: 'Water'
+        },
+        {
+          label: 'Water tanks',
+          icon: <Icon>water</Icon>,
+          path: '/settings/water-tanks'
+        },
+
+        {
+          type: 'subheader',
+          label: 'Temperature'
+        },
+        {
+          label: 'Heaters',
+          icon: <Icon>whatshot</Icon>,
+          path: '/settings/heaters'
+        },
+        {
+          label: 'Temperature sensors',
+          icon: <Icon>thermostat</Icon>,
+          path: '/settings/temperature-sensors'
+        },
+
         {
           type: 'subheader',
           label: 'Security'

@@ -15,6 +15,8 @@ import SolarChargeControllerForm from '../solar-charge-controller-form/SolarChar
 
 import SolarChargeController from '../../models/SolarChargeController';
 
+import Loading from '../ui/Loading';
+
 const SolarChargeControllersForm = () => {
   const initialState = {
     solarChargeControllers: [],
@@ -93,7 +95,7 @@ const SolarChargeControllersForm = () => {
 
   let content;
   if (isLoading) {
-    content = <div>Loading</div>
+    return <Loading size={40} fullPage />
   } else if(isSuccess) {
     content = (
       <Box>

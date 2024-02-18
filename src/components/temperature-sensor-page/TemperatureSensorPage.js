@@ -11,6 +11,8 @@ import {
   Typography
 } from '@mui/material';
 
+import Loading from '../ui/Loading';
+
 export default function TemperatureSensorPage({ temperatureSensor, compact=false }) {
   const {
     id,
@@ -21,7 +23,7 @@ export default function TemperatureSensorPage({ temperatureSensor, compact=false
 
   let content;
   if (!temperatureSensorState) {
-    content = <div>Loading</div>
+    return <Loading fullPage size={compact ? 25 : 40} />
   } else {
     const { temperature } = temperatureSensorState;
 

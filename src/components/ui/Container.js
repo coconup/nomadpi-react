@@ -7,16 +7,18 @@ const ContainerComponent = ({ children }) => {
   const theme = useTheme();
 
   return (
-    <Box sx={{
-      padding: '20px 10vw',
-      [theme.breakpoints.up('xl')]: {
-        padding: '20px 20vw',
-      },
-      flexGrow: 1,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-    }}>
+    <Box
+      sx={{
+        padding: '20px 10vw',
+        [theme.breakpoints.up('xl')]: {
+          padding: '20px 20vw',
+        },
+        flexGrow: 1,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
       { children }
     </Box>
   )

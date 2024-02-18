@@ -11,6 +11,8 @@ import WifiRelaySwitchForm from '../wifi-relay-switch-form/WifiRelaySwitchForm';
 
 import WifiRelaySwitch from '../../models/WifiRelaySwitch';
 
+import Loading from '../ui/Loading';
+
 const WifiRelaySwitchesForm = () => {
   const initialState = {
     switches: [],
@@ -103,7 +105,7 @@ const WifiRelaySwitchesForm = () => {
 
   let content;
   if (isLoading) {
-    content = <div>Loading</div>
+    return <Loading size={40} fullPage />
   } else if(isSuccess) {
     content = (
       <Box>

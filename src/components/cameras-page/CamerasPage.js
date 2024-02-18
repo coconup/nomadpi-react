@@ -19,6 +19,8 @@ import Container from '../ui/Container';
 
 import CameraPage from '../camera-page/CameraPage';
 
+import Loading from '../ui/Loading';
+
 import {
   useGetCamerasQuery,
   useGetFrigateConfigQuery,
@@ -57,7 +59,7 @@ export default function CamerasPage() {
 
   let content;
   if (!cameras || !settings) {
-    content = <div>Loading</div>
+    return <Loading size={40} fullPage />
   } else if (isError) {
     const {status, error: message} = errors[0];
     content = <div>{message}</div>

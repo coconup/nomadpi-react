@@ -23,6 +23,8 @@ import ActionSwitch from '../../models/ActionSwitch';
 
 import ActionSwitchForm from '../action-switch-form/ActionSwitchForm';
 
+import Loading from '../ui/Loading';
+
 const ActionSwitchesForm = () => {
   const [state, setState] = useState({
     actionSwitches: [],
@@ -137,7 +139,7 @@ const ActionSwitchesForm = () => {
 
   let content;
   if (isLoading) {
-    content = <div>Loading</div>
+    return <Loading size={40} fullPage />
   } else if (isSuccess) {
     content = actionSwitches.filter(({isDeleted}) => !isDeleted).map(actionSwitch => {
       return (

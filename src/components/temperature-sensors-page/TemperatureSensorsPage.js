@@ -12,6 +12,8 @@ import Container from '../ui/Container';
 
 import TemperatureSensorPage from '../temperature-sensor-page/TemperatureSensorPage';
 
+import Loading from '../ui/Loading';
+
 export default function TemperatureSensorsPage({ compact=false }) {
   const initialState = {
     temperatureSensors: [],
@@ -54,7 +56,7 @@ export default function TemperatureSensorsPage({ compact=false }) {
 
   let content;
   if (isLoading) {
-    content = <div>Loading</div>
+    return <Loading size={40} fullPage />
   } else if(isSuccess && state.init) {
     if(compact) {
       return (

@@ -17,6 +17,8 @@ import {
 
 import GaugeComponent from 'react-gauge-component';
 
+import Loading from '../ui/Loading';
+
 export default function WaterTankPage({ waterTank, compact=false }) {
   const theme = useTheme();
 
@@ -40,7 +42,7 @@ export default function WaterTankPage({ waterTank, compact=false }) {
 
   let content;
   if (!waterTankState) {
-    content = <div>Loading</div>
+    return <Loading fullPage size={compact ? 25 : 40} />
   } else {
     const {
       total_volume_liters,

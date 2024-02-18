@@ -7,6 +7,7 @@ import {
 } from '@mui/material';
 
 import Container from '../ui/Container';
+import Loading from '../ui/Loading';
 
 import SolarChargeControllerPage from '../solar-charge-controller-page/SolarChargeControllerPage';
 
@@ -54,7 +55,7 @@ export default function SolarChargeControllersPage({ compact=false }) {
 
   let content;
   if (isLoading) {
-    content = <div>Loading</div>
+    return <Loading size={40} fullPage />
   } else if(isSuccess && state.init) {
     if(compact) {
       if(!selectedSolarChargeController) return null;

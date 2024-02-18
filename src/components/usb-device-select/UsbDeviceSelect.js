@@ -7,6 +7,7 @@ import {
 
 import { getApisState } from '../../utils';
 import Select from '../ui/Select';
+import Loading from '../ui/Loading';
 
 import { useGetUsbDevicesQuery } from '../../apis/van-pi/vanpi-app-api';
 
@@ -52,7 +53,7 @@ export default function UsbDeviceSelect({
 
   let content;
   if (isLoading) {
-    return <div>Loading</div>
+    return <Loading />
   } else if(isSuccess && state.init) {
     const usbOptions = usbDevices.map((item, i) => {
       const {

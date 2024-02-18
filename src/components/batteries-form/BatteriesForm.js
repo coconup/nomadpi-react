@@ -15,6 +15,8 @@ import BatteryForm from '../battery-form/BatteryForm';
 
 import Battery from '../../models/Battery';
 
+import Loading from '../ui/Loading';
+
 const BatteriesForm = () => {
   const initialState = {
     batteries: [],
@@ -93,7 +95,7 @@ const BatteriesForm = () => {
 
   let content;
   if (isLoading) {
-    content = <div>Loading</div>
+    return <Loading size={40} fullPage />
   } else if(isSuccess) {
     content = (
       <Box>

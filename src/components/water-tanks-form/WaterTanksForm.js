@@ -11,6 +11,8 @@ import WaterTankForm from '../water-tank-form/WaterTankForm';
 
 import WaterTank from '../../models/WaterTank';
 
+import Loading from '../ui/Loading';
+
 const WaterTanksForm = () => {
   const initialState = {
     waterTanks: [],
@@ -103,7 +105,7 @@ const WaterTanksForm = () => {
 
   let content;
   if (isLoading) {
-    content = <div>Loading</div>
+    return <Loading size={40} fullPage />
   } else if(isSuccess) {
     content = (
       <Box>

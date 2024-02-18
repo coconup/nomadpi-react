@@ -13,6 +13,7 @@ import {
 } from '@mui/material';
 
 import Metric from '../ui/Metric';
+import Loading from '../ui/Loading';
 
 export default function CameraPage({ camera }) {
   const [ts, setTs] = useState(null);
@@ -39,7 +40,11 @@ export default function CameraPage({ camera }) {
 
   let content;
   if (!frigateConfig) {
-    content = <div>Loading</div>
+    return (
+      <Card sx={{ height: '300px' }}>
+        <Loading fullPage size={40} />
+      </Card>
+    )
   } else {
     const cameraConfig = frigateConfig.cameras[camera_id];
 

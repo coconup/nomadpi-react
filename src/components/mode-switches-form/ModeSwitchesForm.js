@@ -11,6 +11,8 @@ import ModeSwitchForm from '../mode-switch-form/ModeSwitchForm';
 
 import ModeSwitch from '../../models/ModeSwitch';
 
+import Loading from '../ui/Loading';
+
 const ModeSwitchesForm = () => {
   const initialState = {
     switches: [],
@@ -103,7 +105,7 @@ const ModeSwitchesForm = () => {
 
   let content;
   if (isLoading) {
-    content = <div>Loading</div>
+    return <Loading size={40} fullPage />
   } else if(isSuccess) {
     content = (
       <Box>

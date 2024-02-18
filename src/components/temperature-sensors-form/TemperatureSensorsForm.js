@@ -16,6 +16,8 @@ import TemperatureSensorForm from '../temperature-sensor-form/TemperatureSensorF
 
 import TemperatureSensor from '../../models/TemperatureSensor';
 
+import Loading from '../ui/Loading';
+
 const TemperatureSensorsForm = () => {
   const initialState = {
     temperatureSensors: [],
@@ -94,7 +96,7 @@ const TemperatureSensorsForm = () => {
 
   let content;
   if (isLoading) {
-    content = <div>Loading</div>
+    return <Loading size={40} fullPage />
   } else if(isSuccess) {
     content = (
       <Box>

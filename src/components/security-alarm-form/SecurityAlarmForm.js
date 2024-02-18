@@ -28,6 +28,8 @@ import {
 import SecurityAlarmCameraRule from '../../models/SecurityAlarmCameraRule';
 import SecurityAlarmTriggerRule from '../../models/SecurityAlarmTriggerRule';
 
+import Loading from '../ui/Loading';
+
 const SecurityAlarmForm = () => {
   useGetCamerasQuery();
   useGetSensorsQuery();
@@ -78,7 +80,7 @@ const SecurityAlarmForm = () => {
 
   let content;
   if (!cameras || !settings || !sensors) {
-    content = <div>Loading</div>
+    return <Loading size={40} fullPage />
   } else {
     const [
       enabledSetting,

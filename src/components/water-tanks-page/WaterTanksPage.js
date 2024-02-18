@@ -12,6 +12,8 @@ import WaterTankPage from '../water-tank-page/WaterTankPage';
 
 import { useGetWaterTanksQuery } from '../../apis/van-pi/vanpi-app-api';
 
+import Loading from '../ui/Loading';
+
 export default function WaterTanksPage({ compact=false }) {
   const initialState = {
     waterTanks: [],
@@ -54,7 +56,7 @@ export default function WaterTanksPage({ compact=false }) {
 
   let content;
   if (isLoading) {
-    content = <div>Loading</div>
+    return <Loading size={40} fullPage />
   } else if(isSuccess && state.init) {
     if(compact) {
       return (

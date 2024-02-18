@@ -10,6 +10,8 @@ import {
 
 import Select from '../ui/Select';
 
+import Loading from '../ui/Loading';
+
 const FrigateCameraSelector = ({ cameraId, onChange }) => {
   const [cameras, setCameras] = useState(null);
 
@@ -41,7 +43,7 @@ const FrigateCameraSelector = ({ cameraId, onChange }) => {
   }
   
   if (isLoading) {
-    return <div>Loading</div>
+    return <Loading />
   } else if(isSuccess && cameras) {
     const options = cameras.map(({ camera_id: value, name: label }) => ({
       label,

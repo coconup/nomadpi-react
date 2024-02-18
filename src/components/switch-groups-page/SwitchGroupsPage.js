@@ -20,6 +20,8 @@ import {
 
 import SwitchGroupItem from '../switch-group-item/SwitchGroupItem';
 
+import Loading from '../ui/Loading';
+
 const SwitchGroupsPage = () => {
   const initialState = {
     switchGroups: [],
@@ -101,7 +103,7 @@ const SwitchGroupsPage = () => {
   let content;
 
   if (isLoading) {
-    content = <div>Loading</div>
+    return <Loading size={40} fullPage />
   } else if (isError) {
     const {status, error: message} = errors[0];
     content = <div>{message}</div>

@@ -26,6 +26,8 @@ import HeaterForm from '../heater-form/HeaterForm';
 
 import Heater from '../../models/Heater';
 
+import Loading from '../ui/Loading';
+
 const HeatersForm = () => {
   const initialState = {
     heaters: [],
@@ -142,7 +144,7 @@ const HeatersForm = () => {
 
   let content;
   if (isLoading) {
-    content = <div>Loading</div>
+    return <Loading size={40} fullPage />
   } else if(isSuccess) {
     content = (
       <Box>

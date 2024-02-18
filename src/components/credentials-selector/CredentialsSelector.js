@@ -21,6 +21,8 @@ import {
 
 import Credentials from '../../models/Credentials';
 
+import Loading from '../ui/Loading';
+
 const CredentialsSelector = ({ serviceId, serviceName, fields, disabled }) => {
   const apiCredentials = useGetCredentialsQuery();
 
@@ -64,7 +66,7 @@ const CredentialsSelector = ({ serviceId, serviceName, fields, disabled }) => {
   let content;
 
   if(isLoading) {
-    content = <div>Loading</div>
+    content = <Loading />
   } else if(!credentials) {
     const credentialsFromApi = apiCredentials.data.find(c => c.service_id === serviceId);
     if(credentialsFromApi) {
