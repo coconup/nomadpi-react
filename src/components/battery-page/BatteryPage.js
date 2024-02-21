@@ -121,7 +121,7 @@ export default function BatteryPage({ battery, compact=false }) {
               }}
             >
               <Typography variant="h6">
-                { state_of_charge }%
+                { state_of_charge.toFixed(0) }%
               </Typography>
               <Icon>
                 { icon }
