@@ -23,7 +23,7 @@ import {
   useUpdateSwitchGroupMutation,
   useCreateSwitchGroupMutation,
   useDeleteSwitchGroupMutation
-} from '../../apis/van-pi/vanpi-app-api';
+} from '../../apis/nomadpi/nomadpi-app-api';
 
 import SwitchGroupForm from '../switch-group-form/SwitchGroupForm';
 

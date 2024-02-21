@@ -17,7 +17,7 @@ import {
 
 import ModeSwitch from '../../models/ModeSwitch';
 
-import { usePostSwitchStateMutation } from '../../apis/van-pi/vanpi-app-api';
+import { usePostSwitchStateMutation } from '../../apis/nomadpi/nomadpi-app-api';
 
 export default function SwitchGroupItem({switchItem, relays, wifiRelays}) {
   const itemType = switchItem.snakecaseType;
@@ -29,11 +29,11 @@ export default function SwitchGroupItem({switchItem, relays, wifiRelays}) {
   } = switchItem;
   
   const relaysState = useSelector(state => {
-    return state['vanpi-app-api'].queries['getRelaysState(undefined)'].data
+    return state['nomadpi-app-api'].queries['getRelaysState(undefined)'].data
   });
 
   const modesState = useSelector(state => {
-    return state['vanpi-app-api'].queries['getModesState(undefined)'].data
+    return state['nomadpi-app-api'].queries['getModesState(undefined)'].data
   });
 
   let state;

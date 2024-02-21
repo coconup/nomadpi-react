@@ -17,7 +17,7 @@ import {
   useUpdateActionSwitchMutation,
   useCreateActionSwitchMutation,
   useDeleteActionSwitchMutation
-} from '../../apis/van-pi/vanpi-app-api';
+} from '../../apis/nomadpi/nomadpi-app-api';
 
 import ActionSwitch from '../../models/ActionSwitch';
 

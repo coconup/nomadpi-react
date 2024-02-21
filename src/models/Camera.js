@@ -1,5 +1,5 @@
 import BaseModel from './abstract/BaseModel';
-import { BASE_URL } from '../apis/van-pi/vanpi-app-api';
+import { BASE_URL } from '../apis/nomadpi/nomadpi-app-api';
 
 // Initializer
 class Camera extends BaseModel() {

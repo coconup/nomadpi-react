@@ -6,7 +6,7 @@ import {
   Unstable_Grid2 as Grid
 } from '@mui/material';
 
-import { useGetTemperatureSensorsQuery } from '../../apis/van-pi/vanpi-app-api';
+import { useGetTemperatureSensorsQuery } from '../../apis/nomadpi/nomadpi-app-api';
 
 import Container from '../ui/Container';
 

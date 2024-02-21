@@ -9,7 +9,7 @@ import { getApisState } from '../../utils';
 import Select from '../ui/Select';
 import Loading from '../ui/Loading';
 
-import { useGetUsbDevicesQuery } from '../../apis/van-pi/vanpi-app-api';
+import { useGetUsbDevicesQuery } from '../../apis/nomadpi/nomadpi-app-api';
 
 export default function UsbDeviceSelect({
   label,

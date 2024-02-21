@@ -36,7 +36,7 @@ resourceNames.forEach(resourceName => {
   const reducer = slice.reducer;
 
   const middleware = () => (next) => async (action) => {
-    if (action.type === 'vanpi-app-api/executeQuery/fulfilled') {
+    if (action.type === 'nomadpi-app-api/executeQuery/fulfilled') {
       if(action.meta.arg.endpointName === `get${uppercaseResourceName}`) {
         store.dispatch(setState(action.payload));
         

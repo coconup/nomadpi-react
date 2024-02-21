@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { vanPiAppAPI } from '../apis/van-pi/vanpi-app-api';
-// import { vanPiServicesAPI } from '../apis/van-pi/vanpi-services-api';
+import { vanPiAppAPI } from '../apis/nomadpi/nomadpi-app-api';
+// import { vanPiServicesAPI } from '../apis/nomadpi/nomadpi-services-api';
 
 import { frigateMiddleware, frigateReducer } from './frigateMiddleware';
 import { notificationBarMiddleware, notificationBarReducer } from './notificationBarMiddleware';
@@ -35,7 +35,7 @@ const store = configureStore({
 });
 
 const getQueryState = (state, query, args) => {
-  return state['vanpi-app-api'].queries[`${query}(${args === undefined ? 'undefined': JSON.stringify(args)})`] || {};
+  return state['nomadpi-app-api'].queries[`${query}(${args === undefined ? 'undefined': JSON.stringify(args)})`] || {};
 }
 
 const selectGpsState = state => getQueryState(state, 'getGpsState').data || {};

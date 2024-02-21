@@ -19,7 +19,7 @@ import {
   useGetSettingsQuery,
 
   useGetServiceCredentialsQuery
-} from './apis/van-pi/vanpi-app-api';
+} from './apis/nomadpi/nomadpi-app-api';
 
 import {
   Box,

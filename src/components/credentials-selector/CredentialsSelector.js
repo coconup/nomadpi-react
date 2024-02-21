@@ -17,7 +17,7 @@ import {
   useGetCredentialsQuery,
   useUpdateCredentialsMutation,
   useCreateCredentialsMutation
-} from '../../apis/van-pi/vanpi-app-api';
+} from '../../apis/nomadpi/nomadpi-app-api';
 
 import Credentials from '../../models/Credentials';
 

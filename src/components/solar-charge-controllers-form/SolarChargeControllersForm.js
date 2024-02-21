@@ -9,7 +9,7 @@ import {
   useGetSolarChargeControllersQuery,
   useUpdateSolarChargeControllerMutation,
   useCreateSolarChargeControllerMutation
-} from '../../apis/van-pi/vanpi-app-api';
+} from '../../apis/nomadpi/nomadpi-app-api';
 
 import SolarChargeControllerForm from '../solar-charge-controller-form/SolarChargeControllerForm';
 

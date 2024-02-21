@@ -24,7 +24,7 @@ import Loading from '../ui/Loading';
 import UsbDeviceSelect from '../usb-device-select/UsbDeviceSelect';
 import CredentialsSelector from '../credentials-selector/CredentialsSelector';
 
-import { useUpdateSettingMutation } from '../../apis/van-pi/vanpi-app-api';
+import { useUpdateSettingMutation } from '../../apis/nomadpi/nomadpi-app-api';
 
 const SettingsForm = () => {
   const anchor = window.location.hash.substr(1);

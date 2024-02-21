@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import useWebSocket from 'react-use-websocket';
 
-import { WS_BASE_URL } from '../../apis/van-pi/vanpi-app-api';
+import { WS_BASE_URL } from '../../apis/nomadpi/nomadpi-app-api';
 
 import * as ort from "onnxruntime-web"
 

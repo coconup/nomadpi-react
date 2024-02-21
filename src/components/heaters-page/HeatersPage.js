@@ -10,7 +10,7 @@ import Container from '../ui/Container';
 import {
   useGetHeatersQuery,
   useUpdateHeaterMutation
-} from '../../apis/van-pi/vanpi-app-api';
+} from '../../apis/nomadpi/nomadpi-app-api';
 
 export default function HeatersPage() {
   const initialState = {

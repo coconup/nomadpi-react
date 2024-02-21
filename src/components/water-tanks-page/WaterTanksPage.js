@@ -10,7 +10,7 @@ import Container from '../ui/Container';
 
 import WaterTankPage from '../water-tank-page/WaterTankPage';
 
-import { useGetWaterTanksQuery } from '../../apis/van-pi/vanpi-app-api';
+import { useGetWaterTanksQuery } from '../../apis/nomadpi/nomadpi-app-api';
 
 import Loading from '../ui/Loading';
 

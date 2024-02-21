@@ -23,7 +23,7 @@ import {
   useGetCamerasQuery,
   useGetSensorsQuery,
   useUpdateSettingMutation
-} from '../../apis/van-pi/vanpi-app-api';
+} from '../../apis/nomadpi/nomadpi-app-api';
 
 import SecurityAlarmCameraRule from '../../models/SecurityAlarmCameraRule';
 import SecurityAlarmTriggerRule from '../../models/SecurityAlarmTriggerRule';

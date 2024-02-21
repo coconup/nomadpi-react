@@ -20,7 +20,7 @@ import {
   useGetWifiRelaysQuery,
   
   useGetTemperatureSensorsQuery,
-} from '../../apis/van-pi/vanpi-app-api';
+} from '../../apis/nomadpi/nomadpi-app-api';
 
 import HeaterForm from '../heater-form/HeaterForm';
 

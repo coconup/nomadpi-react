@@ -10,7 +10,7 @@ import Container from '../ui/Container';
 
 import BatteryPage from '../battery-page/BatteryPage';
 
-import { useGetBatteriesQuery } from '../../apis/van-pi/vanpi-app-api';
+import { useGetBatteriesQuery } from '../../apis/nomadpi/nomadpi-app-api';
 
 import Loading from '../ui/Loading';
 

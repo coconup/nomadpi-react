@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 import Fab from '@mui/material/Fab';
 import { Icon} from '@mui/material';
 
-import { useGetModesQuery, useUpdateModeMutation, useCreateModeMutation } from '../../apis/van-pi/vanpi-app-api';
+import { useGetModesQuery, useUpdateModeMutation, useCreateModeMutation } from '../../apis/nomadpi/nomadpi-app-api';
 
 import ModeSwitchForm from '../mode-switch-form/ModeSwitchForm';
 

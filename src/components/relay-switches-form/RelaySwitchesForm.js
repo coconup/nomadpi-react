@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 import Fab from '@mui/material/Fab';
 import { Icon} from '@mui/material';
 
-import { useGetRelaysQuery, useUpdateRelayMutation, useCreateRelayMutation } from '../../apis/van-pi/vanpi-app-api';
+import { useGetRelaysQuery, useUpdateRelayMutation, useCreateRelayMutation } from '../../apis/nomadpi/nomadpi-app-api';
 
 import RelaySwitchForm from '../relay-switch-form/RelaySwitchForm';
 

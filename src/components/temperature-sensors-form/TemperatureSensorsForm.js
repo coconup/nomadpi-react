@@ -10,7 +10,7 @@ import {
   useGetTemperatureSensorsQuery,
   useUpdateTemperatureSensorMutation,
   useCreateTemperatureSensorMutation
-} from '../../apis/van-pi/vanpi-app-api';
+} from '../../apis/nomadpi/nomadpi-app-api';
 
 import TemperatureSensorForm from '../temperature-sensor-form/TemperatureSensorForm';
 

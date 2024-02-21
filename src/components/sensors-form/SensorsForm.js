@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 import Fab from '@mui/material/Fab';
 import { Icon} from '@mui/material';
 
-import { useGetSensorsQuery, useUpdateSensorMutation, useCreateSensorMutation } from '../../apis/van-pi/vanpi-app-api';
+import { useGetSensorsQuery, useUpdateSensorMutation, useCreateSensorMutation } from '../../apis/nomadpi/nomadpi-app-api';
 
 import SensorForm from '../sensor-form/SensorForm';
 

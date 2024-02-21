@@ -16,7 +16,7 @@ import {
   useGetModesQuery, 
   useGetActionSwitchesQuery, 
   useGetSwitchGroupsQuery,
-} from '../../apis/van-pi/vanpi-app-api';
+} from '../../apis/nomadpi/nomadpi-app-api';
 
 import SwitchGroupItem from '../switch-group-item/SwitchGroupItem';
 

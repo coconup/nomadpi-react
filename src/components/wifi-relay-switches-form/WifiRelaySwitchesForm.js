@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 import Fab from '@mui/material/Fab';
 import { Icon} from '@mui/material';
 
-import { useGetWifiRelaysQuery, useUpdateWifiRelayMutation, useCreateWifiRelayMutation } from '../../apis/van-pi/vanpi-app-api';
+import { useGetWifiRelaysQuery, useUpdateWifiRelayMutation, useCreateWifiRelayMutation } from '../../apis/nomadpi/nomadpi-app-api';
 
 import WifiRelaySwitchForm from '../wifi-relay-switch-form/WifiRelaySwitchForm';
 

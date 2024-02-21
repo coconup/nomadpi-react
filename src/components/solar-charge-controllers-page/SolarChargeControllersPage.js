@@ -11,7 +11,7 @@ import Loading from '../ui/Loading';
 
 import SolarChargeControllerPage from '../solar-charge-controller-page/SolarChargeControllerPage';
 
-import { useGetSolarChargeControllersQuery } from '../../apis/van-pi/vanpi-app-api';
+import { useGetSolarChargeControllersQuery } from '../../apis/nomadpi/nomadpi-app-api';
 
 export default function SolarChargeControllersPage({ compact=false }) {
   const initialState = {

@@ -25,7 +25,7 @@ import {
   useGetCamerasQuery,
   useGetFrigateConfigQuery,
   usePostAlarmStateMutation
-} from '../../apis/van-pi/vanpi-app-api';
+} from '../../apis/nomadpi/nomadpi-app-api';
 
 export default function CamerasPage() {
   const apiCameras = useGetCamerasQuery();
