@@ -32,6 +32,8 @@ const inferBaseUrl = () => {
   } else if (protocol === 'https:') {
     const host = hostname.split('.').slice(1).join('.');
     return `${protocol}//api.${host}`
+  } else {
+    return 'http://raspberrypi.local:3001'
   }
 };
 

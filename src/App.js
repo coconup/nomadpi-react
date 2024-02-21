@@ -105,7 +105,8 @@ function App() {
         <Box 
           className="App"
           sx={{
-            backgroundColor: 'background.default'
+            backgroundColor: 'background.default',
+            pt: 'env(safe-area-inset-top)'
           }}
         >
           <Box 
