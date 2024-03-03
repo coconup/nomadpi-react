@@ -88,7 +88,7 @@ const CredentialsSelector = ({ serviceId, serviceName, fields, disabled }) => {
               {
                 fields.map(({ key, label }, index) => {
                   return (
-                    <Box sx={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                    <Box sx={{display: 'flex', flexDirection: 'row', alignItems: 'center'}} key={key}>
                       <TextField
                         disabled={disabled}
                         key={`${serviceId}-${key}-edit`}

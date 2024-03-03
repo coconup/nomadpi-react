@@ -12,6 +12,7 @@ import {
 } from '../../apis/nomadpi/nomadpi-app-api';
 
 import BatteryForm from '../battery-form/BatteryForm';
+import EmptyResourcePage from '../empty-resource-page/EmptyResourcePage';
 
 import Battery from '../../models/Battery';
 
@@ -97,6 +98,15 @@ const BatteriesForm = () => {
   if (isLoading) {
     return <Loading size={40} fullPage />
   } else if(isSuccess) {
+    if(batteries.length === 0) {
+      return (
+        <EmptyResourcePage
+          onClick={addBattery}
+          buttonLabel={'Add a battery'}
+        />
+      )
+    }
+
     content = (
       <Box>
         {
@@ -146,7 +156,7 @@ const BatteriesForm = () => {
           <Icon>check</Icon>
         </Fab>
       </Box>
-      <Box sx={{display: 'flex', flexDirection: 'row'}}>
+      <Box sx={{display: 'flex', flexDirection: 'row', flexGrow: 1}}>
         {content}
       </Box>
     </Box>

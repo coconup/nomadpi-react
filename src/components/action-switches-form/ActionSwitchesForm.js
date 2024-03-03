@@ -22,6 +22,7 @@ import {
 import ActionSwitch from '../../models/ActionSwitch';
 
 import ActionSwitchForm from '../action-switch-form/ActionSwitchForm';
+import EmptyResourcePage from '../empty-resource-page/EmptyResourcePage';
 
 import Loading from '../ui/Loading';
 
@@ -141,6 +142,15 @@ const ActionSwitchesForm = () => {
   if (isLoading) {
     return <Loading size={40} fullPage />
   } else if (isSuccess) {
+    if(actionSwitches.length === 0) {
+      return (
+        <EmptyResourcePage
+          onClick={addActionSwitch}
+          buttonLabel={'Add an action switch'}
+        />
+      )
+    }
+
     content = actionSwitches.filter(({isDeleted}) => !isDeleted).map(actionSwitch => {
       return (
         <Box key={actionSwitch.key}>

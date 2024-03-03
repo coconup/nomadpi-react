@@ -8,6 +8,7 @@ import { Icon} from '@mui/material';
 import { useGetModesQuery, useUpdateModeMutation, useCreateModeMutation } from '../../apis/nomadpi/nomadpi-app-api';
 
 import ModeSwitchForm from '../mode-switch-form/ModeSwitchForm';
+import EmptyResourcePage from '../empty-resource-page/EmptyResourcePage';
 
 import ModeSwitch from '../../models/ModeSwitch';
 
@@ -107,6 +108,15 @@ const ModeSwitchesForm = () => {
   if (isLoading) {
     return <Loading size={40} fullPage />
   } else if(isSuccess) {
+    if(switches.length === 0) {
+      return (
+        <EmptyResourcePage
+          onClick={addSwitch}
+          buttonLabel={'Add a mode switch'}
+        />
+      )
+    }
+
     content = (
       <Box>
         {

@@ -1,8 +1,11 @@
 import { useState } from 'react';
+import { useLocation } from "wouter";
 
 import {
   Box,
   ButtonBase,
+  Card,
+  Icon,
   Unstable_Grid2 as Grid
 } from '@mui/material';
 
@@ -11,10 +14,13 @@ import { useGetTemperatureSensorsQuery } from '../../apis/nomadpi/nomadpi-app-ap
 import Container from '../ui/Container';
 
 import TemperatureSensorPage from '../temperature-sensor-page/TemperatureSensorPage';
+import EmptyResourcePage from '../empty-resource-page/EmptyResourcePage';
 
 import Loading from '../ui/Loading';
 
 export default function TemperatureSensorsPage({ compact=false }) {
+  const [location, setLocation] = useLocation();
+  
   const initialState = {
     temperatureSensors: [],
     init: false
@@ -61,17 +67,43 @@ export default function TemperatureSensorsPage({ compact=false }) {
     if(compact) {
       return (
         
-        <Box onClick={selectNextTemperatureSensor}>
+        <Box onClick={temperatureSensors.length > 0 ? selectNextTemperatureSensor : () => setLocation("/settings/temperature-sensors")}>
           <ButtonBase sx={{width: '100%'}}>
-            <TemperatureSensorPage
-              compact
-              temperatureSensor={selectedTemperatureSensor}
-              temperatureState={{ value: 26 }}
-            />
+            {
+              selectedTemperatureSensor && (
+                <TemperatureSensorPage
+                  compact
+                  temperatureSensor={selectedTemperatureSensor}
+                  temperatureState={{ value: 26 }}
+                />
+              ) || (
+                <Card
+                  sx={{
+                    flex: 1,
+                    height: '150px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                  }}
+                >
+                  <Icon sx={{fontSize: 42, color: 'text.disabled'}}>thermostat</Icon>
+                </Card>
+              )
+            }
           </ButtonBase>
         </Box>
       )
     } else {
+      if(temperatureSensors.length === 0) {
+        return (
+          <EmptyResourcePage
+            onClick={() => setLocation("/settings/temperature-sensors")}
+            buttonLabel='Go to settings'
+            icon={'settings'}
+          />
+        )
+      }
+
       content = temperatureSensors.map(temperatureSensor => (
         <Grid 
           key={temperatureSensor.key}
@@ -81,7 +113,7 @@ export default function TemperatureSensorsPage({ compact=false }) {
           lg={3}
         >
           <TemperatureSensorPage
-            temperatureSensor={selectedTemperatureSensor}
+            temperatureSensor={temperatureSensor}
             temperatureState={{ value: 26 }}
           />
         </Grid>

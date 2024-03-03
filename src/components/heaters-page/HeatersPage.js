@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useTheme } from '@mui/material/styles';
+import { useLocation } from "wouter";
 
 import { getApisState } from '../../utils';
 
@@ -7,12 +8,16 @@ import HeaterPage from '../heater-page/HeaterPage';
 import BottomNavigation from '../ui/BottomNavigation';
 import Container from '../ui/Container';
 
+import EmptyResourcePage from '../empty-resource-page/EmptyResourcePage';
+
 import {
   useGetHeatersQuery,
   useUpdateHeaterMutation
 } from '../../apis/nomadpi/nomadpi-app-api';
 
 export default function HeatersPage() {
+  const [location, setLocation] = useLocation();
+
   const initialState = {
     heaters: [],
     init: false
@@ -98,6 +103,16 @@ export default function HeatersPage() {
   }, [isSaved]);
 
   const selectedHeater = heaters.find(h => h.name === state.selectedTab);
+
+  if(heaters.length === 0) {
+    return (
+      <EmptyResourcePage
+        onClick={() => setLocation("/settings/heaters")}
+        buttonLabel='Go to settings'
+        icon={'settings'}
+      />
+    )
+  }
 
   return (
     <Container>

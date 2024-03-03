@@ -1,8 +1,12 @@
 import { useSelector } from 'react-redux';
 import { selectGpsState } from '../../app/store';
+import { useLocation } from "wouter";
 
 import {
   Box,
+  ButtonBase,
+  Card,
+  Icon,
   Unstable_Grid2 as Grid,
   Paper
 } from '@mui/material';
@@ -29,11 +33,17 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 export default function HomePanel() {
+  const [location, setLocation] = useLocation();
+
   const gpsState = useSelector(selectGpsState);
 
   const googleMapsCredentials = useSelector(selectServiceCredentials('google-maps'));
+  const openWeatherCredentials = useSelector(selectServiceCredentials('open-weather-map'));
+
+  console.log('openWeatherCredentials', openWeatherCredentials)
 
   const { api_key: googleMapsApiKey } = googleMapsCredentials.value || {};
+  const { api_key: openWeatherApiKey } = openWeatherCredentials.value || {};
 
   const {
     latitude,
@@ -51,7 +61,11 @@ export default function HomePanel() {
             />
           </Grid>
           <Grid xs={12} sm={8} md={6}>
-            <WeatherCard />
+            <WeatherCard 
+              apiKey={openWeatherApiKey}
+              latitude={latitude}
+              longitude={longitude}
+            />
           </Grid>
           <Grid xs={6}>
             <Box
@@ -71,7 +85,7 @@ export default function HomePanel() {
                 <Paper
                   sx={{
                     flexGrow: 1,
-                    mb: '20px',
+                    // mb: '20px',
                     display: 'flex'
                   }}
                 >
@@ -86,6 +100,22 @@ export default function HomePanel() {
                           flex: 1
                         }}
                       />
+                    ) || (
+                      <ButtonBase 
+                        sx={{flexGrow: 1, flex: 1, height: '100%'}}
+                        onClick={() => setLocation("/settings/weather-and-maps")}
+                      >
+                        <Box
+                          sx={{
+                            flex: 1,
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center'
+                          }}
+                        >
+                          <Icon sx={{fontSize: 54, color: 'text.disabled'}}>maps</Icon>
+                        </Box>
+                      </ButtonBase>
                     )
                   }
                 </Paper>

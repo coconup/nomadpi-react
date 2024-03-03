@@ -61,37 +61,37 @@ export default function NavigationDrawer({ open, toggleDrawer }) {
         {
           label: 'Appearance',
           icon: <Icon>palette</Icon>,
-          path: '/settings/general#appearance'
+          path: '/settings/appearance'
         },
         {
           label: 'Devices',
           icon: <Icon>usb</Icon>,
-          path: '/settings/general#devices'
+          path: '/settings/devices'
         },
         {
           label: 'Weather and maps',
           icon: <Icon>map</Icon>,
-          path: '/settings/general#weather-and-maps'
+          path: '/settings/weather-and-maps'
         },
         {
           label: 'Voice assistant',
           icon: <Icon>settings_voice</Icon>,
-          path: '/settings/general#voice-assistant'
+          path: '/settings/voice-assistant'
         },
         {
           label: 'Notifications',
           icon: <Icon>notifications_active</Icon>,
-          path: '/settings/general#notifications'
+          path: '/settings/notifications'
         },
         {
           label: 'Remote access',
           icon: <Icon>devices</Icon>,
-          path: '/settings/general#cloudflare'
+          path: '/settings/remote-access'
         },
         {
           label: 'Cloud sync',
           icon: <Icon>cloud_upload</Icon>,
-          path: '/settings/general#nextcloud'
+          path: '/settings/cloud-sync'
         },
 
         {
@@ -217,7 +217,6 @@ export default function NavigationDrawer({ open, toggleDrawer }) {
         {
           subMenu && (
             <Box>
-
               <ListItem 
                 disablePadding
                 sx={{ 
@@ -236,12 +235,12 @@ export default function NavigationDrawer({ open, toggleDrawer }) {
             </Box>
           )
         }
-        {menuItems.map(({type, label, icon, path, subMenuItems}) => {
+        {menuItems.map(({type, label, icon, path, subMenuItems}, i) => {
           if(type === 'divider') {
-            return <Divider />
+            return <Divider key={`divider-${i}`} />
           } else if(type === 'subheader') {
             return (
-              <Box>
+              <Box key={`subheader-${i}`}>
                 <Divider />
                 <ListSubheader sx={{ backgroundColor: theme.palette.grey[100] }}>
                   {label}

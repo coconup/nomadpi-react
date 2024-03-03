@@ -12,6 +12,7 @@ import {
 } from '../../apis/nomadpi/nomadpi-app-api';
 
 import SolarChargeControllerForm from '../solar-charge-controller-form/SolarChargeControllerForm';
+import EmptyResourcePage from '../empty-resource-page/EmptyResourcePage';
 
 import SolarChargeController from '../../models/SolarChargeController';
 
@@ -97,6 +98,15 @@ const SolarChargeControllersForm = () => {
   if (isLoading) {
     return <Loading size={40} fullPage />
   } else if(isSuccess) {
+    if(solarChargeControllers.length === 0) {
+      return (
+        <EmptyResourcePage
+          onClick={addSolarChargeController}
+          buttonLabel={'Add a solar charge controller'}
+        />
+      )
+    }
+
     content = (
       <Box>
         {

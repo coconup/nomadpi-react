@@ -69,6 +69,7 @@ function App() {
   useGetSettingsQuery();
 
   useGetServiceCredentialsQuery({ service_id: 'google-maps' });
+  useGetServiceCredentialsQuery({ service_id: 'open-weather-map' });
   useGetServiceCredentialsQuery({ service_id: 'open-ai' });
   useGetServiceCredentialsQuery({ service_id: 'eleven-labs' });
 
@@ -132,7 +133,6 @@ function App() {
                 <Route path="/security"><CamerasPage /></Route>
                 <Route path="/heater"><HeatersPage /></Route>
 
-                <Route path="/settings/general"><SettingsForm /></Route>
                 <Route path="/settings/batteries"><BatteriesForm /></Route>
                 <Route path="/settings/solar-charge-controllers"><SolarChargeControllersForm /></Route>
                 <Route path="/settings/water-tanks"><WaterTanksForm /></Route>
@@ -146,6 +146,13 @@ function App() {
                 <Route path="/settings/mode-switches"><ModeSwitchesForm /></Route>
                 <Route path="/settings/action-switches"><ActionSwitchesForm /></Route>
                 <Route path="/settings/switch-groups"><SwitchGroupsForm /></Route>
+                <Route path="/settings/appearance"><SettingsForm currentPath={'appearance'}/></Route>
+                <Route path="/settings/devices"><SettingsForm currentPath={'devices'}/></Route>
+                <Route path="/settings/weather-and-maps"><SettingsForm currentPath={'weather-and-maps'}/></Route>
+                <Route path="/settings/voice-assistant"><SettingsForm currentPath={'voice-assistant'}/></Route>
+                <Route path="/settings/notifications"><SettingsForm currentPath={'notifications'}/></Route>
+                <Route path="/settings/remote-access"><SettingsForm currentPath={'remote-access'}/></Route>
+                <Route path="/settings/cloud-sync"><SettingsForm currentPath={'cloud-sync'}/></Route>
                 <Route><Redirect to={'/'} /></Route>
               </Switch>
             </Box>
