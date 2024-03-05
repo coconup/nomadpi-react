@@ -123,7 +123,7 @@ export default function BatteryPage({ battery, compact=false }) {
               }}
             >
               <Typography variant="h6">
-                { state_of_charge ? state_of_charge.toFixed(0) : '-' }%
+                { state_of_charge !== undefined ? state_of_charge.toFixed(0) : '-' }%
               </Typography>
               <Icon>
                 { icon }
@@ -144,24 +144,24 @@ export default function BatteryPage({ battery, compact=false }) {
                   <Box>
                     <Metric
                       label="State of charge"
-                      value={state_of_charge ? state_of_charge.toFixed(2) : '-'}
+                      value={state_of_charge !== undefined ? state_of_charge.toFixed(2) : '-'}
                       unit="%"
                     />
                     <Metric
                       label="Current load"
-                      value={current_load ? current_load.toFixed(2) : '-'}
+                      value={current_load !== undefined ? current_load.toFixed(2) : '-'}
                       unit="Ah"
                     />
                     <Metric
                       label="Total voltage"
-                      value={totalVoltage ? totalVoltage.toFixed(2) : '-'}
+                      value={totalVoltage !== undefined ? totalVoltage.toFixed(2) : '-'}
                       unit="V"
                     />
                   </Box>
                   <Box>
                     <Metric
                       label="Remaining capacity"
-                      value={capacity.remaining ? capacity.remaining.toFixed(2) : '-'}
+                      value={capacity.remaining !== undefined ? capacity.remaining.toFixed(2) : '-'}
                       unit="Ah"
                     />
                     <Metric
@@ -178,7 +178,7 @@ export default function BatteryPage({ battery, compact=false }) {
                     />
                     <Metric
                       label="Cell voltage range"
-                      value={`${minCellVoltage ? minCellVoltage.toFixed(2) : '-'} - ${maxCellVoltage ? maxCellVoltage.toFixed(2) : '-'}`}
+                      value={`${minCellVoltage !== undefined ? minCellVoltage.toFixed(2) : '-'} - ${maxCellVoltage !== undefined ? maxCellVoltage.toFixed(2) : '-'}`}
                       unit="V"
                     />
                   </Box>
@@ -201,7 +201,7 @@ export default function BatteryPage({ battery, compact=false }) {
                       fontWeight: 300
                     }}
                   >
-                    { capacity.remaining ? capacity.remaining.toFixed(1) : '-' }
+                    { capacity.remaining !== undefined ? capacity.remaining.toFixed(1) : '-' }
                   </Typography>
                   <Typography 
                     variant="h5" 
