@@ -25,9 +25,9 @@ import {
   useGetCamerasQuery,
   useGetFrigateConfigQuery,
   usePostAlarmStateMutation
-} from '../../apis/van-pi/vanpi-app-api';
+} from '../../apis/nomadpi/nomadpi-app-api';
 
-export default function CamerasPage() {
+export default function CamerasPage({ demo }) {
   const apiCameras = useGetCamerasQuery();
   const apiFrigateConfig = useGetFrigateConfigQuery();
 
@@ -114,6 +114,7 @@ export default function CamerasPage() {
             >
               <CameraPage
                 camera={camera}
+                demo={demo}
               />
             </Grid>
           ))

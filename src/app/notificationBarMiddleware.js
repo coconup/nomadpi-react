@@ -29,8 +29,8 @@ const {
 } = slice.actions;
 
 const notificationBarMiddleware = () => (next) => async (action) => {
-  const isMutationSuccess = action.type === 'vanpi-app-api/executeMutation/fulfilled';
-  const isMutationError = action.type === 'vanpi-app-api/executeMutation/rejected';
+  const isMutationSuccess = action.type === 'nomadpi-app-api/executeMutation/fulfilled';
+  const isMutationError = action.type === 'nomadpi-app-api/executeMutation/rejected';
 
   if(isMutationSuccess || isMutationError) {
     const { endpointName } = action.meta.arg;

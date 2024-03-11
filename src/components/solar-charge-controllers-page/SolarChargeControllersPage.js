@@ -1,8 +1,11 @@
 import { useState } from 'react';
+import { useLocation } from "wouter";
 
 import {
   Box,
   ButtonBase,
+  Card,
+  Icon,
   Unstable_Grid2 as Grid
 } from '@mui/material';
 
@@ -10,10 +13,13 @@ import Container from '../ui/Container';
 import Loading from '../ui/Loading';
 
 import SolarChargeControllerPage from '../solar-charge-controller-page/SolarChargeControllerPage';
+import EmptyResourcePage from '../empty-resource-page/EmptyResourcePage';
 
-import { useGetSolarChargeControllersQuery } from '../../apis/van-pi/vanpi-app-api';
+import { useGetSolarChargeControllersQuery } from '../../apis/nomadpi/nomadpi-app-api';
 
 export default function SolarChargeControllersPage({ compact=false }) {
+  const [location, setLocation] = useLocation();
+
   const initialState = {
     solarChargeControllers: [],
     init: false
@@ -58,19 +64,43 @@ export default function SolarChargeControllersPage({ compact=false }) {
     return <Loading size={40} fullPage />
   } else if(isSuccess && state.init) {
     if(compact) {
-      if(!selectedSolarChargeController) return null;
-
       return (
-        <Box onClick={selectNextSolarChargeController}>
+        <Box onClick={solarChargeControllers.length > 0 ? selectNextSolarChargeController : () => setLocation("/settings/solar-charge-controllers")}>
           <ButtonBase sx={{width: '100%'}}>
-            <SolarChargeControllerPage
-              compact
-              solarChargeController={selectedSolarChargeController}
-            />
+            {
+              selectedSolarChargeController && (
+                <SolarChargeControllerPage
+                  compact
+                  solarChargeController={selectedSolarChargeController}
+                />
+              ) || (
+                <Card
+                  sx={{
+                    flex: 1,
+                    height: '150px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                  }}
+                >
+                  <Icon sx={{fontSize: 42, color: 'text.disabled'}}>solar_power</Icon>
+                </Card>
+              )
+            }
           </ButtonBase>
         </Box>
       )
     } else {
+      if(solarChargeControllers.length === 0) {
+        return (
+          <EmptyResourcePage
+            onClick={() => setLocation("/settings/solar-charge-controllers")}
+            buttonLabel='Go to settings'
+            icon={'settings'}
+          />
+        )
+      }
+
       content = solarChargeControllers.map(solarChargeController => (
         <Grid 
           key={solarChargeController.key}

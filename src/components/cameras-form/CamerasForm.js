@@ -12,9 +12,10 @@ import {
   useGetCamerasQuery,
   useUpdateCameraMutation,
   useCreateCameraMutation,
-} from '../../apis/van-pi/vanpi-app-api';
+} from '../../apis/nomadpi/nomadpi-app-api';
 
 import CameraForm from '../camera-form/CameraForm';
+import EmptyResourcePage from '../empty-resource-page/EmptyResourcePage';
 
 import Camera from '../../models/Camera';
 
@@ -106,6 +107,15 @@ const CamerasForm = () => {
   if (isLoading) {
     return <Loading size={40} fullPage />
   } else if(isSuccess) {
+    if(cameras.length === 0) {
+      return (
+        <EmptyResourcePage
+          onClick={addCamera}
+          buttonLabel={'Add a camera'}
+        />
+      )
+    }
+
     content = (
       <Box>
         {

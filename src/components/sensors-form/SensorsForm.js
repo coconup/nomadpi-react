@@ -5,9 +5,10 @@ import Typography from '@mui/material/Typography';
 import Fab from '@mui/material/Fab';
 import { Icon} from '@mui/material';
 
-import { useGetSensorsQuery, useUpdateSensorMutation, useCreateSensorMutation } from '../../apis/van-pi/vanpi-app-api';
+import { useGetSensorsQuery, useUpdateSensorMutation, useCreateSensorMutation } from '../../apis/nomadpi/nomadpi-app-api';
 
 import SensorForm from '../sensor-form/SensorForm';
+import EmptyResourcePage from '../empty-resource-page/EmptyResourcePage';
 
 import Sensor from '../../models/Sensor';
 
@@ -107,6 +108,15 @@ const SensorsForm = () => {
   if (isLoading) {
     return <Loading size={40} fullPage />
   } else if(isSuccess) {
+    if(sensors.length === 0) {
+      return (
+        <EmptyResourcePage
+          onClick={addSensor}
+          buttonLabel={'Add a sensor'}
+        />
+      )
+    }
+
     content = (
       <Box>
         {

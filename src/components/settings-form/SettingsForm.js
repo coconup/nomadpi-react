@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
 import { getApisState } from '../../utils';
@@ -24,11 +24,9 @@ import Loading from '../ui/Loading';
 import UsbDeviceSelect from '../usb-device-select/UsbDeviceSelect';
 import CredentialsSelector from '../credentials-selector/CredentialsSelector';
 
-import { useUpdateSettingMutation } from '../../apis/van-pi/vanpi-app-api';
+import { useUpdateSettingMutation } from '../../apis/nomadpi/nomadpi-app-api';
 
-const SettingsForm = () => {
-  const anchor = window.location.hash.substr(1);
-
+const SettingsForm = ({ currentPath }) => {
   const storeSettings = useSelector(state => state.settings);
 
   const [settings, setSettings] = useState(null);
@@ -100,7 +98,7 @@ const SettingsForm = () => {
     content = (
       <Box sx={{flex: 1, maxWidth: 600}}>
         {
-          anchor === 'appearance' && (
+          currentPath === 'appearance' && (
             <Box sx={containerStyle}>
               <Title
                 label="Appearance"
@@ -123,7 +121,7 @@ const SettingsForm = () => {
         }
 
         {
-          anchor === 'devices' && (
+          currentPath === 'devices' && (
             <Box sx={containerStyle}>
               <Title
                 label="Devices"
@@ -143,7 +141,7 @@ const SettingsForm = () => {
         }
 
         {
-          anchor === 'weather-and-maps' && (
+          currentPath === 'weather-and-maps' && (
             <Box sx={containerStyle}>
               <Title
                 label="Weather and maps"
@@ -173,7 +171,7 @@ const SettingsForm = () => {
         }
 
         {
-          anchor === 'voice-assistant' && (
+          currentPath === 'voice-assistant' && (
             <Box sx={containerStyle}>
               <Title
                 label="Voice assistant"
@@ -225,7 +223,7 @@ const SettingsForm = () => {
         }
 
         {
-          anchor === 'notifications' && (
+          currentPath === 'notifications' && (
             <Box sx={containerStyle}>
               <Title
                 label="Notifications"
@@ -251,7 +249,7 @@ const SettingsForm = () => {
         }
 
         {
-          anchor === 'cloudflare' && (
+          currentPath === 'remote-access' && (
             <Box sx={containerStyle}>
               <Title
                 label="Cloudflare"
@@ -292,7 +290,7 @@ const SettingsForm = () => {
         }
 
         {
-          anchor === 'nextcloud' && (
+          currentPath === 'cloud-sync' && (
             <Box sx={containerStyle}>
               <Title
                 label="Nextcloud"

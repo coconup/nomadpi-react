@@ -40,15 +40,15 @@
 // const middleware = () => (next) => async (action) => {
 //   let endpointName;
 
-//   if (action.type === 'vanpi-app-api/executeQuery/fulfilled') {
+//   if (action.type === 'nomadpi-app-api/executeQuery/fulfilled') {
 //     endpointName = action.meta.arg.endpointName;
-//   } else if (action.type === 'vanpi-app-api/queries/queryResultPatched') {
+//   } else if (action.type === 'nomadpi-app-api/queries/queryResultPatched') {
 //     endpointName = action.payload.queryCacheKey.split('(')[0];
 //   }
 
 //   if(endpointName && actionNames.find(a => a === endpointName)) {
 //     const state = store.getState();
-//     const { data } = Object.values(state['vanpi-app-api'].queries).find(q => q.endpointName === endpointName);
+//     const { data } = Object.values(state['nomadpi-app-api'].queries).find(q => q.endpointName === endpointName);
 
 //     const setter = slice.actions[endpointName.replace(/^get/, 'set')];
 

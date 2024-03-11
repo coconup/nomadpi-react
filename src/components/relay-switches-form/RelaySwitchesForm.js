@@ -5,7 +5,9 @@ import Typography from '@mui/material/Typography';
 import Fab from '@mui/material/Fab';
 import { Icon} from '@mui/material';
 
-import { useGetRelaysQuery, useUpdateRelayMutation, useCreateRelayMutation } from '../../apis/van-pi/vanpi-app-api';
+import EmptyResourcePage from '../empty-resource-page/EmptyResourcePage';
+
+import { useGetRelaysQuery, useUpdateRelayMutation, useCreateRelayMutation } from '../../apis/nomadpi/nomadpi-app-api';
 
 import RelaySwitchForm from '../relay-switch-form/RelaySwitchForm';
 
@@ -107,6 +109,15 @@ const RelaySwitchesForm = () => {
   if (isLoading) {
     return <Loading size={40} fullPage />
   } else if(isSuccess) {
+    if(switches.length === 0) {
+      return (
+        <EmptyResourcePage
+          onClick={addSwitch}
+          buttonLabel={'Add a relay'}
+        />
+      )
+    }
+
     content = (
       <Box>
         {

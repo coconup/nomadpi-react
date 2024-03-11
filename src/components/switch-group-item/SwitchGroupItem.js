@@ -17,7 +17,7 @@ import {
 
 import ModeSwitch from '../../models/ModeSwitch';
 
-import { usePostSwitchStateMutation } from '../../apis/van-pi/vanpi-app-api';
+import { usePostSwitchStateMutation } from '../../apis/nomadpi/nomadpi-app-api';
 
 export default function SwitchGroupItem({switchItem, relays, wifiRelays}) {
   const itemType = switchItem.snakecaseType;
@@ -28,19 +28,19 @@ export default function SwitchGroupItem({switchItem, relays, wifiRelays}) {
     actor
   } = switchItem;
   
-  const relaysState = useSelector(state => {
-    return state['vanpi-app-api'].queries['getRelaysState(undefined)'].data
+  const switchablesState = useSelector(state => {
+    return state['nomadpi-app-api'].queries['getSwitchablesState(undefined)'].data
   });
 
   const modesState = useSelector(state => {
-    return state['vanpi-app-api'].queries['getModesState(undefined)'].data
+    return state['nomadpi-app-api'].queries['getModesState(undefined)'].data
   });
 
   let state;
   if(switchItem.constructor === ModeSwitch) {
     state = (modesState[switchItem.mode_key] || {}).state || false;
   } else {
-    state = !![relaysState.relay || {}, ...(Object.values(relaysState.wifi_relay || {}) || [])].find(switchesState => {
+    state = !![switchablesState.relay || {}, ...(Object.values(switchablesState.wifi_relay || {}) || [])].find(switchesState => {
       return !!Object.values(switchesState).find(({actors=[]}) => !!actors.find(({actor: a}) => a === actor));
     })
   }

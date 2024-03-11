@@ -59,7 +59,7 @@ const toSingular = (resource) => {
 };
 
 export const vanPiAppAPI = createApi({
-  reducerPath: 'vanpi-app-api',
+  reducerPath: 'nomadpi-app-api',
   tagTypes: [
     'RelaySwitch',
     'WifiRelaySwitch',
@@ -212,7 +212,7 @@ export const vanPiAppAPI = createApi({
     const stateResourceNames = [
       'gps',
       'modes',
-      'relays',
+      'switchables',
       'batteries',
       'waterTanks',
       'temperatureSensors',
@@ -426,7 +426,7 @@ export const {
   useDeleteSolarChargeControllerMutation,
 
   useGetGpsStateQuery,
-  useGetRelaysStateQuery,
+  useGetSwitchablesStateQuery,
   useGetModesStateQuery,
   useGetBatteriesStateQuery,
   useGetWaterTanksStateQuery,

@@ -4,7 +4,7 @@ import {
   usePostButterflyIntentMutation,
   usePostButterflyCommandConfirmationMutation,
   usePostButterflyServiceFunctionMutation,
-} from '../../apis/van-pi/vanpi-app-api';
+} from '../../apis/nomadpi/nomadpi-app-api';
 
 export default function ButterflyProvider({ prompt, command, commandConfirmations, onProcessing=()=>{}, onError, onResponse }) {
   const [

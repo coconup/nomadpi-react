@@ -39,7 +39,7 @@ export default function HeaterForm({heater, onChange, temperatureSensors=[], swi
 
   const {
     temperature_sensor_id,
-    switch_id
+    switches=[]
   } = thermostat;
 
   return (
@@ -90,9 +90,9 @@ export default function HeaterForm({heater, onChange, temperatureSensors=[], swi
         />
         <Select
           label={"Thermostat associated switch"}
-          value={switch_id}
-          options={switchesOptions.map(({id, name, type}) => ({ value: JSON.stringify({ id, type }), label: name}))}
-          onChange={(event) => onChange(heater, {heater_settings: {...heater_settings, thermostat: {...thermostat, switch_id: event.target.value}}})}
+          value={switches[0] || ''}
+          options={switchesOptions.map(({id, name, type}) => ({ value: JSON.stringify({ switch_id: id, switch_type: type }), label: name}))}
+          onChange={(event) => onChange(heater, {heater_settings: {...heater_settings, thermostat: {...thermostat, switches: [event.target.value]}}})}
         />
       </CardContent>
     </Card>

@@ -8,6 +8,8 @@ import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';
 import { Icon} from '@mui/material';
 
+import EmptyResourcePage from '../empty-resource-page/EmptyResourcePage';
+
 import {
   DragDropContext,
   Droppable,
@@ -23,7 +25,7 @@ import {
   useUpdateSwitchGroupMutation,
   useCreateSwitchGroupMutation,
   useDeleteSwitchGroupMutation
-} from '../../apis/van-pi/vanpi-app-api';
+} from '../../apis/nomadpi/nomadpi-app-api';
 
 import SwitchGroupForm from '../switch-group-form/SwitchGroupForm';
 
@@ -43,6 +45,7 @@ const SwitchGroupsForm = () => {
   };
 
   const [state, setState] = useState(initialState);  
+  const [unusedGroup, setUnusedGroup] = useState(new SwitchGroup({name: 'Unused'}));
 
   const apiRelaySwitches = useGetRelaysQuery();
   const apiWifiRelaySwitches = useGetWifiRelaysQuery();
@@ -119,9 +122,23 @@ const SwitchGroupsForm = () => {
     ...modeSwitches
   ];
 
-  const ungroupedSwitches = switchableItems.filter(item => !switchGroups.find(group => group.hasItem(item)));
-  let unusedGroup = new SwitchGroup({name: 'Unused'});
-  unusedGroup.switches = ungroupedSwitches.map(item => unusedGroup.parseSwitchItem(item));
+  if(unusedGroup.switches.length === 0 && switchableItems.length > 0) {
+    let newGroup = unusedGroup.clone();
+    const ungroupedSwitches = switchableItems.filter(item => !switchGroups.find(group => group.hasItem(item)));
+    newGroup.switches = ungroupedSwitches.map(item => newGroup.parseSwitchItem(item));
+    setUnusedGroup(newGroup);
+  } else if(switchableItems.length === 0) {
+    return (
+      <EmptyResourcePage
+        title={
+          <Box sx={{textAlign: 'center'}}>
+            <p>There are no switches to display.</p>
+            <p>Add a relay, a WiFi relay or a mode switch to get started.</p>
+          </Box>
+        }
+      />
+    )
+  }
 
   const onDragEnd = ({ source, destination }) => {
     if (!destination) { return }

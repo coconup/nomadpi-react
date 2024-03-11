@@ -12,6 +12,14 @@ class Heater extends BaseModel() {
       heater_settings: parsedHeaterSettings
     })
   }
+  
+  get frontendType() {
+    return 'Heater';
+  }
+
+  get snakecaseType() {
+    return 'heater';
+  }
 
   get vendor_id_options() {
     return [

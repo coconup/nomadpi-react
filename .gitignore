@@ -5,3 +5,4 @@ android
 ios
 .env
 public/voice_assistant/custom/*
+public/demo/*

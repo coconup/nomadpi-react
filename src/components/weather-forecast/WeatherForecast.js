@@ -96,7 +96,7 @@ const WeatherForecast = ({open, onClose, apiKey}) => {
   };
 
   return (
-    <Container maxWidth="md" style={{ marginTop: '20px' }}>
+    <Container maxWidth="md">
       <Modal open={open} onClose={onClose}>
         <ModalContainer>
           <Grid container spacing={3} style={{ flexWrap: 'nowrap' }}>

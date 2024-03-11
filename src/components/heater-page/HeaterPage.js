@@ -27,7 +27,6 @@ export default function HeaterPage({ heater, onChange }) {
 
   const {
     temperature_sensor_id,
-    switch_id,
     mode='off',
     timer_from='09:00',
     timer_to='22:00',

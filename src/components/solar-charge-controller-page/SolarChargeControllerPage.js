@@ -30,9 +30,9 @@ export default function SolarChargeControllerPage({ solarChargeController, compa
     const {
       charging_status,
       controller_temperature,
-      photovoltaic,
-      load,
-      battery
+      photovoltaic={},
+      load={},
+      battery={}
     } = solarChargeControllerState;
 
     const {
@@ -102,17 +102,17 @@ export default function SolarChargeControllerPage({ solarChargeController, compa
                     />
                     <Metric
                       label="Power"
-                      value={`${photovoltaic_power.toFixed(2)}`}
+                      value={photovoltaic_power !== undefined ? photovoltaic_power.toFixed(2) : '-'}
                       unit="W"
                     />
                     <Metric
                       label="Current"
-                      value={`${photovoltaic_current.toFixed(2)}`}
+                      value={photovoltaic_current !== undefined ? photovoltaic_current.toFixed(2) : '-'}
                       unit="Ah"
                     />
                     <Metric
                       label="Voltage"
-                      value={`${photovoltaic_voltage.toFixed(2)}`}
+                      value={photovoltaic_voltage !== undefined ? photovoltaic_voltage.toFixed(2) : '-'}
                       unit="V"
                     />
                   </Box>
@@ -135,12 +135,12 @@ export default function SolarChargeControllerPage({ solarChargeController, compa
                     />
                     <Metric
                       label="Temperature"
-                      value={`${battery_temperature.toFixed(2)}`}
+                      value={battery_temperature !== undefined ? battery_temperature.toFixed(2) : '-'}
                       unit="°"
                     />
                     <Metric
                       label="Voltage"
-                      value={`${battery_voltage.toFixed(2)}`}
+                      value={battery_voltage !== undefined ? battery_voltage.toFixed(2) : '-'}
                       unit="V"
                     />
                   </Box>
@@ -155,17 +155,17 @@ export default function SolarChargeControllerPage({ solarChargeController, compa
                     />
                     <Metric
                       label="Power"
-                      value={`${load_power.toFixed(2)}`}
+                      value={load_power !== undefined ? load_power.toFixed(2) : '-'}
                       unit="W"
                     />
                     <Metric
                       label="Current"
-                      value={`${load_current.toFixed(2)}`}
+                      value={load_current !== undefined ? load_current.toFixed(2) : '-'}
                       unit="Ah"
                     />
                     <Metric
                       label="Voltage"
-                      value={`${load_voltage.toFixed(2)}`}
+                      value={load_voltage !== undefined ? load_voltage.toFixed(2) : '-'}
                       unit="V"
                     />
                   </Box>
@@ -188,7 +188,7 @@ export default function SolarChargeControllerPage({ solarChargeController, compa
                       fontWeight: 300
                     }}
                   >
-                    { photovoltaic_power.toFixed(2) }
+                    { photovoltaic_power !== undefined ? photovoltaic_power.toFixed(2) : '-' }
                   </Typography>
                   <Typography 
                     variant="h5" 

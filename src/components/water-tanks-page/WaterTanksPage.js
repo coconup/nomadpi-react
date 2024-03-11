@@ -1,20 +1,26 @@
 import { useState } from 'react';
+import { useLocation } from "wouter";
 
 import {
   Box,
   ButtonBase,
+  Card,
+  Icon,
   Unstable_Grid2 as Grid
 } from '@mui/material';
 
 import Container from '../ui/Container';
 
 import WaterTankPage from '../water-tank-page/WaterTankPage';
+import EmptyResourcePage from '../empty-resource-page/EmptyResourcePage';
 
-import { useGetWaterTanksQuery } from '../../apis/van-pi/vanpi-app-api';
+import { useGetWaterTanksQuery } from '../../apis/nomadpi/nomadpi-app-api';
 
 import Loading from '../ui/Loading';
 
 export default function WaterTanksPage({ compact=false }) {
+  const [location, setLocation] = useLocation();
+
   const initialState = {
     waterTanks: [],
     init: false
@@ -60,16 +66,42 @@ export default function WaterTanksPage({ compact=false }) {
   } else if(isSuccess && state.init) {
     if(compact) {
       return (
-        <Box onClick={selectNextWaterTank}>
+        <Box onClick={waterTanks.length > 0 ? selectNextWaterTank : () => setLocation("/settings/water-tanks")}>
           <ButtonBase sx={{width: '100%'}}>
-            <WaterTankPage
-              compact
-              waterTank={selectedWaterTank}
-            />
+            {
+              selectedWaterTank && (
+                <WaterTankPage
+                  compact
+                  waterTank={selectedWaterTank}
+                />
+              ) || (
+                <Card
+                  sx={{
+                    flex: 1,
+                    height: '150px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                  }}
+                >
+                  <Icon sx={{fontSize: 42, color: 'text.disabled'}}>water</Icon>
+                </Card>
+              )
+            }
           </ButtonBase>
         </Box>
       )
     } else {
+      if(waterTanks.length === 0) {
+        return (
+          <EmptyResourcePage
+            onClick={() => setLocation("/settings/water-tanks")}
+            buttonLabel='Go to settings'
+            icon={'settings'}
+          />
+        )
+      }
+
       content = waterTanks.map(waterTank => (
         <Grid 
           key={waterTank.key}

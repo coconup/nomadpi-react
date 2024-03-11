@@ -10,9 +10,10 @@ import {
   useGetTemperatureSensorsQuery,
   useUpdateTemperatureSensorMutation,
   useCreateTemperatureSensorMutation
-} from '../../apis/van-pi/vanpi-app-api';
+} from '../../apis/nomadpi/nomadpi-app-api';
 
 import TemperatureSensorForm from '../temperature-sensor-form/TemperatureSensorForm';
+import EmptyResourcePage from '../empty-resource-page/EmptyResourcePage';
 
 import TemperatureSensor from '../../models/TemperatureSensor';
 
@@ -98,6 +99,15 @@ const TemperatureSensorsForm = () => {
   if (isLoading) {
     return <Loading size={40} fullPage />
   } else if(isSuccess) {
+    if(temperatureSensors.length === 0) {
+      return (
+        <EmptyResourcePage
+          onClick={addTemperatureSensor}
+          buttonLabel={'Add a temperature sensor'}
+        />
+      )
+    }
+
     content = (
       <Box>
         {

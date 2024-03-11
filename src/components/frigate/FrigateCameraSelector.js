@@ -6,7 +6,7 @@ import {
 
 import {
   useGetFrigateConfigQuery
-} from '../../apis/van-pi/vanpi-app-api';
+} from '../../apis/nomadpi/nomadpi-app-api';
 
 import Select from '../ui/Select';
 

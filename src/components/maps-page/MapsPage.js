@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback, memo } from 'react'
 import { useSelector } from 'react-redux';
+import { useLocation } from "wouter";
 
 import { GoogleMap, Marker, Polyline, useJsApiLoader } from '@react-google-maps/api';
 
@@ -7,6 +8,8 @@ import { useTheme } from '@mui/material/styles';
 
 function MapsPage({ googleMapsApiKey, latitude: latitudeProp, longitude: longitudeProp, containerStyle={} }) {
   const theme = useTheme();
+
+  const [location, setLocation] = useLocation();
 
   const [position, setPosition] = useState({
     latitude: latitudeProp,

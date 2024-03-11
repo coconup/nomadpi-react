@@ -20,9 +20,10 @@ import {
   useGetWifiRelaysQuery,
   
   useGetTemperatureSensorsQuery,
-} from '../../apis/van-pi/vanpi-app-api';
+} from '../../apis/nomadpi/nomadpi-app-api';
 
 import HeaterForm from '../heater-form/HeaterForm';
+import EmptyResourcePage from '../empty-resource-page/EmptyResourcePage';
 
 import Heater from '../../models/Heater';
 
@@ -146,6 +147,15 @@ const HeatersForm = () => {
   if (isLoading) {
     return <Loading size={40} fullPage />
   } else if(isSuccess) {
+    if(heaters.length === 0) {
+      return (
+        <EmptyResourcePage
+          onClick={addHeater}
+          buttonLabel={'Add a heater'}
+        />
+      )
+    }
+
     content = (
       <Box>
         {

@@ -3,6 +3,8 @@ import { useSelector } from 'react-redux';
 
 import { getApisState } from '../../utils';
 
+import { useLocation } from "wouter";
+
 import {
   Unstable_Grid2 as Grid
 } from '@mui/material';
@@ -16,13 +18,16 @@ import {
   useGetModesQuery, 
   useGetActionSwitchesQuery, 
   useGetSwitchGroupsQuery,
-} from '../../apis/van-pi/vanpi-app-api';
+} from '../../apis/nomadpi/nomadpi-app-api';
 
 import SwitchGroupItem from '../switch-group-item/SwitchGroupItem';
+import EmptyResourcePage from '../empty-resource-page/EmptyResourcePage';
 
 import Loading from '../ui/Loading';
 
 const SwitchGroupsPage = () => {
+  const [location, setLocation] = useLocation();
+  
   const initialState = {
     switchGroups: [],
     relaySwitches: [],
@@ -79,6 +84,13 @@ const SwitchGroupsPage = () => {
     selectedSwitchGroup,
   } = state;
 
+  const emptySwitches = (
+    relaySwitches.length === 0
+      && wifiRelaySwitches.length === 0
+      && modeSwitches.length === 0
+      && actionSwitches.length === 0
+  );
+
   let displaySwitches = [];
   
   if(selectedSwitchGroup) {
@@ -108,6 +120,16 @@ const SwitchGroupsPage = () => {
     const {status, error: message} = errors[0];
     content = <div>{message}</div>
   } else if (isSuccess) {
+    if(displaySwitches.length === 0 || emptySwitches) {
+      return (
+        <EmptyResourcePage
+          onClick={() => setLocation(emptySwitches ? "/settings/relays" : "/settings/switch-groups")}
+          buttonLabel='Go to settings'
+          icon={'settings'}
+        />
+      )
+    }
+
     content = (
       <Container>
         <Grid container 

@@ -5,9 +5,10 @@ import Typography from '@mui/material/Typography';
 import Fab from '@mui/material/Fab';
 import { Icon} from '@mui/material';
 
-import { useGetWaterTanksQuery, useUpdateWaterTankMutation, useCreateWaterTankMutation } from '../../apis/van-pi/vanpi-app-api';
+import { useGetWaterTanksQuery, useUpdateWaterTankMutation, useCreateWaterTankMutation } from '../../apis/nomadpi/nomadpi-app-api';
 
 import WaterTankForm from '../water-tank-form/WaterTankForm';
+import EmptyResourcePage from '../empty-resource-page/EmptyResourcePage';
 
 import WaterTank from '../../models/WaterTank';
 
@@ -107,6 +108,15 @@ const WaterTanksForm = () => {
   if (isLoading) {
     return <Loading size={40} fullPage />
   } else if(isSuccess) {
+    if(waterTanks.length === 0) {
+      return (
+        <EmptyResourcePage
+          onClick={addWaterTank}
+          buttonLabel={'Add a water tank'}
+        />
+      )
+    }
+
     content = (
       <Box>
         {

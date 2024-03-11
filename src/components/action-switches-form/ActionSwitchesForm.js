@@ -14,14 +14,16 @@ import {
   useGetActionSwitchesQuery,
   useGetRelaysQuery,
   useGetWifiRelaysQuery,
+  useGetHeatersQuery,
   useUpdateActionSwitchMutation,
   useCreateActionSwitchMutation,
   useDeleteActionSwitchMutation
-} from '../../apis/van-pi/vanpi-app-api';
+} from '../../apis/nomadpi/nomadpi-app-api';
 
 import ActionSwitch from '../../models/ActionSwitch';
 
 import ActionSwitchForm from '../action-switch-form/ActionSwitchForm';
+import EmptyResourcePage from '../empty-resource-page/EmptyResourcePage';
 
 import Loading from '../ui/Loading';
 
@@ -30,12 +32,14 @@ const ActionSwitchesForm = () => {
     actionSwitches: [],
     relaySwitches: [],
     wifiRelaySwitches: [],
+    heaterSwitches: [],
     init: false
   });
 
   const apiActionSwitches = useGetActionSwitchesQuery();
   const apiRelaySwitches = useGetRelaysQuery();
   const apiWifiRelaySwitches = useGetWifiRelaysQuery();
+  const apiHeaterSwitches = useGetHeatersQuery();
 
   const [
     updateActionSwitchTrigger, 
@@ -61,7 +65,8 @@ const ActionSwitchesForm = () => {
   } = getApisState([
     apiActionSwitches,
     apiRelaySwitches,
-    apiWifiRelaySwitches
+    apiWifiRelaySwitches,
+    apiHeaterSwitches
   ]);
 
   if(isSuccess && !state.init) {
@@ -70,11 +75,12 @@ const ActionSwitchesForm = () => {
       actionSwitches: apiActionSwitches.data,
       relaySwitches: apiRelaySwitches.data,
       wifiRelaySwitches: apiWifiRelaySwitches.data,
+      heaterSwitches: apiHeaterSwitches.data,
       init: true
     });
   };
 
-  const { actionSwitches, relaySwitches, wifiRelaySwitches } = state;
+  const { actionSwitches, relaySwitches, wifiRelaySwitches, heaterSwitches } = state;
 
   const addActionSwitch = () => {
     const newActionSwitch = new ActionSwitch({
@@ -141,6 +147,15 @@ const ActionSwitchesForm = () => {
   if (isLoading) {
     return <Loading size={40} fullPage />
   } else if (isSuccess) {
+    if(actionSwitches.length === 0) {
+      return (
+        <EmptyResourcePage
+          onClick={addActionSwitch}
+          buttonLabel={'Add an action switch'}
+        />
+      )
+    }
+
     content = actionSwitches.filter(({isDeleted}) => !isDeleted).map(actionSwitch => {
       return (
         <Box key={actionSwitch.key}>
@@ -148,6 +163,7 @@ const ActionSwitchesForm = () => {
             actionSwitch={actionSwitch}
             relaySwitches={relaySwitches}
             wifiRelaySwitches={wifiRelaySwitches}
+            heaterSwitches={heaterSwitches}
             onChange={handleChange}
             onDelete={handleDelete}
           />

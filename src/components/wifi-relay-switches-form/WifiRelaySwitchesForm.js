@@ -5,9 +5,10 @@ import Typography from '@mui/material/Typography';
 import Fab from '@mui/material/Fab';
 import { Icon} from '@mui/material';
 
-import { useGetWifiRelaysQuery, useUpdateWifiRelayMutation, useCreateWifiRelayMutation } from '../../apis/van-pi/vanpi-app-api';
+import { useGetWifiRelaysQuery, useUpdateWifiRelayMutation, useCreateWifiRelayMutation } from '../../apis/nomadpi/nomadpi-app-api';
 
 import WifiRelaySwitchForm from '../wifi-relay-switch-form/WifiRelaySwitchForm';
+import EmptyResourcePage from '../empty-resource-page/EmptyResourcePage';
 
 import WifiRelaySwitch from '../../models/WifiRelaySwitch';
 
@@ -107,6 +108,15 @@ const WifiRelaySwitchesForm = () => {
   if (isLoading) {
     return <Loading size={40} fullPage />
   } else if(isSuccess) {
+    if(switches.length === 0) {
+      return (
+        <EmptyResourcePage
+          onClick={addSwitch}
+          buttonLabel={'Add a WiFi relay'}
+        />
+      )
+    }
+
     content = (
       <Box>
         {
