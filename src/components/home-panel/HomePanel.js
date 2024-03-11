@@ -32,7 +32,7 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-export default function HomePanel() {
+export default function HomePanel({ demo }) {
   const [location, setLocation] = useLocation();
 
   const gpsState = useSelector(selectGpsState);
@@ -40,15 +40,11 @@ export default function HomePanel() {
   const googleMapsCredentials = useSelector(selectServiceCredentials('google-maps'));
   const openWeatherCredentials = useSelector(selectServiceCredentials('open-weather-map'));
 
-  console.log('openWeatherCredentials', openWeatherCredentials)
-
   const { api_key: googleMapsApiKey } = googleMapsCredentials.value || {};
   const { api_key: openWeatherApiKey } = openWeatherCredentials.value || {};
 
-  const {
-    latitude,
-    longitude
-  } = gpsState;
+  const latitude = demo ? 38.18885675160445 : gpsState.latitude;
+  const longitude = demo ? 12.733572417196724 : gpsState.longitude;
 
   return (
     <Container>

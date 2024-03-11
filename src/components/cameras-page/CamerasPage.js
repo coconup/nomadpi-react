@@ -27,7 +27,7 @@ import {
   usePostAlarmStateMutation
 } from '../../apis/nomadpi/nomadpi-app-api';
 
-export default function CamerasPage() {
+export default function CamerasPage({ demo }) {
   const apiCameras = useGetCamerasQuery();
   const apiFrigateConfig = useGetFrigateConfigQuery();
 
@@ -114,6 +114,7 @@ export default function CamerasPage() {
             >
               <CameraPage
                 camera={camera}
+                demo={demo}
               />
             </Grid>
           ))

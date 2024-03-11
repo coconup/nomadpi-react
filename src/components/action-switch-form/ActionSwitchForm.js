@@ -17,32 +17,33 @@ import {
 export default function ActionSwitchForm({
   actionSwitch, 
   relaySwitches: relaySwitchOptions,
-  wifiRelaySwitches: wifiRelaySwitchOptions,
+  wifiRelaySwitches: wifiSwitchOptions,
+  heaterSwitches: heaterSwitchOptions,
   onChange, 
   onDelete
 }) {
   const {
     name,
     icon='',
-    switches: relaySwitches=[]
+    switches=[]
   } = actionSwitch;
 
-  const handleRelaySwitchChange = (_index, relaySwitch) => {
-    const newRelaySwitches = relaySwitches.map((item, index) => ({
+  const handleSwitchChange = (_index, switchItem) => {
+    const newSwitches = switches.map((item, index) => ({
       ...item,
-      ...index === _index ? { switch_id: relaySwitch.id, switch_type: relaySwitch.snakecaseType } : {}
+      ...index === _index ? { switch_id: switchItem.id, switch_type: switchItem.snakecaseType } : {}
     }));
 
-    onChange(actionSwitch, {switches: newRelaySwitches});
+    onChange(actionSwitch, {switches: newSwitches});
   }
 
   const handleStateChange = (state_type, _index, value) => {
-    const newRelaySwitches = relaySwitches.map((item, index) => ({
+    const newSwitches = switches.map((item, index) => ({
       ...item,
       ...index === _index ? { [`${state_type}_state`]: value } : {}
     }));
 
-    onChange(actionSwitch, {switches: newRelaySwitches});
+    onChange(actionSwitch, {switches: newSwitches});
   }
 
   const addItem = () => {
@@ -50,11 +51,11 @@ export default function ActionSwitchForm({
       switch_id: null,
       state: false
     }
-    onChange(actionSwitch, {switches: [...relaySwitches, newItem]})
+    onChange(actionSwitch, {switches: [...switches, newItem]})
   }
 
-  const removeRelaySwitch = (item) => {
-    onChange(actionSwitch, {switches: relaySwitches.filter(({switch_id}) => switch_id !== item.switch_id)})
+  const removeSwitch = (item) => {
+    onChange(actionSwitch, {switches: switches.filter(({switch_id}) => switch_id !== item.switch_id)})
   }
 
   return (
@@ -124,17 +125,10 @@ export default function ActionSwitchForm({
         </Box>
         <Box>
           {
-            relaySwitches.map((relaySwitch, index) => {
-              let relay;
-              if(relaySwitch.switch_type === 'relay') {
-                relay = relaySwitchOptions.find(({id}) => id === relaySwitch.switch_id);
-              } else if(relaySwitch.switch_type === 'wifi_relay') {
-                relay = wifiRelaySwitchOptions.find(({id}) => id === relaySwitch.switch_id);
-              }
-
+            switches.map((switchItem, index) => {
               return(
                 <Box
-                  key={`RelaySwitch-${actionSwitch.id}-${index}`}
+                  key={`Switch-${actionSwitch.id}-${index}`}
                   sx={{
                     display: 'flex',
                     flexDirection: 'row',
@@ -142,7 +136,6 @@ export default function ActionSwitchForm({
                     alignItems: 'center'
                   }}
                 >
-
                   <FormControl 
                     sx={{
                       flex: 6,
@@ -151,22 +144,24 @@ export default function ActionSwitchForm({
                   >
                     <InputLabel>Switch</InputLabel>
                     <Select
-                      value={relaySwitch.switch_id ? `${relaySwitch.switch_type}-${relaySwitch.switch_id}` : ''}
+                      value={switchItem.switch_id ? `${switchItem.switch_type}-${switchItem.switch_id}` : ''}
                       label="Switch"
                       onChange={(event, option) => {
                         const value = event.target.value;
-                        let newRelay;
+                        let newSwitch;
                         if(value.startsWith('relay')) {
-                          newRelay = relaySwitchOptions.find(({id, snakecaseType}) => `${snakecaseType}-${id}` === value);
+                          newSwitch = relaySwitchOptions.find(({id, snakecaseType}) => `${snakecaseType}-${id}` === value);
                         } else if(value.startsWith('wifi_relay')) {
-                          newRelay = wifiRelaySwitchOptions.find(({id, snakecaseType}) => `${snakecaseType}-${id}` === value);
+                          newSwitch = wifiSwitchOptions.find(({id, snakecaseType}) => `${snakecaseType}-${id}` === value);
+                        }else if(value.startsWith('heater')) {
+                          newSwitch = heaterSwitchOptions.find(({id, snakecaseType}) => `${snakecaseType}-${id}` === value);
                         }
-                        handleRelaySwitchChange(index, newRelay);
+                        handleSwitchChange(index, newSwitch);
                       }}
                     >
                       {
-                        [...relaySwitchOptions, ...wifiRelaySwitchOptions].map(({id, name, snakecaseType, key}) => (
-                          <MenuItem key={`RelaySwitch-${actionSwitch.id}-${index}-${key}`} value={`${snakecaseType}-${id}`}>{name}</MenuItem>
+                        [...relaySwitchOptions, ...wifiSwitchOptions, ...heaterSwitchOptions].map(({id, name, snakecaseType, key}) => (
+                          <MenuItem key={`Switch-${actionSwitch.id}-${index}-${key}`} value={`${snakecaseType}-${id}`}>{name}</MenuItem>
                         ))
                       }
                     </Select>
@@ -179,7 +174,7 @@ export default function ActionSwitchForm({
                   >
                     <InputLabel>ON state</InputLabel>
                     <Select
-                      value={relaySwitch.on_state}
+                      value={switchItem.on_state}
                       label="ON state"
                       onChange={(event, option) => {
                         handleStateChange('on', index, event.target.value)
@@ -193,7 +188,7 @@ export default function ActionSwitchForm({
                     size="small"
                     color="secondary" 
                     aria-label="edit"
-                    onClick={() => removeRelaySwitch(index)}
+                    onClick={() => removeSwitch(index)}
                     sx={{
                       margin: '0px 5px 0px 15px'
                     }}

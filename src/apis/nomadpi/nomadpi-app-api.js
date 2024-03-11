@@ -210,7 +210,7 @@ export const vanPiAppAPI = createApi({
     const stateResourceNames = [
       'gps',
       'modes',
-      'relays',
+      'switchables',
       'batteries',
       'waterTanks',
       'temperatureSensors',
@@ -424,7 +424,7 @@ export const {
   useDeleteSolarChargeControllerMutation,
 
   useGetGpsStateQuery,
-  useGetRelaysStateQuery,
+  useGetSwitchablesStateQuery,
   useGetModesStateQuery,
   useGetBatteriesStateQuery,
   useGetWaterTanksStateQuery,

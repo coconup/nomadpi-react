@@ -28,8 +28,8 @@ export default function SwitchGroupItem({switchItem, relays, wifiRelays}) {
     actor
   } = switchItem;
   
-  const relaysState = useSelector(state => {
-    return state['nomadpi-app-api'].queries['getRelaysState(undefined)'].data
+  const switchablesState = useSelector(state => {
+    return state['nomadpi-app-api'].queries['getSwitchablesState(undefined)'].data
   });
 
   const modesState = useSelector(state => {
@@ -40,7 +40,7 @@ export default function SwitchGroupItem({switchItem, relays, wifiRelays}) {
   if(switchItem.constructor === ModeSwitch) {
     state = (modesState[switchItem.mode_key] || {}).state || false;
   } else {
-    state = !![relaysState.relay || {}, ...(Object.values(relaysState.wifi_relay || {}) || [])].find(switchesState => {
+    state = !![switchablesState.relay || {}, ...(Object.values(switchablesState.wifi_relay || {}) || [])].find(switchesState => {
       return !!Object.values(switchesState).find(({actors=[]}) => !!actors.find(({actor: a}) => a === actor));
     })
   }

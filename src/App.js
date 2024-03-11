@@ -3,12 +3,12 @@ import logo from './logo.svg';
 import store from './app/store';
 import { selectSetting } from './app/store';
 
-import { Route, Switch, Redirect } from "wouter";
+import { Router, Route, Switch, Redirect } from "wouter";
 import { useSelector } from 'react-redux';
 
 import {
   useGetGpsStateQuery,
-  useGetRelaysStateQuery,
+  useGetSwitchablesStateQuery,
   useGetModesStateQuery,
   useGetBatteriesStateQuery,
   useGetWaterTanksStateQuery,
@@ -57,8 +57,13 @@ import { ThemeProvider } from '@mui/material/styles';
 import theme from './app/theme';
 
 function App() {
+  const [demo, setDemo] = useState(undefined);
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const isDemo = !!urlParams.get('demo');
+
   useGetGpsStateQuery();
-  useGetRelaysStateQuery();
+  useGetSwitchablesStateQuery();
   useGetModesStateQuery();
   useGetBatteriesStateQuery();
   useGetWaterTanksStateQuery();
@@ -85,6 +90,10 @@ function App() {
   };
 
   const primaryColorSetting = useSelector(selectSetting('appearance_primary_color'));
+
+  if(isDemo && demo === undefined) {
+    setDemo(true);
+  }
 
   if(!primaryColorSetting) {
     return <Loading size={40} fullPage />
@@ -124,13 +133,13 @@ function App() {
               }}
             >
               <Switch>
-                <Route path="/"><HomePanel /></Route>
+                <Route path="/"><HomePanel demo={demo}/></Route>
                 <Route path="/weather">
                   <WeatherForecast />
                 </Route>
                 <Route path="/control-panel"><SwitchGroupsPage /></Route>
                 <Route path="/monitor"><MonitorPage /></Route>
-                <Route path="/security"><CamerasPage /></Route>
+                <Route path="/security"><CamerasPage demo={demo} /></Route>
                 <Route path="/heater"><HeatersPage /></Route>
 
                 <Route path="/settings/batteries"><BatteriesForm /></Route>

@@ -15,15 +15,16 @@ import {
 import Metric from '../ui/Metric';
 import Loading from '../ui/Loading';
 
-export default function CameraPage({ camera }) {
+export default function CameraPage({ camera, demo }) {
   const [ts, setTs] = useState(null);
 
   const {
     id,
     name,
-    connection_params,
-    thumbnailUrl
+    connection_params
   } = camera;
+
+  const thumbnailUrl = demo ? process.env.PUBLIC_URL + `demo/cameras/${id}.png` : camera.thumbnailUrl;
 
   const {
     camera_id

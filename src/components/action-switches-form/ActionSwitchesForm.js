@@ -14,6 +14,7 @@ import {
   useGetActionSwitchesQuery,
   useGetRelaysQuery,
   useGetWifiRelaysQuery,
+  useGetHeatersQuery,
   useUpdateActionSwitchMutation,
   useCreateActionSwitchMutation,
   useDeleteActionSwitchMutation
@@ -31,12 +32,14 @@ const ActionSwitchesForm = () => {
     actionSwitches: [],
     relaySwitches: [],
     wifiRelaySwitches: [],
+    heaterSwitches: [],
     init: false
   });
 
   const apiActionSwitches = useGetActionSwitchesQuery();
   const apiRelaySwitches = useGetRelaysQuery();
   const apiWifiRelaySwitches = useGetWifiRelaysQuery();
+  const apiHeaterSwitches = useGetHeatersQuery();
 
   const [
     updateActionSwitchTrigger, 
@@ -62,7 +65,8 @@ const ActionSwitchesForm = () => {
   } = getApisState([
     apiActionSwitches,
     apiRelaySwitches,
-    apiWifiRelaySwitches
+    apiWifiRelaySwitches,
+    apiHeaterSwitches
   ]);
 
   if(isSuccess && !state.init) {
@@ -71,11 +75,12 @@ const ActionSwitchesForm = () => {
       actionSwitches: apiActionSwitches.data,
       relaySwitches: apiRelaySwitches.data,
       wifiRelaySwitches: apiWifiRelaySwitches.data,
+      heaterSwitches: apiHeaterSwitches.data,
       init: true
     });
   };
 
-  const { actionSwitches, relaySwitches, wifiRelaySwitches } = state;
+  const { actionSwitches, relaySwitches, wifiRelaySwitches, heaterSwitches } = state;
 
   const addActionSwitch = () => {
     const newActionSwitch = new ActionSwitch({
@@ -158,6 +163,7 @@ const ActionSwitchesForm = () => {
             actionSwitch={actionSwitch}
             relaySwitches={relaySwitches}
             wifiRelaySwitches={wifiRelaySwitches}
+            heaterSwitches={heaterSwitches}
             onChange={handleChange}
             onDelete={handleDelete}
           />

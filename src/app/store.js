@@ -39,7 +39,7 @@ const getQueryState = (state, query, args) => {
 }
 
 const selectGpsState = state => getQueryState(state, 'getGpsState').data || {};
-const selectRelaysState = state => getQueryState(state, 'getRelaysState').data || {};
+const selectSwitchablesState = state => getQueryState(state, 'getSwitchablesState').data || {};
 const selectModesState = state => getQueryState(state, 'getModesState').data || {};
 const selectAlarmState = state => getQueryState(state, 'getAlarmState').data || {};
 const selectBatteriesState = state => getQueryState(state, 'getBatteriesState').data || {};
@@ -55,7 +55,7 @@ export default store;
 
 export {
   selectGpsState,
-  selectRelaysState,
+  selectSwitchablesState,
   selectModesState,
   selectAlarmState,
   selectBatteriesState,

@@ -5,7 +5,8 @@ const theme = ({
   nightMode,
   primaryColor
 }) => {
-  const mode = nightMode ? 'dark' : 'light';
+  // const mode = nightMode ? 'dark' : 'light';
+  const mode = 'light'
 
   return createTheme({
     palette: {
