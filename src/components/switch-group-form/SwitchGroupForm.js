@@ -4,6 +4,8 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Modal from '@mui/material/Modal';
 
+import IconSelect from '../ui/IconSelect';
+
 const style = {
   position: 'absolute',
   top: '50%',
@@ -32,13 +34,11 @@ export default function SwitchGroupForm({open, groupName, groupIcon='', onClose,
           sx={{margin: '15px', display: 'flex'}}
           onChange={(event) => onChange({name: event.target.value})}
         />
-        <TextField
+        <IconSelect
           label="Icon"
-          value={groupIcon}
-          sx={{margin: '15px', display: 'flex'}}
-          onChange={(event) => onChange({icon: event.target.value})}
+          value={groupIcon || ''}
+          onChange={({ value }) => onChange({icon: value})}
         />
-
         <Button variant="contained" onClick={onSave}>Save</Button>
       </Box>
     </Modal>

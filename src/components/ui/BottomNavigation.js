@@ -31,6 +31,7 @@ const BottomNavigationComponent = (props) => {
   return(
     <Paper 
       sx={{
+        pb: "env(safe-area-inset-bottom)",
         position: 'fixed', 
         bottom: 0,
         left: 0,

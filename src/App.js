@@ -1,25 +1,6 @@
-import { useState } from 'react';
-import logo from './logo.svg';
-import store from './app/store';
-import { selectSetting } from './app/store';
-
+import { useState, useEffect } from 'react';
 import { Router, Route, Switch, Redirect } from "wouter";
-import { useSelector } from 'react-redux';
-
-import {
-  useGetGpsStateQuery,
-  useGetSwitchablesStateQuery,
-  useGetModesStateQuery,
-  useGetBatteriesStateQuery,
-  useGetWaterTanksStateQuery,
-  useGetTemperatureSensorsStateQuery,
-  useGetSolarChargeControllersStateQuery,
-  useGetAlarmStateQuery,
-
-  useGetSettingsQuery,
-
-  useGetServiceCredentialsQuery
-} from './apis/nomadpi/nomadpi-app-api';
+import Init from './Init';
 
 import {
   Box,
@@ -33,8 +14,9 @@ import SwitchGroupsPage from './components/switch-groups-page/SwitchGroupsPage';
 import MonitorPage from './components/monitor-page/MonitorPage';
 import CamerasPage from './components/cameras-page/CamerasPage';
 import HeatersPage from './components/heaters-page/HeatersPage';
-import DayNightIndicator from './components/day-night-indicator/DayNightIndicator';
 import WeatherForecast from './components/weather-forecast/WeatherForecast';
+
+import MobileInitScreen from './components/mobile-init-screen/MobileInitScreen';
 
 import RelaySwitchesForm from './components/relay-switches-form/RelaySwitchesForm';
 import WifiRelaySwitchesForm from './components/wifi-relay-switches-form/WifiRelaySwitchesForm';
@@ -51,126 +33,70 @@ import HeatersForm from './components/heaters-form/HeatersForm';
 import TemperatureSensorsForm from './components/temperature-sensors-form/TemperatureSensorsForm';
 import SolarChargeControllersForm from './components/solar-charge-controllers-form/SolarChargeControllersForm';
 
-import Loading from './components/ui/Loading';
-
-import { ThemeProvider } from '@mui/material/styles';
-import theme from './app/theme';
-
 function App() {
-  const [demo, setDemo] = useState(undefined);
-
   const urlParams = new URLSearchParams(window.location.search);
-  const isDemo = !!urlParams.get('demo');
+  const [demo] = useState(!!urlParams.get('demo'));
 
-  useGetGpsStateQuery();
-  useGetSwitchablesStateQuery();
-  useGetModesStateQuery();
-  useGetBatteriesStateQuery();
-  useGetWaterTanksStateQuery();
-  useGetTemperatureSensorsStateQuery();
-  useGetSolarChargeControllersStateQuery();
-  useGetAlarmStateQuery();
-
-  useGetSettingsQuery();
-
-  useGetServiceCredentialsQuery({ service_id: 'google-maps' });
-  useGetServiceCredentialsQuery({ service_id: 'open-weather-map' });
-  useGetServiceCredentialsQuery({ service_id: 'open-ai' });
-  useGetServiceCredentialsQuery({ service_id: 'eleven-labs' });
-
-  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
-
-  const [nightMode, setNightMode] = useState(prefersDarkMode);
-
-  const handleNightModeChange = (isNight) => {
-    if(nightMode !== isNight) {
-      console.log(`Night mode is ${isNight ? 'on' : 'off'}`);
-      setNightMode(isNight);  
-    }
-  };
-
-  const primaryColorSetting = useSelector(selectSetting('appearance_primary_color'));
-
-  if(isDemo && demo === undefined) {
-    setDemo(true);
-  }
-
-  if(!primaryColorSetting) {
-    return <Loading size={40} fullPage />
-  } else {
+  const Main = ({ onReset }) => {
     return (
-      <ThemeProvider
-        theme={theme({
-          nightMode,
-          primaryColor: primaryColorSetting.value
-        })}
+      <Box 
+        sx={{
+          flexGrow: 1,
+          display: 'flex',
+          flexDirection: 'column'
+        }}
       >
-        {
-          !prefersDarkMode && (
-            <DayNightIndicator
-              onNightMode={handleNightModeChange}
-            />
-          )
-        }
-        <Box 
-          className="App"
+        <ResponsiveAppBar />
+        <NotificationBar />
+        <Box
           sx={{
-            backgroundColor: 'background.default',
-            pt: 'env(safe-area-inset-top)'
+            flexGrow: 1,
+            display: 'flex'
           }}
         >
-          <Box 
-            sx={{
-              flexGrow: 1,
-              display: 'flex',
-              flexDirection: 'column'
-            }}>
-            <ResponsiveAppBar />
-            <NotificationBar />
-            <Box
-              sx={{
-                flexGrow: 1,
-                display: 'flex'
-              }}
-            >
-              <Switch>
-                <Route path="/"><HomePanel demo={demo}/></Route>
-                <Route path="/weather">
-                  <WeatherForecast />
-                </Route>
-                <Route path="/control-panel"><SwitchGroupsPage /></Route>
-                <Route path="/monitor"><MonitorPage /></Route>
-                <Route path="/security"><CamerasPage demo={demo} /></Route>
-                <Route path="/heater"><HeatersPage /></Route>
+          <Switch>
+            <Route path="/"><HomePanel demo={demo}/></Route>
+            <Route path="/weather">
+              <WeatherForecast />
+            </Route>
+            <Route path="/control-panel"><SwitchGroupsPage /></Route>
+            <Route path="/monitor"><MonitorPage /></Route>
+            <Route path="/security"><CamerasPage demo={demo} /></Route>
+            <Route path="/heater"><HeatersPage /></Route>
 
-                <Route path="/settings/batteries"><BatteriesForm /></Route>
-                <Route path="/settings/solar-charge-controllers"><SolarChargeControllersForm /></Route>
-                <Route path="/settings/water-tanks"><WaterTanksForm /></Route>
-                <Route path="/settings/cameras"><CamerasForm /></Route>
-                <Route path="/settings/security-alarm"><SecurityAlarmForm /></Route>
-                <Route path="/settings/heaters"><HeatersForm /></Route>
-                <Route path="/settings/temperature-sensors"><TemperatureSensorsForm /></Route>
-                <Route path="/settings/sensors"><SensorsForm /></Route>
-                <Route path="/settings/relays"><RelaySwitchesForm /></Route>
-                <Route path="/settings/wifi-relays"><WifiRelaySwitchesForm /></Route>
-                <Route path="/settings/mode-switches"><ModeSwitchesForm /></Route>
-                <Route path="/settings/action-switches"><ActionSwitchesForm /></Route>
-                <Route path="/settings/switch-groups"><SwitchGroupsForm /></Route>
-                <Route path="/settings/appearance"><SettingsForm currentPath={'appearance'}/></Route>
-                <Route path="/settings/devices"><SettingsForm currentPath={'devices'}/></Route>
-                <Route path="/settings/weather-and-maps"><SettingsForm currentPath={'weather-and-maps'}/></Route>
-                <Route path="/settings/voice-assistant"><SettingsForm currentPath={'voice-assistant'}/></Route>
-                <Route path="/settings/notifications"><SettingsForm currentPath={'notifications'}/></Route>
-                <Route path="/settings/remote-access"><SettingsForm currentPath={'remote-access'}/></Route>
-                <Route path="/settings/cloud-sync"><SettingsForm currentPath={'cloud-sync'}/></Route>
-                <Route><Redirect to={'/'} /></Route>
-              </Switch>
-            </Box>
-          </Box>
+            <Route path="/settings/batteries"><BatteriesForm /></Route>
+            <Route path="/settings/solar-charge-controllers"><SolarChargeControllersForm /></Route>
+            <Route path="/settings/water-tanks"><WaterTanksForm /></Route>
+            <Route path="/settings/cameras"><CamerasForm /></Route>
+            <Route path="/settings/security-alarm"><SecurityAlarmForm /></Route>
+            <Route path="/settings/heaters"><HeatersForm /></Route>
+            <Route path="/settings/temperature-sensors"><TemperatureSensorsForm /></Route>
+            <Route path="/settings/sensors"><SensorsForm /></Route>
+            <Route path="/settings/relays"><RelaySwitchesForm /></Route>
+            <Route path="/settings/wifi-relays"><WifiRelaySwitchesForm /></Route>
+            <Route path="/settings/mode-switches"><ModeSwitchesForm /></Route>
+            <Route path="/settings/action-switches"><ActionSwitchesForm /></Route>
+            <Route path="/settings/switch-groups"><SwitchGroupsForm /></Route>
+            <Route path="/settings/mobile-app"><MobileInitScreen onSave={onReset} /></Route>
+            <Route path="/settings/appearance"><SettingsForm currentPath={'appearance'}/></Route>
+            <Route path="/settings/devices"><SettingsForm currentPath={'devices'}/></Route>
+            <Route path="/settings/weather-and-maps"><SettingsForm currentPath={'weather-and-maps'}/></Route>
+            <Route path="/settings/voice-assistant"><SettingsForm currentPath={'voice-assistant'}/></Route>
+            <Route path="/settings/notifications"><SettingsForm currentPath={'notifications'}/></Route>
+            <Route path="/settings/remote-access"><SettingsForm currentPath={'remote-access'}/></Route>
+            <Route path="/settings/cloud-sync"><SettingsForm currentPath={'cloud-sync'}/></Route>
+            <Route><Redirect to={'/'} /></Route>
+          </Switch>
         </Box>
-      </ThemeProvider>
-    );
+      </Box>
+    )
   }
+
+  return (
+    <Init>
+      <Main />
+    </Init>
+  );
 }
 
 export default App;

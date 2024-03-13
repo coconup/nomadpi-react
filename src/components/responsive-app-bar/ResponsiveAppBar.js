@@ -48,7 +48,10 @@ function ResponsiveAppBar() {
   };
 
   return (
-    <AppBar position="static">
+    <AppBar
+      position="static"
+      sx={{ pt: "env(safe-area-inset-top)" }}
+    >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <NavigationDrawer 

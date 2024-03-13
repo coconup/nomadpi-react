@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import useWebSocket from 'react-use-websocket';
-
-import { WS_BASE_URL } from '../../apis/nomadpi/nomadpi-app-api';
+import store from '../../app/store';
+import { selectApiBaseUrl } from '../../app/store';
 
 import * as ort from "onnxruntime-web"
 
@@ -22,7 +22,10 @@ export default function WakeWordProvider({ onListen, pause }) {
     navigator.msGetUserMedia
   );
 
-  const websocketURL = `${WS_BASE_URL}/open_wake_word`;
+  const state = store.getState();
+  const wsBaseUrl = selectApiBaseUrl(state).ws;
+
+  const websocketURL = `${wsBaseUrl}/open_wake_word`;
 
   const {
     sendMessage,

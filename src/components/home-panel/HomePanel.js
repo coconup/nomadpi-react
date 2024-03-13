@@ -1,17 +1,15 @@
 import { useSelector } from 'react-redux';
 import { selectGpsState } from '../../app/store';
 import { useLocation } from "wouter";
+import { isPlatform } from '@ionic/react';
 
 import {
   Box,
   ButtonBase,
-  Card,
   Icon,
   Unstable_Grid2 as Grid,
   Paper
 } from '@mui/material';
-
-import { styled } from '@mui/material/styles';
 
 import Container from '../ui/Container';
 import WeatherCard from '../weather-card/WeatherCard';
@@ -24,16 +22,8 @@ import MapsPage from '../maps-page/MapsPage';
 
 import { selectServiceCredentials } from '../../app/store';
 
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: 'center',
-  color: theme.palette.text.secondary,
-}));
-
 export default function HomePanel({ demo }) {
-  const [location, setLocation] = useLocation();
+  const setLocation = useLocation()[1];
 
   const gpsState = useSelector(selectGpsState);
 
@@ -46,16 +36,22 @@ export default function HomePanel({ demo }) {
   const latitude = demo ? 38.18885675160445 : gpsState.latitude;
   const longitude = demo ? 12.733572417196724 : gpsState.longitude;
 
+  const isPhone = isPlatform('mobile') && !isPlatform('tablet');
+
   return (
     <Container>
       <Box sx={{ flexGrow: 1, padding: 3 }}>
         <Grid container spacing={2}>
-          <Grid xs={12}>
-            <CurrentTimeCard
-              latitude={latitude}
-              longitude={longitude}
-            />
-          </Grid>
+          {
+            !isPhone && (
+              <Grid xs={12}>
+                <CurrentTimeCard
+                  latitude={latitude}
+                  longitude={longitude}
+                />
+              </Grid>
+            )
+          }
           <Grid xs={12} sm={8} md={6}>
             <WeatherCard 
               apiKey={openWeatherApiKey}
@@ -63,21 +59,9 @@ export default function HomePanel({ demo }) {
               longitude={longitude}
             />
           </Grid>
-          <Grid xs={6}>
-            <Box
-              sx={{
-                height: '100%',
-                display: 'flex',
-                flexDirection: 'column'
-              }}
-            >
-              <Box
-                sx={{
-                  // mt: '15px',
-                  display: 'flex',
-                  flexGrow: 1
-                }}
-              >
+          <Grid xs={12} sm={8} md={6}>
+            {
+              googleMapsApiKey && (
                 <Paper
                   sx={{
                     flexGrow: 1,
@@ -85,38 +69,45 @@ export default function HomePanel({ demo }) {
                     display: 'flex'
                   }}
                 >
-                  {
-                    googleMapsApiKey && (
-                      <MapsPage
-                        googleMapsApiKey={googleMapsApiKey}
-                        latitude={latitude}
-                        longitude={longitude}
-                        containerStyle={{
-                          borderRadius: '4px',
-                          flex: 1
-                        }}
-                      />
-                    ) || (
-                      <ButtonBase 
-                        sx={{flexGrow: 1, flex: 1, height: '100%'}}
-                        onClick={() => setLocation("/settings/weather-and-maps")}
-                      >
-                        <Box
-                          sx={{
-                            flex: 1,
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center'
-                          }}
-                        >
-                          <Icon sx={{fontSize: 54, color: 'text.disabled'}}>maps</Icon>
-                        </Box>
-                      </ButtonBase>
-                    )
-                  }
+                  <MapsPage
+                    googleMapsApiKey={googleMapsApiKey}
+                    latitude={latitude}
+                    longitude={longitude}
+                    containerStyle={{
+                      borderRadius: '4px',
+                      flex: 1
+                    }}
+                  />
                 </Paper>
-              </Box>
-            </Box>
+              )
+            }
+            {
+              !googleMapsApiKey && (
+                <Paper
+                  sx={{
+                    padding: '20px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    height: '408px'
+                  }}
+                >
+                  <ButtonBase 
+                    sx={{flex: 1, height: '100%'}}
+                    onClick={() => setLocation("/settings/weather-and-maps")}
+                  >
+                    <Box
+                      sx={{
+                        justifyContent: 'center',
+                        alignItems: 'center'
+                      }}
+                    >
+                      <Icon sx={{fontSize: 54, color: 'text.disabled'}}>maps</Icon>
+                    </Box>
+                  </ButtonBase>
+                </Paper>
+              )
+            }
           </Grid>
           <Grid 
             md={3}

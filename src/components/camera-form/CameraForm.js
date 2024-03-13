@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 import {
   Card,
   CardContent,
@@ -10,8 +8,6 @@ import {
 import FrigateCameraSelector from '../frigate/FrigateCameraSelector';
 
 import Select from '../ui/Select';
-
-import Camera from '../../models/Camera';
 
 export default function CameraForm({camera, onChange, editable }) {
   const {
@@ -24,7 +20,7 @@ export default function CameraForm({camera, onChange, editable }) {
   const { camera_id } = connection_params;
 
   return (
-    <Card sx={{ width: 400, margin: '20px' }}>
+    <Card sx={{ width: '80vw', maxWidth: 400, margin: '20px' }}>
       <CardContent>
         <TextField
           label="Name"

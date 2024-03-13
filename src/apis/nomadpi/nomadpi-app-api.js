@@ -1,10 +1,12 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { isPlatform } from '@ionic/react';
+import { Preferences } from '@capacitor/preferences';
 import { makeCrudEndpoints } from '../crudBuilder';
+import { selectApiBaseUrl } from '../../app/store';
 
 import {
   toSnakeCase,
-  uppercaseFirstLetter,
-  snakeToCamelCase
+  uppercaseFirstLetter
 } from '../../utils';
 
 import Credentials from '../../models/Credentials';
@@ -22,23 +24,7 @@ import Heater from '../../models/Heater';
 import TemperatureSensor from '../../models/TemperatureSensor';
 import SolarChargeController from '../../models/SolarChargeController';
 
-const inferBaseUrl = () => {
-  const { protocol, hostname, port } = window.location;
-
-  const raspberryPiHostname = process.env.REACT_APP_RPI_HOSTNAME || 'raspberrypi.local';
-
-  if([`${raspberryPiHostname}`, 'localhost'].includes(hostname)) {
-    return `${protocol}//${raspberryPiHostname}:3001`;
-  } else if (protocol === 'https:') {
-    const host = hostname.split('.').slice(1).join('.');
-    return `${protocol}//api.${host}`
-  } else {
-    return 'http://raspberrypi.local:3001'
-  }
-};
-
-const BASE_URL = inferBaseUrl();
-const WS_BASE_URL = `${BASE_URL.replace('https://', 'wss://').replace('http://', 'ws://')}/ws`;
+let wsBaseUrl;
 
 const toPlural = (resource) => {
   return {
@@ -49,13 +35,31 @@ const toPlural = (resource) => {
   }[resource];
 };
 
-const toSingular = (resource) => {
-  return {
-    relays: 'relay',
-    wifi_relays: 'wifi_relay',
-    action_switches: 'action_switch',
-    modes: 'mode'
-  }[resource];
+const dynamicBaseQuery = async (args, api, extraOptions) => {
+  const baseUrl = selectApiBaseUrl(api.getState());
+
+  if (!baseUrl.http) {
+    return {
+      error: {
+        status: 400,
+        statusText: 'Bad Request',
+        data: 'No hostname set',
+      },
+    }
+  };
+
+  wsBaseUrl = baseUrl.ws;
+
+  const baseQuery = fetchBaseQuery({
+    baseUrl: baseUrl.http,
+    prepareHeaders: (headers) => {
+      headers.set('Accept', 'application/json');
+      return headers;
+    },
+    credentials: "include"
+  });
+
+  return baseQuery(args, api, extraOptions)
 };
 
 export const vanPiAppAPI = createApi({
@@ -84,14 +88,7 @@ export const vanPiAppAPI = createApi({
     'Settings',
     'AlarmState',
   ],
-  baseQuery: fetchBaseQuery({ 
-    baseUrl: BASE_URL,
-    prepareHeaders: (headers) => {
-      headers.set('Accept', 'application/json');
-      return headers;
-    },
-    credentials: "include"
-  }),
+  baseQuery: dynamicBaseQuery,
   endpoints: (builder) => {
     let endpoints = {
       postSwitchState: builder.mutation({
@@ -236,27 +233,29 @@ export const vanPiAppAPI = createApi({
           arg,
           { updateCachedData, cacheDataLoaded, cacheEntryRemoved }
         ) {
-          const ws = new WebSocket(`${WS_BASE_URL}/${toSnakeCase(name)}/state`)
-          try {
-            await cacheDataLoaded;
+          if(wsBaseUrl) {
+            const ws = new WebSocket(`${wsBaseUrl}/${toSnakeCase(name)}/state`)
+            try {
+              await cacheDataLoaded;
 
-            const listener = (event) => {
-              const data = JSON.parse(event.data);
+              const listener = (event) => {
+                const data = JSON.parse(event.data);
 
-              updateCachedData((draft) => {
-                Object.assign(draft, data);
-              });
+                updateCachedData((draft) => {
+                  Object.assign(draft, data);
+                });
+              }
+
+              ws.addEventListener('message', listener)
+            } catch {
+              // no-op in case `cacheEntryRemoved` resolves before `cacheDataLoaded`,
+              // in which case `cacheDataLoaded` will throw
             }
-
-            ws.addEventListener('message', listener)
-          } catch {
-            // no-op in case `cacheEntryRemoved` resolves before `cacheDataLoaded`,
-            // in which case `cacheDataLoaded` will throw
+            // cacheEntryRemoved will resolve when the cache subscription is no longer active
+            await cacheEntryRemoved
+            // perform cleanup steps once the `cacheEntryRemoved` promise resolves
+            ws.close()
           }
-          // cacheEntryRemoved will resolve when the cache subscription is no longer active
-          await cacheEntryRemoved
-          // perform cleanup steps once the `cacheEntryRemoved` promise resolves
-          ws.close()
         },
       })
     });
@@ -350,11 +349,6 @@ export const vanPiAppAPI = createApi({
     return endpoints;
   },
 });
-
-export {
-  BASE_URL,
-  WS_BASE_URL
-};
 
 export const {
   usePostSwitchStateMutation,

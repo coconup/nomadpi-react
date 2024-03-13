@@ -1,12 +1,19 @@
 import { useState } from 'react';
-import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
-import Typography from '@mui/material/Typography';
-import Fab from '@mui/material/Fab';
-import Card from '@mui/material/Card';
-import CardHeader from '@mui/material/CardHeader';
-import CardContent from '@mui/material/CardContent';
-import { Icon} from '@mui/material';
+
+import {
+  Box,
+  Card,
+  CardContent,
+  CardHeader,
+  Fab,
+  Icon,
+  Paper,
+  Typography
+} from '@mui/material';
+
+import {
+  getApisState
+} from '../../utils';
 
 import EmptyResourcePage from '../empty-resource-page/EmptyResourcePage';
 
@@ -45,7 +52,7 @@ const SwitchGroupsForm = () => {
   };
 
   const [state, setState] = useState(initialState);  
-  const [unusedGroup, setUnusedGroup] = useState(new SwitchGroup({name: 'Unused'}));
+  const [unusedGroup, setUnusedGroup] = useState(null);
 
   const apiRelaySwitches = useGetRelaysQuery();
   const apiWifiRelaySwitches = useGetWifiRelaysQuery();
@@ -53,46 +60,32 @@ const SwitchGroupsForm = () => {
   const apiActionSwitches = useGetActionSwitchesQuery();
   const apiSwitchGroups = useGetSwitchGroupsQuery();
 
-  const isLoading = apiRelaySwitches.isLoading || apiWifiRelaySwitches.isLoading || apiActionSwitches.isLoading || apiSwitchGroups.isLoading || apiModeSwitches.isLoading;
-  const isFetching = apiRelaySwitches.isFetching || apiWifiRelaySwitches.isFetching || apiActionSwitches.isFetching || apiSwitchGroups.isFetching || apiModeSwitches.isFetching;
-  const isSuccess = apiRelaySwitches.isSuccess && apiWifiRelaySwitches.isSuccess && apiActionSwitches.isSuccess && apiSwitchGroups.isSuccess && apiModeSwitches.isSuccess;
-  const isError = apiRelaySwitches.isError || apiWifiRelaySwitches.isError || apiActionSwitches.isError || apiSwitchGroups.isError || apiModeSwitches.isError;
-  const error = apiRelaySwitches.error || apiWifiRelaySwitches.error || apiActionSwitches.error || apiSwitchGroups.error || apiModeSwitches.error;
+  const {
+    isLoading,
+    isSuccess,
+    isError,
+    errors
+  } = getApisState([
+    apiRelaySwitches,
+    apiWifiRelaySwitches,
+    apiActionSwitches,
+    apiSwitchGroups,
+    apiModeSwitches
+  ]);
 
   const [
     updateSwitchGroupTrigger, 
-    {
-      // data={},
-      // isLoading,
-      // isFetching,
-      // isSuccess,
-      // isError,
-      // error,
-    }
+    // updateSwitchGroupStatus
   ] = useUpdateSwitchGroupMutation();
 
   const [
     createSwitchGroupTrigger, 
-    {
-      // data={},
-      // isLoading,
-      // isFetching,
-      // isSuccess,
-      // isError,
-      // error,
-    }
+    // createSwitchGroupStatus
   ] = useCreateSwitchGroupMutation();
 
   const [
     deleteSwitchGroupTrigger, 
-    {
-      // data={},
-      // isLoading,
-      // isFetching,
-      // isSuccess,
-      // isError,
-      // error,
-    }
+    // deleteSwitchGroupStatus
   ] = useDeleteSwitchGroupMutation();
 
   if(isSuccess && !state.init) {
@@ -122,8 +115,8 @@ const SwitchGroupsForm = () => {
     ...modeSwitches
   ];
 
-  if(unusedGroup.switches.length === 0 && switchableItems.length > 0) {
-    let newGroup = unusedGroup.clone();
+  if(!unusedGroup && switchableItems.length > 0) {
+    let newGroup = new SwitchGroup({name: 'Unused'});
     const ungroupedSwitches = switchableItems.filter(item => !switchGroups.find(group => group.hasItem(item)));
     newGroup.switches = ungroupedSwitches.map(item => newGroup.parseSwitchItem(item));
     setUnusedGroup(newGroup);
@@ -148,7 +141,7 @@ const SwitchGroupsForm = () => {
     ];
 
     let sourceGroup, destinationGroup;
-    if(source.droppableId === unusedGroup.key) {
+    if(unusedGroup && source.droppableId === unusedGroup.key) {
       sourceGroup = unusedGroup;
     } else {
       sourceGroup = newSwitchGroups.find(group => group.key === source.droppableId);
@@ -156,7 +149,7 @@ const SwitchGroupsForm = () => {
 
     const item = sourceGroup.removeItem(source.index);
 
-    if(destination.droppableId === unusedGroup.key) {
+    if(unusedGroup && destination.droppableId === unusedGroup.key) {
       destinationGroup = unusedGroup;
     } else {
       destinationGroup = newSwitchGroups.find(group => group.key === destination.droppableId);
@@ -225,137 +218,143 @@ const SwitchGroupsForm = () => {
     content = [
       unusedGroup,
       ...switchGroups
-    ].map(switchGroup => {
+    ].filter(el => !!el).map(switchGroup => {
       const {name: groupName, icon, switches, key} = switchGroup;
       const sortedSwitches = switches.sort((a, b) => a.index - b.index);
 
       return (
-          <Droppable key={key} droppableId={key}>
-            {(provided, snapshot) => (
-              <div
-                ref={provided.innerRef}
-                // style={getListStyle(snapshot.isDraggingOver)}
-                {...provided.droppableProps}
+        <Droppable key={key} droppableId={key}>
+          {(provided, snapshot) => (
+            <div
+              ref={provided.innerRef}
+              // style={getListStyle(snapshot.isDraggingOver)}
+              {...provided.droppableProps}
+            >
+              <Paper
+                elevation={1}
+                sx={{
+                  margin: '15px',
+                  padding: '20px',
+                  width: '315px',
+                  backgroundColor: 'grey.50'
+                }}
               >
-                <Paper
-                  elevation={1}
-                  sx={{
-                    margin: '15px',
-                    padding: '20px',
-                    width: '315px',
-                    backgroundColor: 'grey.50'
+                <Box
+                  sx= {{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    margin: '5px 15px',
+                    justifyContent: 'space-between'
                   }}
                 >
-                  <Box
-                    sx= {{
+                  <Box 
+                    sx={{
                       display: 'flex',
-                      flexDirection: 'row',
-                      margin: '5px 15px',
-                      justifyContent: 'space-between'
+                      flexDirection:'row',
+                      alignItems: 'center'
                     }}
                   >
-                    <Box 
-                      sx={{
-                        display: 'flex',
-                        flexDirection:'row',
-                        alignItems: 'center'
+                    <Typography 
+                      color="secondary"
+                      sx={{ 
+                        fontSize: 16, 
+                        fontWeight: 500, 
+                        marginBottom: '0px', 
+                        alignSelf: 'center'
                       }}
                     >
-                      <Typography 
-                        color="secondary"
-                        sx={{ 
-                          fontSize: 16, 
-                          fontWeight: 500, 
-                          marginBottom: '0px', 
-                          alignSelf: 'center'
-                        }}
-                      >
-                          {groupName}
-                      </Typography>
-                      <Icon sx={{marginLeft: '15px'}}>{icon}</Icon>
-                    </Box>
-                    <Fab 
-                      size="small"
-                      color="primary" 
-                      aria-label="edit"
-                      onClick={() => setState({...state, editingGroup: switchGroup})}
-                    >
-                      <Icon>edit</Icon>
-                    </Fab>
+                        {groupName}
+                    </Typography>
+                    <Icon sx={{marginLeft: '15px'}}>{icon}</Icon>
                   </Box>
                   {
-                    sortedSwitches.map(({switch_type, switch_id}, index) => {
-
-                      const switchable = switchableItems.find(item => item.snakecaseType === switch_type && item.id === switch_id);
-
-                      return (
-                        <Draggable
-                          key={switchable.key}
-                          draggableId={switchable.key}
-                          index={index}
-                        >
-                          {(provided, snapshot) => (
-                            <div
-                              ref={provided.innerRef}
-                              {...provided.draggableProps}
-                              {...provided.dragHandleProps}
-                              // style={getItemStyle(
-                              //   snapshot.isDragging,
-                              //   provided.draggableProps.style
-                              // )}
-                            >
-                              <Card sx={{ flex: 1, margin: '20px' }}>
-                                <CardContent>
-                                  <CardHeader
-                                    avatar={
-                                      <Box
-                                        sx={{
-                                          display: 'flex',
-                                          flexDirection: 'row',
-                                          alignItems: 'center'
-                                        }}>
-                                        <Typography 
-                                          sx={{ 
-                                            fontSize: 16, 
-                                            fontWeight: 500, 
-                                            marginBottom: '0px', 
-                                            alignSelf: 'center'
-                                          }} color="primary" gutterBottom>
-                                          {switchable.name}
-                                        </Typography>
-                                        <Icon sx={{marginLeft: '15px'}}>{switchable.icon}</Icon>
-                                      </Box>
-                                    }
-                                  />
-                                </CardContent>
-                              </Card>
-                            </div>
-                          )}
-                        </Draggable>
-                      )
-                    })
+                    switchGroup.name !== 'Unused' && (
+                      <Fab 
+                        size="small"
+                        color="primary" 
+                        aria-label="edit"
+                        onClick={() => setState({...state, editingGroup: switchGroup})}
+                      >
+                        <Icon>edit</Icon>
+                      </Fab>
+                    )
                   }
-                  {provided.placeholder}
-                </Paper>
-              </div>
-            )}
-          </Droppable>
+                </Box>
+                {
+                  sortedSwitches.map(({switch_type, switch_id}, index) => {
+
+                    const switchable = switchableItems.find(item => item.snakecaseType === switch_type && item.id === switch_id);
+
+                    return (
+                      <Draggable
+                        key={switchable.key}
+                        draggableId={switchable.key}
+                        index={index}
+                      >
+                        {(provided, snapshot) => (
+                          <div
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            // style={getItemStyle(
+                            //   snapshot.isDragging,
+                            //   provided.draggableProps.style
+                            // )}
+                          >
+                            <Card sx={{ flex: 1, margin: '20px' }}>
+                              <CardContent>
+                                <CardHeader
+                                  avatar={
+                                    <Box
+                                      sx={{
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        alignItems: 'center'
+                                      }}>
+                                      <Typography 
+                                        sx={{ 
+                                          fontSize: 16, 
+                                          fontWeight: 500, 
+                                          marginBottom: '0px', 
+                                          alignSelf: 'center'
+                                        }} color="primary" gutterBottom>
+                                        {switchable.name}
+                                      </Typography>
+                                      <Icon sx={{marginLeft: '15px'}}>{switchable.icon}</Icon>
+                                    </Box>
+                                  }
+                                />
+                              </CardContent>
+                            </Card>
+                          </div>
+                        )}
+                      </Draggable>
+                    )
+                  })
+                }
+                {provided.placeholder}
+              </Paper>
+            </div>
+          )}
+        </Droppable>
       )
     });
   } else if (isError) {
-  	const {status, error: message} = error;
+  	const {error: message} = errors[0];
     content = <div>{message}</div>
   }
 
   return (
     <Box
       sx={{
-        margin: '0px auto'
+        margin: '0px auto',
+        overflowX: 'scroll',
       }}
     >
       <DragDropContext onDragEnd={onDragEnd}>
         <Box sx={{
-          display: 'flex', 
+          display: 'flex',
+          height: '100%',
           flexDirection: 'column',
           overflowX: 'scroll',
           overflowY: 'hidden',

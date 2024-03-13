@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 import {
   Box,
   Card,
@@ -13,6 +11,8 @@ import {
   Select,
   TextField
 } from '@mui/material';
+
+import IconSelect from '../ui/IconSelect';
 
 export default function ActionSwitchForm({
   actionSwitch, 
@@ -59,7 +59,7 @@ export default function ActionSwitchForm({
   }
 
   return (
-    <Card sx={{ width: 600, margin: '20px' }}>
+    <Card sx={{ width: '80vw', maxWidth: 600, margin: '20px' }}>
       <CardContent>
         <Box
           sx={{
@@ -93,11 +93,11 @@ export default function ActionSwitchForm({
             alignItems: 'center'
           }}
         >
-          <TextField
+          <IconSelect
             label="Icon"
-            value={icon}
-            sx={{margin: '5px 15px', display: 'flex', flex: 1}}
-            onChange={(event) => onChange(actionSwitch, {icon: event.target.value})}
+            value={icon || ''}
+            sx={{flex: 1}}
+            onChange={({ value }) => onChange(actionSwitch, {icon: value})}
           />
           <Icon sx={{marginRight: '15px'}}>{icon}</Icon>
         </Box>

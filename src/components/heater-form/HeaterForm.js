@@ -1,7 +1,4 @@
-import { useState } from 'react';
-
 import {
-  Box,
   Card,
   CardContent,
   Divider,
@@ -11,8 +8,6 @@ import {
 import UsbDeviceSelect from '../usb-device-select/UsbDeviceSelect';
 
 import Select from '../ui/Select';
-
-import Heater from '../../models/Heater';
 
 export default function HeaterForm({heater, onChange, temperatureSensors=[], switchesOptions=[]}) {
   const {
@@ -43,7 +38,7 @@ export default function HeaterForm({heater, onChange, temperatureSensors=[], swi
   } = thermostat;
 
   return (
-    <Card sx={{ width: 400, margin: '20px' }}>
+    <Card sx={{ width: '80vw', maxWidth: 400, margin: '20px' }}>
       <CardContent>
         <TextField
           label="Name"

@@ -1,19 +1,14 @@
-import { useState } from 'react';
-import Card from '@mui/material/Card';
-import CardHeader from '@mui/material/CardHeader';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import Button from '@mui/material/Button';
-import Box from '@mui/material/Box';
-import Switch from '@mui/material/Switch';
-import Typography from '@mui/material/Typography';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
-import TextField from '@mui/material/TextField';
-import { Icon} from '@mui/material';
-import RelaySwitch from '../../models/RelaySwitch';
+import {
+  Box,
+  Card,
+  CardHeader,
+  CardContent,
+  Icon,
+  TextField,
+  Typography,
+} from '@mui/material';
+
+import IconSelect from '../ui/IconSelect';
 
 export default function RelaySwitchForm({relaySwitch, onChange, editable}) {
   const {
@@ -24,7 +19,7 @@ export default function RelaySwitchForm({relaySwitch, onChange, editable}) {
   } = relaySwitch;
 
   return (
-    <Card sx={{ width: 400, margin: '20px' }}>
+    <Card sx={{ width: '80vw', maxWidth: 400, margin: '20px' }}>
       <CardContent>
         <CardHeader
           avatar={
@@ -41,7 +36,7 @@ export default function RelaySwitchForm({relaySwitch, onChange, editable}) {
                   marginBottom: '0px', 
                   alignSelf: 'center'
                 }} color="primary" gutterBottom>
-                {relay_position ? `${frontendType} ${relay_position}` : ''}
+                {relay_position ? `${frontendType} ${relay_position}` : 'New relay'}
               </Typography>
               <Icon sx={{marginLeft: '15px'}}>{icon}</Icon>
             </Box>
@@ -66,11 +61,10 @@ export default function RelaySwitchForm({relaySwitch, onChange, editable}) {
           sx={{margin: '15px', display: 'flex'}}
           onChange={(event) => onChange(relaySwitch, {name: event.target.value})}
         />
-        <TextField
+        <IconSelect
           label="Icon"
           value={icon || ''}
-          sx={{margin: '15px', display: 'flex'}}
-          onChange={(event) => onChange(relaySwitch, {icon: event.target.value})}
+          onChange={({ value }) => onChange(relaySwitch, {icon: value})}
         />
       </CardContent>
     </Card>

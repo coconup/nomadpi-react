@@ -1,13 +1,18 @@
 import { useState } from 'react';
-import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
-import Typography from '@mui/material/Typography';
-import Fab from '@mui/material/Fab';
-import { Icon} from '@mui/material';
+
+import {
+  Box,
+  Fab,
+  Icon
+} from '@mui/material';
 
 import EmptyResourcePage from '../empty-resource-page/EmptyResourcePage';
 
-import { useGetRelaysQuery, useUpdateRelayMutation, useCreateRelayMutation } from '../../apis/nomadpi/nomadpi-app-api';
+import {
+  useGetRelaysQuery,
+  useUpdateRelayMutation,
+  useCreateRelayMutation
+} from '../../apis/nomadpi/nomadpi-app-api';
 
 import RelaySwitchForm from '../relay-switch-form/RelaySwitchForm';
 
@@ -27,30 +32,15 @@ const RelaySwitchesForm = () => {
 
   const [
     updateRelaySwitchTrigger, 
-    {
-      // data={},
-      // isLoading,
-      // isFetching,
-      // isSuccess,
-      // isError,
-      // error,
-    }
+    // updateRelaySwitchState
   ] = useUpdateRelayMutation();
 
   const [
     createRelaySwitchTrigger, 
-    {
-      // data={},
-      // isLoading,
-      // isFetching,
-      // isSuccess,
-      // isError,
-      // error,
-    }
+    // createRelaySwitchState
   ] = useCreateRelayMutation();
 
   const isLoading = apiSwitches.isLoading;
-  const isFetching = apiSwitches.isFetching;
   const isSuccess = apiSwitches.isSuccess;
   const isError = apiSwitches.isError;
   const error = apiSwitches.error;
@@ -133,7 +123,7 @@ const RelaySwitchesForm = () => {
       </Box>
     );
   } else if (isError) {
-  	const {status, error: message} = error;
+  	const { error: message } = error;
     content = <div>{message}</div>
   }
 

@@ -4,7 +4,7 @@ import { vanPiAppAPI } from '../apis/nomadpi/nomadpi-app-api';
 
 import { frigateMiddleware, frigateReducer } from './frigateMiddleware';
 import { notificationBarMiddleware, notificationBarReducer } from './notificationBarMiddleware';
-// import { resourcesStateMiddleware, resourcesStateReducer } from './resourceStateMiddleware';
+import { apiBaseUrlReducer, apiBaseUrlMiddleware } from './apiBaseUrlMiddleware';
 import { resources, resourceNames as crudResourceNames } from './crudResourcesMiddleware';
 
 import { createSelector } from 'reselect';
@@ -13,7 +13,7 @@ let reducer = {
   [vanPiAppAPI.reducerPath]: vanPiAppAPI.reducer,
   frigate: frigateReducer,
   notification_bar: notificationBarReducer,
-  // state: resourcesStateReducer
+  api_base_url: apiBaseUrlReducer
 };
 
 crudResourceNames.forEach(name => {
@@ -27,7 +27,7 @@ const store = configureStore({
       .concat(vanPiAppAPI.middleware)
       .concat(frigateMiddleware)
       .concat(notificationBarMiddleware)
-      // .concat(resourcesStateMiddleware)
+      .concat(apiBaseUrlMiddleware)
       .concat(
         crudResourceNames.map(name => resources[`${name}Middleware`])
       )
@@ -38,6 +38,7 @@ const getQueryState = (state, query, args) => {
   return state['nomadpi-app-api'].queries[`${query}(${args === undefined ? 'undefined': JSON.stringify(args)})`] || {};
 }
 
+const selectApiBaseUrl = state => state ? state['api_base_url'] : {};
 const selectGpsState = state => getQueryState(state, 'getGpsState').data || {};
 const selectSwitchablesState = state => getQueryState(state, 'getSwitchablesState').data || {};
 const selectModesState = state => getQueryState(state, 'getModesState').data || {};
@@ -54,6 +55,7 @@ const selectSetting = (key) => state => (getQueryState(state, 'getSettings').dat
 export default store;
 
 export {
+  selectApiBaseUrl,
   selectGpsState,
   selectSwitchablesState,
   selectModesState,

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useTheme } from '@mui/material/styles';
+import { isPlatform } from '@ionic/react';
 
 import {
   Box,
@@ -63,6 +64,13 @@ export default function NavigationDrawer({ open, toggleDrawer }) {
           icon: <Icon>palette</Icon>,
           path: '/settings/appearance'
         },
+        ...isPlatform('ios') || isPlatform('android') ? [
+          {
+            label: 'Mobile app',
+            icon: <Icon>mobile_friendly</Icon>,
+            path: '/settings/mobile-app'
+          }
+        ] : [],
         {
           label: 'Devices',
           icon: <Icon>usb</Icon>,
@@ -210,7 +218,10 @@ export default function NavigationDrawer({ open, toggleDrawer }) {
 
   const list = () => (
     <Box
-      sx={{ width: 250 }}
+      sx={{
+        width: 250,
+        pt: 'env(safe-area-inset-top)'
+      }}
       role="presentation"
     >
       <List sx={subMenu ? { padding: 0 } : {}}>

@@ -1,5 +1,6 @@
 import BaseModel from './abstract/BaseModel';
-import { BASE_URL } from '../apis/nomadpi/nomadpi-app-api';
+import store from '../app/store';
+import { selectApiBaseUrl } from '../app/store';
 
 // Initializer
 class Camera extends BaseModel() {
@@ -22,7 +23,9 @@ class Camera extends BaseModel() {
   };
 
   get thumbnailUrl() {
-    return `${BASE_URL}/frigate/${this.connection_params.camera_id}/latest.jpg`;
+    const state = store.getState();
+    const baseUrl = selectApiBaseUrl(state);
+    return `${baseUrl.http}/frigate/${this.connection_params.camera_id}/latest.jpg`;
   };
 
   toJSONPayload() {

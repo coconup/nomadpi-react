@@ -1,7 +1,4 @@
-import { useState } from 'react';
-
 import {
-  Icon,
   Card,
   CardContent,
   Box,
@@ -11,8 +8,6 @@ import {
 } from '@mui/material';
 
 import Select from '../ui/Select';
-
-import WaterTank from '../../models/WaterTank';
 
 export default function WaterTankForm({waterTank, onChange, editable}) {
   const {
@@ -25,8 +20,6 @@ export default function WaterTankForm({waterTank, onChange, editable}) {
   } = waterTank;
 
   const {
-    device_type,
-    device_id,
     mqtt_topic
   } = connection_params;
 
@@ -44,7 +37,7 @@ export default function WaterTankForm({waterTank, onChange, editable}) {
   } = water_tank_settings;
 
   return (
-    <Card sx={{ width: 400, margin: '20px' }}>
+    <Card sx={{ width: '80vw', maxWidth: 400, margin: '20px' }}>
       <CardContent>
         <TextField
           label="Name"

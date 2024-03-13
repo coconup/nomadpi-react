@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 import {
   Card,
   CardContent,
@@ -10,8 +8,6 @@ import {
   Select,
   TextField,
 } from '@mui/material';
-
-import TemperatureSensor from '../../models/TemperatureSensor';
 
 export default function TemperatureSensorForm({temperatureSensor, onChange}) {
   const {
@@ -28,7 +24,7 @@ export default function TemperatureSensorForm({temperatureSensor, onChange}) {
   } = connection_params;
 
   return (
-    <Card sx={{ width: 400, margin: '20px' }}>
+    <Card sx={{ width: '80vw', maxWidth: 400, margin: '20px' }}>
       <CardContent>
         <TextField
           label="Name"

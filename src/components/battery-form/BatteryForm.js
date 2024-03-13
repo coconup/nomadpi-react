@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 import TextField from '@mui/material/TextField';
 
 import {
@@ -8,8 +6,6 @@ import {
 } from '@mui/material';
 
 import Select from '../ui/Select';
-
-import Battery from '../../models/Battery';
 
 export default function BatteryForm({battery, onChange, editable}) {
   const {
@@ -26,7 +22,7 @@ export default function BatteryForm({battery, onChange, editable}) {
   } = connection_params;
 
   return (
-    <Card sx={{ width: 400, margin: '20px' }}>
+    <Card sx={{ width: '80vw', maxWidth: 400, margin: '20px' }}>
       <CardContent>
         <TextField
           label="Name"

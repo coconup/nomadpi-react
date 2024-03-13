@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useTheme } from '@mui/material/styles';
 
 import { RoundSlider } from 'mz-react-round-slider';

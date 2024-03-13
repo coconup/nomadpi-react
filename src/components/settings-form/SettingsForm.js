@@ -1,7 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useSelector } from 'react-redux';
-
-import { getApisState } from '../../utils';
 
 import {
   Icon,
@@ -18,7 +16,6 @@ import {
 import { MuiColorInput } from 'mui-color-input'
 
 import Container from '../ui/Container';
-import Select from '../ui/Select';
 import Loading from '../ui/Loading';
 
 import UsbDeviceSelect from '../usb-device-select/UsbDeviceSelect';
@@ -37,7 +34,7 @@ const SettingsForm = ({ currentPath }) => {
 
   const [
     updateSettingTrigger, 
-    updateSettingState
+    // updateSettingState
   ] = useUpdateSettingMutation();
 
   const onSettingChange = ({ setting_key }, attrs) => {
