@@ -36,7 +36,7 @@ export default function HomePanel({ demo }) {
   const latitude = demo ? 38.18885675160445 : gpsState.latitude;
   const longitude = demo ? 12.733572417196724 : gpsState.longitude;
 
-  const isPhone = isPlatform('mobile') && !isPlatform('tablet');
+  const isPhone = (isPlatform('ios') || isPlatform('android')) && !isPlatform('tablet');
 
   return (
     <Container>
@@ -61,12 +61,13 @@ export default function HomePanel({ demo }) {
           </Grid>
           <Grid xs={12} sm={8} md={6}>
             {
-              googleMapsApiKey && (
+              googleMapsApiKey && latitude && (
                 <Paper
                   sx={{
                     flexGrow: 1,
                     // mb: '20px',
-                    display: 'flex'
+                    display: 'flex',
+                    height: '100%'
                   }}
                 >
                   <MapsPage
@@ -79,10 +80,7 @@ export default function HomePanel({ demo }) {
                     }}
                   />
                 </Paper>
-              )
-            }
-            {
-              !googleMapsApiKey && (
+              ) || (
                 <Paper
                   sx={{
                     padding: '20px',
@@ -135,7 +133,7 @@ export default function HomePanel({ demo }) {
             sm={6}
             xs={12}
           >
-            <SolarChargeControllersPage compact />
+            <SolarChargeControllersPage compact demo={demo} />
           </Grid>
         </Grid>
       </Box>

@@ -288,6 +288,7 @@ function MapsPage({ googleMapsApiKey, latitude: latitudeProp, longitude: longitu
   //   },
   // ]
 
+
   if(isLoaded && latitude && longitude) {
     return (
       <GoogleMap

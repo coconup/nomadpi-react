@@ -13,6 +13,7 @@ import store from './app/store';
 import {
   Box,
   Button,
+  Fade,
   Icon,
   useMediaQuery,
   Typography
@@ -42,6 +43,7 @@ function Init({ children }) {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   const [nightMode, setNightMode] = useState(prefersDarkMode);
 
+  const [showSplashScreen, setShowSplashScreen] = useState(true);
   const [showInitScreen, setShowInitScreen] = useState(false);
 
   const [localHostname, setLocalHostname] = useState(null);
@@ -66,7 +68,13 @@ function Init({ children }) {
   };
 
   useEffect(() => {
-    if(isPlatform('mobile')) {
+    const timeoutId = setTimeout(() => setShowSplashScreen(false), 2000);
+
+    return () => clearTimeout(timeoutId);
+  }, []);
+
+  useEffect(() => {
+    if(isPlatform('ios') || isPlatform('android')) {
       const fetchPreferences = async () => {
         const { value: localHostnamePref } = await Preferences.get({ key: 'local-hostname' });
         const { value: remoteHostnamePref } = await Preferences.get({ key: 'remote-hostname' });
@@ -85,7 +93,7 @@ function Init({ children }) {
         hostname
       } = window.location;
 
-      const raspberryPiHostname = process.env.REACT_APP_RPI_HOSTNAME || 'nomadpi.local';
+      const raspberryPiHostname = process.env.REACT_APP_RPI_HOSTNAME || 'raspberrypi.local';
 
       if([raspberryPiHostname, 'localhost', '0.0.0.0'].includes(hostname)) {
         setLocalHostname(raspberryPiHostname)
@@ -140,8 +148,27 @@ function Init({ children }) {
     }
   };
 
+  const splashScreen = (
+    <Box
+      sx={{
+        alignSelf: 'center',
+        mt: '30vh',
+        height: '30vh',
+        maxHeight: '400px'
+      }}
+    >
+      <Fade in>
+        <img src={process.env.PUBLIC_URL + '/splash.png'} height="100%" />
+      </Fade>
+    </Box>
+  );
+
   let content;
-  if(showInitScreen) {
+  let loadState;
+
+  if(showSplashScreen) {
+    content = splashScreen;
+  } else if(showInitScreen) {
     content = (
       <MobileInitScreen
         onSave={() => setShowInitScreen(false)}
@@ -231,19 +258,16 @@ function Init({ children }) {
     )
   } else if(apiBaseUrl) {
     if(!primaryColorSetting) {
-      content = (
-        <Box>
-          <AppStateProvider />
-          <Loading size={40} fullPage />
-        </Box>
-      )
+      content = splashScreen;
+      loadState = true;
     } else {
       content = Children.map(children, (child) => {
         return cloneElement(child, { onReset: resetState });
       });
+      loadState = true;
     }
   } else {
-    return <Loading size={40} fullPage />
+    content = splashScreen;
   }
 
   return (
@@ -253,7 +277,11 @@ function Init({ children }) {
         primaryColor
       })}
     >
-      <AppStateProvider />
+      {
+        loadState && (
+          <AppStateProvider />
+        )
+      }
       {
         !prefersDarkMode && (
           <DayNightIndicator

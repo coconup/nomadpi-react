@@ -35,7 +35,7 @@ import SolarChargeControllersForm from './components/solar-charge-controllers-fo
 
 function App() {
   const urlParams = new URLSearchParams(window.location.search);
-  const [demo] = useState(!!urlParams.get('demo'));
+  const [demo] = useState(!!urlParams.get('demo') || true);
 
   const Main = ({ onReset }) => {
     return (
@@ -56,11 +56,8 @@ function App() {
         >
           <Switch>
             <Route path="/"><HomePanel demo={demo}/></Route>
-            <Route path="/weather">
-              <WeatherForecast />
-            </Route>
             <Route path="/control-panel"><SwitchGroupsPage /></Route>
-            <Route path="/monitor"><MonitorPage /></Route>
+            <Route path="/monitor"><MonitorPage demo={demo} /></Route>
             <Route path="/security"><CamerasPage demo={demo} /></Route>
             <Route path="/heater"><HeatersPage /></Route>
 

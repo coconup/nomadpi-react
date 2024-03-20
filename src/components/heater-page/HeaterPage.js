@@ -60,7 +60,8 @@ export default function HeaterPage({ heater, onChange }) {
 
   return (
     <Paper sx={{
-      padding: '25px 5px'
+      padding: '25px 20px',
+      mb: "env(safe-area-inset-bottom)"
     }}>
       <Grid
         container

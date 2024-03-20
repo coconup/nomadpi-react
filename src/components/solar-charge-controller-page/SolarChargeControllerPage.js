@@ -15,7 +15,7 @@ import {
 import Metric from '../ui/Metric';
 import Loading from '../ui/Loading';
 
-export default function SolarChargeControllerPage({ solarChargeController, compact=false }) {
+export default function SolarChargeControllerPage({ solarChargeController, compact=false, demo }) {
   const {
     id,
     name
@@ -28,30 +28,30 @@ export default function SolarChargeControllerPage({ solarChargeController, compa
     return <Loading fullPage size={compact ? 25 : 40} />
   } else {
     const {
-      charging_status,
-      controller_temperature,
+      charging_status=(demo ? 'charging' : undefined),
+      controller_temperature=(demo ? 20 : undefined),
       photovoltaic={},
       load={},
       battery={}
     } = solarChargeControllerState;
 
     const {
-      temperature: battery_temperature,
-      type: battery_type,
-      voltage: battery_voltage
+      temperature: battery_temperature=(demo ? 21 : undefined),
+      type: battery_type=(demo ? 'lithium' : undefined),
+      voltage: battery_voltage=(demo ? 13.21 : undefined)
     } = battery;
 
     const {
-      current: load_current,
-      power: load_power,
-      status: load_status,
-      voltage: load_voltage
+      current: load_current=(demo ? 0 : undefined),
+      power: load_power=(demo ? 0 : undefined),
+      status: load_status=(demo ? 'disconnected' : undefined),
+      voltage: load_voltage=(demo ? 0 : undefined)
     } = load;
 
     const {
-      current: photovoltaic_current,
-      power: photovoltaic_power,
-      voltage: photovoltaic_voltage
+      current: photovoltaic_current=(demo ? 11.5 : undefined),
+      power: photovoltaic_power=(demo ? 288 : undefined),
+      voltage: photovoltaic_voltage=(demo ? 25 : undefined)
     } = photovoltaic;
 
     let status = {};
@@ -188,7 +188,7 @@ export default function SolarChargeControllerPage({ solarChargeController, compa
                       fontWeight: 300
                     }}
                   >
-                    { photovoltaic_power !== undefined ? photovoltaic_power.toFixed(2) : '-' }
+                    { photovoltaic_power !== undefined ? photovoltaic_power.toFixed(0) : '-' }
                   </Typography>
                   <Typography 
                     variant="h5" 

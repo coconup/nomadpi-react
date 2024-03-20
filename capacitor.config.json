@@ -1,9 +1,9 @@
 {
   "appId": "com.nomadpi.app",
-  "appName": "nomadpi",
+  "appName": "nomadPi",
   "webDir": "build",
   "server": {
-    "url": "http://192.168.1.110:3000",
+    "url": "http://192.168.1.101:3000",
     "cleartext": true
   }
 }

@@ -1,4 +1,5 @@
 import {
+  Box,
   Icon,
   BottomNavigation,
   BottomNavigationAction,
@@ -29,24 +30,26 @@ const BottomNavigationComponent = (props) => {
   })
 
   return(
-    <Paper 
-      sx={{
-        pb: "env(safe-area-inset-bottom)",
-        position: 'fixed', 
-        bottom: 0,
-        left: 0,
-        right: 0
-      }}
-      elevation={3}
-    >
-      <BottomNavigation
-        showLabels
-        value={value}
-        onChange={onChange}
+    <Box sx={{ height: "env(safe-area-inset-bottom)" }}>
+      <Paper 
+        sx={{
+          pb: "env(safe-area-inset-bottom)",
+          position: 'fixed', 
+          bottom: 0,
+          left: 0,
+          right: 0
+        }}
+        elevation={3}
       >
-        { renderedTabs }
-      </BottomNavigation>
-    </Paper>
+        <BottomNavigation
+          showLabels
+          value={value}
+          onChange={onChange}
+        >
+          { renderedTabs }
+        </BottomNavigation>
+      </Paper>
+    </Box>
   );
 }
 

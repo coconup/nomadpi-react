@@ -17,7 +17,7 @@ import EmptyResourcePage from '../empty-resource-page/EmptyResourcePage';
 
 import { useGetSolarChargeControllersQuery } from '../../apis/nomadpi/nomadpi-app-api';
 
-export default function SolarChargeControllersPage({ compact=false }) {
+export default function SolarChargeControllersPage({ compact=false, demo }) {
   const [location, setLocation] = useLocation();
 
   const initialState = {
@@ -71,6 +71,7 @@ export default function SolarChargeControllersPage({ compact=false }) {
               selectedSolarChargeController && (
                 <SolarChargeControllerPage
                   compact
+                  demo={demo}
                   solarChargeController={selectedSolarChargeController}
                 />
               ) || (
@@ -110,6 +111,7 @@ export default function SolarChargeControllersPage({ compact=false }) {
           // lg={4}
         >
           <SolarChargeControllerPage
+            demo={demo}
             solarChargeController={solarChargeController}
           />
         </Grid>

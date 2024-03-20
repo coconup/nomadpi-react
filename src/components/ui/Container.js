@@ -17,6 +17,7 @@ const ContainerComponent = ({ children }) => {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
+        // flexDirection: 'column'
       }}
     >
       { children }
